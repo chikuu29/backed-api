@@ -222,6 +222,14 @@ class userController extends Controller
     {
 
         $alldata = $request->all();
+
+        $targetDir = env('FILE_UPLOAD_PATH'); // Replace with your desired path
+
+        // Check if the upload directory exists; if not, create it
+        if (!file_exists($targetDir)) {
+            // echo "hi";
+            mkdir($targetDir, 0777, true);
+        }
         // print_r($alldata);
         $id = $alldata['q'];
         if ($request->hasFile('uploadfile')) {
@@ -232,7 +240,8 @@ class userController extends Controller
             for ($i = 0; $i < count($imagedata); $i++) {
                 $imgstoreindatabase[$i] = $i . time() . '.' . $_FILES['uploadfile']['name'][$i];
                 $a[$i] = str_replace($_FILES['uploadfile']['name'][$i], 'jpg', $imgstoreindatabase[$i]);
-                $c = move_uploaded_file($temp[$i], storage_path() . '/' . $a[$i]);
+                // $c = move_uploaded_file($temp[$i], storage_path() . '/' . $a[$i]);
+                $c = move_uploaded_file($temp[$i], $targetDir . '/' . $a[$i]);
                 array_push($datainarryform, $a[$i]);
             }
             $d = implode(',', $datainarryform);
@@ -251,7 +260,8 @@ class userController extends Controller
                 $user_arr = array(
                     "success" => true,
                     "message" => "File Uploaded Successfully",
-                    "data" => $d
+                    "data" => $d,
+                    "e"=> $c
                 );
             } else {
                 $user_arr = array(
