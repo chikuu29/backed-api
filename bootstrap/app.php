@@ -83,6 +83,9 @@ $app->routeMiddleware([
     'jwt.auth' => App\Http\Middleware\JwtMiddleware::class,
 ]);
 
+$app->register(\Illuminate\Mail\MailServiceProvider::class);
+
+
 /*
 |--------------------------------------------------------------------------
 | Register Service Providers

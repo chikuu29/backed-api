@@ -14,12 +14,13 @@ class AuthController extends Controller
     {
         // Validate user credentials (e.g., username and password)
         // ...
-        $requestedData = $request->all();
-        // $data = json_decode(file_get_contents("php://input"));
+       // $requestedData = $request->all();
+         $data = json_decode(file_get_contents("php://input"));
+        //dd($data->userId);
 
         try {
-            $user = $requestedData['userId'];
-            $password = $requestedData['password'];
+            $user = $data->userId;
+            $password = $data->password;
             $logindata = DB::table('admin')->where('UserId', $user)->get();
             if (count($logindata) > 0) {
                 if ($password == $logindata[0]->Password) {
@@ -68,7 +69,7 @@ class AuthController extends Controller
             }
         } catch (\Exception $e) {
 
-            return response()->json(['error' => 'Token not provided'], 401);
+            return response()->json(['error' => 'Token not provided','error1'=>$e], 401);
         }
 
         return json_encode($user_arr);

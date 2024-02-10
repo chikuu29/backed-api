@@ -48,7 +48,7 @@ $router->group(['middleware' => ['App\Http\Middleware\JwtMiddleware']], function
     $router->post("/privacypolicy", "addItemControler@privacypolicy");
     $router->post("/contactus", "addItemControler@contactus");
     $router->post("/termandcondition", "addItemControler@termandcondition");
-    $router->post("/aboutus", "addItemControler@aboutus");
+    
     $router->post("/userActivation", "userController@userActivation");
     $router->post("/profileValidation", "userController@profileValidation");
 
@@ -90,3 +90,7 @@ $router->post("/adminLogin", "AuthController@adminLogin");
 $router->post("/auth", "AuthController@userLogin");
 $router->post("/addUserDataFirstApi", "userController@addUserDataFirstApi");
 $router->post("/addUserDataSecondApi", "userController@addUserDataSecondApi");
+$router->post("/getAllData", "memberController@getAllData");
+$router->post("/aboutus", "addItemControler@aboutus");
+$router->post("/unsecuredFatchquary", "dynamic_Crud_controller@unsecuredFatchquary");
+

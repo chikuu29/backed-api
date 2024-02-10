@@ -688,5 +688,6 @@ class addItemControler extends Controller
         }
         return json_encode($user_arr);
     }
+ 
     
 }

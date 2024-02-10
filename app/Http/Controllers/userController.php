@@ -7,103 +7,261 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 
+
+use DateTime;
+
 use function FastRoute\TestFixtures\empty_options_cached;
 
 class userController extends Controller
 {
     public function addUserDataFirstApi(Request $res)
     {
-
-
         $data = json_decode(file_get_contents("php://input"));
 
-        $profiletype = !isset($data->profiletype) ? 'myself' : $data->profiletype;
+        $profiletype = $data->profiletype ?? 'myself';
+        $email = $data->email ?? '';
+        $phone = $data->phone ?? '';
+        $password = isset($data->password) ? md5($data->password) : '';
+        $gender = $data->gender ?? '';
+        $url = $data->url ?? '';
+        $userreligion = $data->user_religion ?? '';
+        $usercaste = $data->user_caste ?? '';
+        $usersubcaste = $data->user_subcaste ?? '';
+        $fname = $data->fname ?? '';
+        $lname = $data->lname ?? '';
+        $dob = $data->dob ?? '';
+        $usermothertoungh = $data->user_mother_toungh ?? '';
+        $usermaritalstatus = $data->user_marital_status ?? '';
 
-        $email = !isset($data->email) ? '' : $data->email;
-        $phone = !isset($data->phone) ? '' : $data->phone;
-        $password = !isset($data->password) ? '' : md5($data->password);
-        $gender = !isset($data->gender) ? '' : $data->gender;
-        $url = !isset($data->url) ? '' : $data->url;
-
-        $fname = !isset($data->fname) ? '' : $data->fname; // :'';
-        $lname = !isset($data->lname) ? '' : $data->lname; // :'';
-        $dob = !isset($data->dob) ? '' : $data->dob;
         $iddata = DB::table('prefix_id')->get('prefix_id_name');
         $id = $iddata[0]->prefix_id_name;
         $userId = $id . chr(64 + rand(0, 26)) . rand(0, 9) . chr(64 + rand(0, 26)) . rand(0, 9) . chr(64 + rand(0, 26)) . rand(1000, 9999);
+
+        // Create DateTime objects for the date of birth and current date
+        $dateOfBirth = new DateTime($dob);
+        $currentDate = new DateTime();
+        // Calculate the difference in years between the two dates
+        $age = $currentDate->diff($dateOfBirth)->y;
         if (empty($profiletype) || empty($email) || empty($phone) || empty($password) || empty($gender)) {
-            $user_arr = array(
+            $user_arr = [
                 "status" => false,
                 "success" => false,
                 "message" => "Please Fill All Data",
-            );
-        }
-        $getAuthUserCount = DB::table('auth_user')
-            ->where('auth_email', $email)
-            ->orWhere('auth_phone_no', $phone)
-            ->count();
-        if ($getAuthUserCount == 0) {
+            ];
+        } else {
+            $getAuthUserCount = DB::table('auth_user')
+                ->where('auth_email', $email)
+                ->orWhere('auth_phone_no', $phone)
+                ->count();
 
-            try {
-                DB::transaction(function () use ($userId, $profiletype, $gender, $email, $fname, $lname, $dob, $password, $phone, $url) {
-                    DB::table('auth_user')->insert([
-                        'auth_ID' => $userId,
-                        'auth_email' => $email,
-                        'auth_password' => $password,
-                        'auth_phone_no' => $phone,
-                        'auth_name' => $fname . " " . $lname,
-                    ]);
-
-                    DB::table('user_info')->insert([
-                        'user_id' => $userId,
-                        'user_profileType' => $profiletype,
-                        'user_gender' => $gender,
-                        'user_email' => $email,
-                        'user_fname' => $fname,
-                        'user_lname' => $lname,
-                        'user_dob' => $dob,
-                        'status' => 1,
-                        'deleted' => 1,
-                    ]);
-                });
+            if (!$getAuthUserCount == 0) {
                 try {
-                    $fadata['user_email'] = $email;
-                    $fadata['name'] = $fname;
-                    $fadata['url'] = $url;
-                    $fadata['Subject'] = 'Registration Successfull';
-                    Mail::send('mail.registation_alert', $fadata, function ($message) use ($fadata) {
-                        $message->from('info@choicemarriage.com', 'choicemarriage');
-                        $message->to($fadata['user_email'], $fadata['name'])->subject($fadata['Subject']);
-                    });
-                } catch (Exception $e) {
-                    DB::rollBack();
-                }
+                    DB::transaction(function () use ($userId, $age, $profiletype, $gender, $email, $fname, $lname, $dob, $password, $phone, $url, $usermothertoungh, $usermaritalstatus, $userreligion, $usercaste, $usersubcaste) {
+                        DB::table('auth_user')->insert([
+                            'auth_ID' => $userId,
+                            'auth_email' => $email,
+                            'auth_password' => $password,
+                            'auth_phone_no' => $phone,
+                            'auth_name' => $fname . " " . $lname,
+                        ]);
 
-                $user_arr = [
-                    "status" => true,
-                    "success" => true,
-                    "profileID" => $userId,
-                    "message" => "Congratulations! Your Registration Done",
-                ];
-                DB::commit();
-            } catch (\Exception $e) {
-                // Handle the exception
-                DB::rollback();
+                        DB::table('user_info')->insert([
+                            'user_id' => $userId,
+                            'user_profileType' => $profiletype,
+                            'user_gender' => $gender,
+                            'user_email' => $email,
+                            'user_fname' => $fname,
+                            'user_lname' => $lname,
+                            'user_dob' => $dob,
+                            'status' => 1,
+                            'deleted' => 1,
+                            'user_mother_toungh' => $usermothertoungh,
+                            'user_marital_status' => $usermaritalstatus,
+                            'user_age' => $age,
+                            'user_full_name' => $fname . ' ' . $lname
+                        ]);
+
+                        DB::table('user_religion')->insert([
+                            'user_ID' => $userId,
+                            'user_religion' => $userreligion,
+                            'user_caste' => $usercaste,
+                            'user_subcaste' => $usersubcaste,
+                            'completed' => 1
+                        ]);
+                    });
+
+                    try {
+                        
+                        $fadata['user_email'] = $email;
+                        $fadata['name'] = $fname;
+                        $fadata['url'] = $url;
+                       Mail::send('mail.registration_alert', $fadata, function ($message) use ($fadata) {
+                            $message->from('info@choicemarriage.com', 'choicemarriage');
+                            $message->to($fadata['user_email'], $fadata['name'])->subject($fadata['Subject']);
+                        });
+                        
+                    } catch (\Exception $e) {
+                        // Log the exception
+                        \Log::error('Error sending email: ' . $e->getMessage());
+                    }
+
+
+                    // try {
+                    //     $fadata['user_email'] = $email;
+                    //     $fadata['name'] = $fname;
+                    //     $fadata['url'] = $url;
+                    //     $fadata['Subject'] = 'Registration Successful';
+                    //     Mail::send('mail.registration_alert', $fadata, function ($message) use ($fadata) {
+                    //         $message->from('info@choicemarriage.com', 'choicemarriage');
+                    //         $message->to($fadata['user_email'], $fadata['name'])->subject($fadata['Subject']);
+                    //     });
+                    // } catch (Exception $e) {
+
+                    //     DB::rollBack();
+                    //     $user_arr = [
+                    //         "status" => false,
+                    //         "success" => false,
+                    //         "profileID" => $userId,
+                    //         "message" => "not",
+                    //     ];
+                    // }
+
+                    $user_arr = [
+                        "status" => true,
+                        "success" => true,
+                        "profileID" => $userId,
+                        "message" => "Congratulations! Your Registration Done",
+                    ];
+                    DB::commit();
+                } catch (\Exception $e) {
+                    // Handle the exception
+                    DB::rollback();
+                    $user_arr = [
+                        "status" => false,
+                        "success" => false,
+                        "message" => "An error occurred during registration: " . $e->getMessage(),
+                    ];
+                }
+            } else {
                 $user_arr = [
                     "status" => false,
                     "success" => false,
-                    "message" => "An error occurred during registration: " . $e->getMessage(),
+                    "message" => "Email or Phone number already exists!",
                 ];
             }
-        } else {
-            $user_arr = array(
-                "status" => false,
-                "success" => false,
-                "message" => "Enter Email and Phone no already exist!",
-            );
         }
+
         return json_encode($user_arr);
+
     }
+    // {
+
+
+    //     $data = json_decode(file_get_contents("php://input"));
+    //    // return $data;   
+
+    //     $profiletype = !isset($data->profiletype) ? 'myself' : $data->profiletype;
+
+    //     $email = !isset($data->email) ? '' : $data->email;
+    //     $phone = !isset($data->phone) ? '' : $data->phone;
+    //     $password = !isset($data->password) ? '' : md5($data->password);
+    //     $gender = !isset($data->gender) ? '' : $data->gender;
+    //     $url = !isset($data->url) ? '' : $data->url;
+
+    //     $userreligion=!isset($data->user_religion) ? '' : $data->user_religion;
+    //     $usercaste=!isset($data->user_caste) ? '' : $data->user_caste;
+    //     $usersubcaste=!isset($data->user_subcaste) ? '' : $data->user_subcaste;
+
+
+    //     $fname = !isset($data->fname) ? '' : $data->fname; // :'';
+    //     $lname = !isset($data->lname) ? '' : $data->lname; // :'';
+    //     $dob = !isset($data->dob) ? '' : $data->dob;
+    //     $usermothertoungh = !isset($data->user_mother_toungh) ? '' : $data->user_mother_toungh;
+    //     $usermaritalstatus =!isset($data->user_marital_status) ? '' : $data->user_marital_status;
+    //     $iddata = DB::table('prefix_id')->get('prefix_id_name');
+    //     $id = $iddata[0]->prefix_id_name;
+    //     $userId = $id . chr(64 + rand(0, 26)) . rand(0, 9) . chr(64 + rand(0, 26)) . rand(0, 9) . chr(64 + rand(0, 26)) . rand(1000, 9999);
+    //     if (empty($profiletype) || empty($email) || empty($phone) || empty($password) || empty($gender)) {
+    //         $user_arr = array(
+    //             "status" => false,
+    //             "success" => false,
+    //             "message" => "Please Fill All Data",
+    //         );
+    //     }
+    //     $getAuthUserCount = DB::table('auth_user')
+    //         ->where('auth_email', $email)
+    //         ->orWhere('auth_phone_no', $phone)
+    //         ->count();
+    //     if ($getAuthUserCount == 0) {
+
+    //         try {
+    //             DB::transaction(function () use ($userId, $profiletype, $gender, $email, $fname, $lname, $dob, $password, $phone, $url,$usermothertoungh,$usermaritalstatus,$userreligion,$usercaste,$usersubcaste) {
+    //                 DB::table('auth_user')->insert([
+    //                     'auth_ID' => $userId,
+    //                     'auth_email' => $email,
+    //                     'auth_password' => $password,
+    //                     'auth_phone_no' => $phone,
+    //                     'auth_name' => $fname . " " . $lname,
+    //                 ]);
+
+    //                 DB::table('user_info')->insert([
+    //                     'user_id' => $userId,
+    //                     'user_profileType' => $profiletype,
+    //                     'user_gender' => $gender,
+    //                     'user_email' => $email,
+    //                     'user_fname' => $fname,
+    //                     'user_lname' => $lname,
+    //                     'user_dob' => $dob,
+    //                     'status' => 1,
+    //                     'deleted' => 1,
+    //                     'user_mother_toungh'=> $usermothertoungh,
+    //                     '$user_marital_status' => $usermaritalstatus
+    //                 ]);
+    //                 DB::table('user_religion')->insert([
+    //                     'user_ID' => $userId,
+    //                     'user_religion'=> $userreligion,
+    //                     'user_caste' => $usercaste,
+    //                     'user_subcaste' => $usersubcaste,
+    //                 ]);
+    //             });
+    //             try {
+    //                 $fadata['user_email'] = $email;
+    //                 $fadata['name'] = $fname;
+    //                 $fadata['url'] = $url;
+    //                 $fadata['Subject'] = 'Registration Successfull';
+    //                 Mail::send('mail.registation_alert', $fadata, function ($message) use ($fadata) {
+    //                     $message->from('info@choicemarriage.com', 'choicemarriage');
+    //                     $message->to($fadata['user_email'], $fadata['name'])->subject($fadata['Subject']);
+    //                 });
+    //             } catch (Exception $e) {
+    //                 DB::rollBack();
+    //             }
+
+    //             $user_arr = [
+    //                 "status" => true,
+    //                 "success" => true,
+    //                 "profileID" => $userId,
+    //                 "message" => "Congratulations! Your Registration Done",
+    //             ];
+    //             DB::commit();
+    //         } catch (\Exception $e) {
+    //             // Handle the exception
+    //             DB::rollback();
+    //             $user_arr = [
+    //                 "status" => false,
+    //                 "success" => false,
+    //                 "message" => "An error occurred during registration: " . $e->getMessage(),
+    //             ];
+    //         }
+    //     } else {
+    //         $user_arr = array(
+    //             "status" => false,
+    //             "success" => false,
+    //             "message" => "Enter Email and Phone no already exist!",
+    //         );
+    //     }
+    //     return json_encode($user_arr);
+    // }
 
     public function addUserDataSecondApi(Request $res)
     {
@@ -261,7 +419,7 @@ class userController extends Controller
                     "success" => true,
                     "message" => "File Uploaded Successfully",
                     "data" => $d,
-                    "e"=> $c
+                    "e" => $c
                 );
             } else {
                 $user_arr = array(
