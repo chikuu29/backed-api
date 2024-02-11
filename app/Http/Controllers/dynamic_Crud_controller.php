@@ -48,19 +48,19 @@ class dynamic_Crud_controller extends Controller
                     $fatchdata = DB::table($table)->where($whereConditions)->skip($offset)
                         ->take($limit)->get($projection);
                 }
-                echo '<pre>';
-                print_r($fatchdata);
-                exit;
+                // echo '<pre>';
+                // print_r($fatchdata);
+                // exit;
 
-                $query = DB::table($table)
-                    ->get($projection);
-                $totalRows = $query->count();
+                // $query = DB::table($table)
+                //     ->get($projection);
+                // $totalRows = $query->count();
                 $user_arr = array(
                     "status" => true,
                     "success" => true,
-                    "totalCount" => $totalRows,
-                    "count" => count($fatchdata),
-                    "message" => 'Total Fetch Data ' . count($fatchdata),
+                    // "totalCount" => $totalRows,
+                    // "count" => count($fatchdata),
+                    // "message" => 'Total Fetch Data ' . count($fatchdata),
                     "data" => $fatchdata
                 );
             }
