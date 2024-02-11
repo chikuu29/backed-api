@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\Rules\Exists;
 
 class dynamic_Crud_controller extends Controller
 {
@@ -52,6 +53,8 @@ class dynamic_Crud_controller extends Controller
                 // print_r($fatchdata);
                 // exit;
 
+                echo "SELECT COUNT(1) AS total_count FROM $table";
+                exit;
                 $total_count = DB::select("SELECT COUNT(1) AS total_count FROM $table");
                 // dd($query);
                 // $totalRows = $query->count();
