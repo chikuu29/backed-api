@@ -48,6 +48,10 @@ class dynamic_Crud_controller extends Controller
                     $fatchdata = DB::table($table)->where($whereConditions)->skip($offset)
                         ->take($limit)->get($projection);
                 }
+                echo '<pre>';
+                print_r($fatchdata);
+                exit;
+
                 $query = DB::table($table)
                     ->get($projection);
                 $totalRows = $query->count();
