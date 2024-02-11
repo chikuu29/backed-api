@@ -52,8 +52,9 @@ class dynamic_Crud_controller extends Controller
                 // print_r($fatchdata);
                 // exit;
 
-                // $query = DB::table($table)
-                //     ->get($projection);
+                $query = DB::table($table)
+                    ->get($projection);
+                dd($query);
                 // $totalRows = $query->count();
                 $user_arr = array(
                     "status" => true,
