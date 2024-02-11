@@ -53,10 +53,10 @@ class dynamic_Crud_controller extends Controller
                 // print_r($fatchdata);
                 // exit;
 
-                echo "SELECT COUNT(1) AS total_count FROM $table";
-                exit;
+                // echo "SELECT COUNT(1) AS total_count FROM $table";
+                // exit;
                 $total_count = DB::select("SELECT COUNT(1) AS total_count FROM $table");
-                // dd($query);
+                dd($total_count);
                 // $totalRows = $query->count();
                 $user_arr = array(
                     "status" => true,
