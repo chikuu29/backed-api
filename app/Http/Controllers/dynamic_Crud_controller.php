@@ -63,8 +63,16 @@ class dynamic_Crud_controller extends Controller
             return json_encode($user_arr);
         } catch (\Exception $e) {
             //throw $th;
-
-            return $e;
+            $user_arr = array(
+                "status" => true,
+                "success" => true,
+                "totalCount" => 0,
+                "count" => 0,
+                "message" => 'Total Fetch Data 0' ,
+                "data" => [],
+                "erroe"=>$e
+            );
+            return json_encode($user_arr);
 
         }
     }
