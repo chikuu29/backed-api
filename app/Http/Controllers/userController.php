@@ -54,7 +54,7 @@ class userController extends Controller
                 ->orWhere('auth_phone_no', $phone)
                 ->count();
 
-            if (!$getAuthUserCount == 0) {
+            if ($getAuthUserCount == 0) {
                 try {
                     DB::transaction(function () use ($userId, $age, $profiletype, $gender, $email, $fname, $lname, $dob, $password, $phone, $url, $usermothertoungh, $usermaritalstatus, $userreligion, $usercaste, $usersubcaste) {
                         DB::table('auth_user')->insert([
