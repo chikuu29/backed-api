@@ -65,6 +65,7 @@ $router->group(['middleware' => ['App\Http\Middleware\JwtMiddleware']], function
     $router->post("/homeLogoUplode", "uplodeController@homeLogoUplode");
     $router->post("/bannerUplode", "uplodeController@bannerUplode");
     $router->post("/cast_matches", "filterController@matchByCast");
+    $router->post("/recommend_matches", "filterController@matches");
     $router->post("/premium_matches", "filterController@premimusMatches");
     $router->post("/getLoginCount", "activityController@getLoginCount");
     $router->post("/getLikeCount", "activityController@getLikeCount");
