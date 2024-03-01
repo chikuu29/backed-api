@@ -54,7 +54,7 @@ class userController extends Controller
                 ->orWhere('auth_phone_no', $phone)
                 ->count();
 
-            if (!$getAuthUserCount == 0) {
+            if ($getAuthUserCount == 0) {
                 try {
                     DB::transaction(function () use ($userId, $age, $profiletype, $gender, $email, $fname, $lname, $dob, $password, $phone, $url, $usermothertoungh, $usermaritalstatus, $userreligion, $usercaste, $usersubcaste) {
                         DB::table('auth_user')->insert([
@@ -90,42 +90,29 @@ class userController extends Controller
                         ]);
                     });
 
-                    try {
-                        
-                        $fadata['user_email'] = $email;
-                        $fadata['name'] = $fname;
-                        $fadata['url'] = $url;
-                       Mail::send('mail.registration_alert', $fadata, function ($message) use ($fadata) {
-                            $message->from('info@choicemarriage.com', 'choicemarriage');
-                            $message->to($fadata['user_email'], $fadata['name'])->subject($fadata['Subject']);
-                        });
-                        
-                    } catch (\Exception $e) {
-                        // Log the exception
-                        \Log::error('Error sending email: ' . $e->getMessage());
-                    }
-
-
                     // try {
+                        
                     //     $fadata['user_email'] = $email;
                     //     $fadata['name'] = $fname;
                     //     $fadata['url'] = $url;
-                    //     $fadata['Subject'] = 'Registration Successful';
-                    //     Mail::send('mail.registration_alert', $fadata, function ($message) use ($fadata) {
+                    //    Mail::send('mail.registration_alert', $fadata, function ($message) use ($fadata) {
                     //         $message->from('info@choicemarriage.com', 'choicemarriage');
                     //         $message->to($fadata['user_email'], $fadata['name'])->subject($fadata['Subject']);
                     //     });
-                    // } catch (Exception $e) {
-
-                    //     DB::rollBack();
-                    //     $user_arr = [
-                    //         "status" => false,
-                    //         "success" => false,
-                    //         "profileID" => $userId,
-                    //         "message" => "not",
-                    //     ];
+                        
+                    // } catch (\Exception $e) {
+                    //     // Log the exception
+                    //     \Log::error('Error sending email: ' . $e->getMessage());
                     // }
 
+                        $fadata['user_email'] = $email;
+                        $fadata['name'] = $fname;
+                        $fadata['url'] = $url;
+                        $fadata['Subject'] = 'Registration Successful';
+                        Mail::send('mail.registration_alert', $fadata, function ($message) use ($fadata) {
+                            $message->from('info@choicemarriage.com', 'choicemarriage');
+                            $message->to($fadata['user_email'], $fadata['name'])->subject($fadata['Subject']);
+                        });
                     $user_arr = [
                         "status" => true,
                         "success" => true,

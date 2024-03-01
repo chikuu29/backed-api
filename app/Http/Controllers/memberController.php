@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Exception;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
+use Carbon\Carbon;
+
 
 class memberController extends Controller
 {
@@ -156,9 +158,8 @@ class memberController extends Controller
     public function updateEditedPlanDetails(Request $res)
     {
         $input = $res->all();
-       // dd($input);
-        date_default_timezone_set('Asia/Kolkata');
-        $curenttim = date("Y-m-d h:i:s");
+        //dd($input);
+
         if ($input == null) {
             $user_arr = array(
                 "status" => false,
@@ -166,297 +167,257 @@ class memberController extends Controller
                 "message" => "Where is your data!",
             );
         } else {
-            $id = $input['id'] == null ? '' : $input['id'];
-            $curentplan = $input['curentplan'] == null ? '' : $input['curentplan'];
-            $palnType = $input['palnType'] == null ? '' : $input['palnType'];
-            $paymentType = $input['paymentType'] == null ? '' : $input['paymentType'];
-            $planId = $input['planId'] == null ? '' : $input['planId'];
-            $membership_plan_table = DB::table('membership_plan')->where('membership_plan_default', 1)->first();
-            $userdeatils = DB::table('user_info')->where('user_id', $id)->get();
-            $ispresentplan = DB::table('plan_details')->where('User_id', $id)->exists();
-           
-            if ($membership_plan_table->membership_plan_type == $curentplan) {
-                //if user is free user then direct all active plan updated in edited_plan_details
-                $activecurentplan = DB::table('user_plan_deatils')->where('user_id', $id)->update([
-                    'active_status' => 0
-                ]);
-                if ($activecurentplan) {
-                    $plan = DB::table('membership_plan')->where('membership_plan_id', $planId)->get();
-                    $ispresent = DB::table('edited_plan_details')->where('User_id', $id)->exists();
-                    if ($ispresentplan) {
-                        $plan_details = DB::table('plan_details')->where('User_id', $id)->update([
-                            'photoviwe' => $plan[0]->membership_plan_no_of_photo,
-                            'sendmessage' => $plan[0]->membership_plan_of_send_message,
-                            'horscope' => $plan[0]->membership_plan_no_of_horscope,
-                            'contact_view' => $plan[0]->membership_plan_no_of_contact,
-                            'contact_view_other' => $plan[0]->membership_plan_show_contact_number_other,
-                            'chating' => $plan[0]->membership_plan_chating,
-                            'profile_viwe' => $plan[0]->membership_plan_visibility
-                        ]);
-                    } else {
-                        $plan_details = DB::table('plan_details')->insert([
-                            'user_id' => $id,
-                            'photoviwe' => $plan[0]->membership_plan_no_of_photo,
-                            'sendmessage' => $plan[0]->membership_plan_of_send_message,
-                            'horscope' => $plan[0]->membership_plan_no_of_horscope,
-                            'contact_view' => $plan[0]->membership_plan_no_of_contact,
-                            'contact_view_other' => $plan[0]->membership_plan_show_contact_number_other,
-                            'chating' => $plan[0]->membership_plan_chating,
-                            'profile_viwe' => $plan[0]->membership_plan_visibility
-                        ]);
-                    }
-                    if ($ispresent) {
+            DB::beginTransaction();
+
+            try {
+                $id = $input['id'] == null ? '' : $input['id'];
+                $userinfo = DB::table('user_info')->where('user_id', $id)->first();
+                if ($userinfo->user_status == 'Approved') {
+                    $curentplan = $input['curentplan'] == null ? '' : $input['curentplan'];
+                    $palnType = $input['palnType'] == null ? '' : $input['palnType'];
+                    $paymentType = $input['paymentType'] == null ? '' : $input['paymentType'];
+                    $planId = $input['planId'] == null ? '' : $input['planId'];
+
+                    $plan = DB::table('membership_plan')->where('membership_plan_id', $planId)->first();
+                    $Membershipdefaultdlan = DB::table('membership_plan')->where('membership_plan_default', 1)->first();
+                    $plandetails = DB::table('plan_details')->where('user_id', $id)->first();
+                    $edited_plan_details = DB::table('edited_plan_details')->where('User_id', $id)->first();
+                    $arrayFromObject = get_object_vars($plandetails);
+                    $userplandeatils = DB::table('user_plan_deatils')->where('user_id', $id)->where('active_status', 1)->first();
+                    if ($curentplan == 'Free') {
+                        $arrayFromObject['plan_deatils'] = "Previous plan: " . $curentplan . ". Current plan: " . $palnType . ". curent plan Taken at: " . date("Y-m-d");
+                        unset($arrayFromObject['id']);
+                        DB::table('left_plan')->insert($arrayFromObject);
                         $edited_plan_details = DB::table('edited_plan_details')->where('User_id', $id)->update([
-                            'photoviwe' => $plan[0]->membership_plan_no_of_photo,
-                            'sendmessage' => $plan[0]->membership_plan_of_send_message,
-                            'horscope' => $plan[0]->membership_plan_no_of_horscope,
-                            'contact_view' => $plan[0]->membership_plan_no_of_contact,
-                            'contact_view_other' => $plan[0]->membership_plan_show_contact_number_other,
-                            'chating' => $plan[0]->membership_plan_chating,
-                            'profile_viwe' => $plan[0]->membership_plan_visibility
+                            'photoviwe' => $plan->membership_plan_no_of_photo,
+                            'sendmessage' => $plan->membership_plan_of_send_message,
+                            'horscope' => $plan->membership_plan_no_of_horscope,
+                            'contact_view' => $plan->membership_plan_no_of_contact,
+                            'contact_view_other' => $plan->membership_plan_show_contact_number_other,
+                            'chating' => $plan->membership_plan_chating,
+                            'profile_viwe' => $plan->membership_plan_visibility
                         ]);
-                    } else {
-                        $edited_plan_details = DB::table('edited_plan_details')->insert([
+                        DB::table('plan_details')->where('User_id', $id)->update([
+                            'photoviwe' => $plan->membership_plan_no_of_photo,
+                            'sendmessage' => $plan->membership_plan_of_send_message,
+                            'horscope' => $plan->membership_plan_no_of_horscope,
+                            'contact_view' => $plan->membership_plan_no_of_contact,
+                            'contact_view_other' => $plan->membership_plan_show_contact_number_other,
+                            'chating' => $plan->membership_plan_chating,
+                            'profile_viwe' => $plan->membership_plan_visibility
+                        ]);
+                        DB::table('user_plan_deatils')->where('user_id', $id)->update([
+                            'active_status' => 0
+                        ]);
+                        $Date = date('Y-m-d h:i:s');
+                        $valid = date('Y-m-d h:i:s', strtotime($Date . ' +' . $plan->membership_plan_validity_date . 'days'));
+                        $insertdata = DB::table('user_info')->where('user_id', $id)->update([
+                            'user_membership_plan_type' => $plan->membership_plan_type,
+                        ]);
+                        DB::table('user_plan_deatils')->insert([
                             'user_id' => $id,
-                            'photoviwe' => $plan[0]->membership_plan_no_of_photo,
-                            'sendmessage' => $plan[0]->membership_plan_of_send_message,
-                            'horscope' => $plan[0]->membership_plan_no_of_horscope,
-                            'contact_view' => $plan[0]->membership_plan_no_of_contact,
-                            'contact_view_other' => $plan[0]->membership_plan_show_contact_number_other,
-                            'chating' => $plan[0]->membership_plan_chating,
-                            'profile_viwe' => $plan[0]->membership_plan_visibility
+                            'user_email' => $userinfo->user_email,
+                            'user_plan_type' => $plan->membership_plan_type,
+                            'user_plan_id' => $plan->membership_plan_id,
+                            'plan_ending_date' => $valid,
+                            'planactiveted_mode' => $paymentType
                         ]);
-                    }
-
-                    $Date = date('Y-m-d h:i:s');
-                    $valid = date('Y-m-d h:i:s', strtotime($Date . ' +' . $plan[0]->membership_plan_validity_date . 'days'));
-                    $insertdata = DB::table('user_info')->where('user_id', $id)->update([
-                        'user_membership_plan_type' => $plan[0]->membership_plan_type,
-                    ]);
-                    $insertdatain_user_plan_deatils = DB::table('user_plan_deatils')->insert([
-                        'user_id' => $id,
-                        'user_email' => $userdeatils[0]->user_email,
-                        'user_plan_type' => $plan[0]->membership_plan_type,
-                        'user_plan_id' => $plan[0]->membership_plan_id,
-                        'plan_ending_date' => $valid,
-                        'planactiveted_mode' => $paymentType
-                    ]);
-
-                    if ($edited_plan_details && $insertdatain_user_plan_deatils && $ispresentplan) {
-
                         $user_arr = array(
                             "status" => true,
                             "success" => true,
-                            "message" => "Update Successfully!",
+                            "message" => "Plan Upgraded free to",
                         );
+
                     } else {
-                        $user_arr = array(
-                            "status" => false,
-                            "success" => false,
-                            "message" => "Not Update Successfully!",
-                        );
+                        $date = Date($userplandeatils->plan_ending_date);
+                        $currentDate = Date('Y-m-d h:i:s');
+                        if ($date < $currentDate) {
+                            $arrayFromObject['plan_deatils'] = "Previous expired .  Previous plan: " . $curentplan . ". Current plan: " . $palnType . ". curent plan Taken at: " . date("Y-m-d");
+                            unset($arrayFromObject['id']);
+                            DB::table('left_plan')->insert($arrayFromObject);
+                            DB::table('edited_plan_details')->where('User_id', $id)->update([
+                                'photoviwe' => $plan->membership_plan_no_of_photo,
+                                'sendmessage' => $plan->membership_plan_of_send_message,
+                                'horscope' => $plan->membership_plan_no_of_horscope,
+                                'contact_view' => $plan->membership_plan_no_of_contact,
+                                'contact_view_other' => $plan->membership_plan_show_contact_number_other,
+                                'chating' => $plan->membership_plan_chating,
+                                'profile_viwe' => $plan->membership_plan_visibility
+                            ]);
+                            DB::table('plan_details')->where('User_id', $id)->update([
+                                'photoviwe' => $plan->membership_plan_no_of_photo,
+                                'sendmessage' => $plan->membership_plan_of_send_message,
+                                'horscope' => $plan->membership_plan_no_of_horscope,
+                                'contact_view' => $plan->membership_plan_no_of_contact,
+                                'contact_view_other' => $plan->membership_plan_show_contact_number_other,
+                                'chating' => $plan->membership_plan_chating,
+                                'profile_viwe' => $plan->membership_plan_visibility
+                            ]);
+                            DB::table('user_plan_deatils')->where('user_id', $id)->update([
+                                'active_status' => 0
+                            ]);
+                            $Date = date('Y-m-d h:i:s');
+                            $valid = date('Y-m-d h:i:s', strtotime($Date . ' +' . $plan->membership_plan_validity_date . 'days'));
+                            $insertdata = DB::table('user_info')->where('user_id', $id)->update([
+                                'user_membership_plan_type' => $plan->membership_plan_type,
+                            ]);
+                            DB::table('user_plan_deatils')->insert([
+                                'user_id' => $id,
+                                'user_email' => $userinfo->user_email,
+                                'user_plan_type' => $plan->membership_plan_type,
+                                'user_plan_id' => $plan->membership_plan_id,
+                                'plan_ending_date' => $userplandeatils->plan_ending_date,
+                                'planactiveted_mode' => $paymentType
+                            ]);
+                            $user_arr = array(
+                                "status" => true,
+                                "success" => true,
+                                "message" => "Plan Upgraded ",
+                            );
+                        } else {
+                            // Convert strings to DateTime objects
+
+                            $userPlanEndingDate = $userplandeatils->plan_ending_date;
+                            $currentDateTime = Carbon::now();
+                            $planEndDate = Carbon::createFromFormat('Y-m-d H:i:s', $userPlanEndingDate);
+                            $daysLeft = $currentDateTime->diffInDays($planEndDate, false); // false to get absolute value
+                            if ($daysLeft > $plan->membership_plan_validity_date) {
+                                $arrayFromObject['plan_deatils'] = "Previous not expired. Previous validity add.   Previous plan: " . $curentplan . ". Current plan: " . $palnType . ". curent plan Taken at: " . date("Y-m-d");
+                                unset($arrayFromObject['id']);
+                                DB::table('left_plan')->insert($arrayFromObject);
+                                $final_photoviwe = $edited_plan_details->photoviwe + $plan->membership_plan_no_of_photo;
+                                $final_sendmessage = $edited_plan_details->sendmessage + $plan->membership_plan_of_send_message;
+                                $final_horscope = $edited_plan_details->horscope + $plan->membership_plan_no_of_horscope;
+                                $final_contact_view = $edited_plan_details->contact_view + $plan->membership_plan_no_of_contact;
+                                $final_contact_view_other = $edited_plan_details->contact_view_other + $plan->membership_plan_show_contact_number_other;
+                                $final_chating = $edited_plan_details->chating + $plan->membership_plan_chating;
+                                $finalprofile_viwe = $edited_plan_details->profile_viwe + $plan->membership_plan_visibility;
+                                $plan_end_date = $userplandeatils->plan_ending_date;
+
+
+                                $edited_plan_details = DB::table('plan_details')->where('User_id', $id)->update([
+                                    'photoviwe' => $final_photoviwe,
+                                    'sendmessage' => $final_sendmessage,
+                                    'horscope' => $final_horscope,
+                                    'contact_view' => $final_contact_view,
+                                    'contact_view_other' => $final_contact_view_other,
+                                    'chating' => $final_chating,
+                                    'profile_viwe' => $finalprofile_viwe
+                                ]);
+
+                                $edited_plan_details = DB::table('edited_plan_details')->where('User_id', $id)->update([
+                                    'photoviwe' => $final_photoviwe,
+                                    'sendmessage' => $final_sendmessage,
+                                    'horscope' => $final_horscope,
+                                    'contact_view' => $final_contact_view,
+                                    'contact_view_other' => $final_contact_view_other,
+                                    'chating' => $final_chating,
+                                    'profile_viwe' => $finalprofile_viwe
+                                ]);
+
+                                DB::table('user_plan_deatils')->where('user_id', $id)->update([
+                                    'active_status' => 0
+                                ]);
+
+                                $insertdata = DB::table('user_info')->where('user_id', $id)->update([
+                                    'user_membership_plan_type' => $plan->membership_plan_type,
+                                ]);
+
+                                DB::table('user_plan_deatils')->insert([
+                                    'user_id' => $id,
+                                    'user_email' => $userplandeatils->user_email,
+                                    'user_plan_type' => $plan->membership_plan_type,
+                                    'user_plan_id' => $plan->membership_plan_id,
+                                    'plan_ending_date' => $plan_end_date,
+                                    'planactiveted_mode' => $paymentType
+                                ]);
+                                //dd('lll');
+                                $user_arr = array(
+                                    "status" => true,
+                                    "success" => true,
+                                    "message" => "Plan Upgraded ",
+                                );
+                            } else {
+                                $arrayFromObject['plan_deatils'] = "Previous  expired. curent validity add.   Previous plan: " . $curentplan . ". Current plan: " . $palnType . ". curent plan Taken at: " . date("Y-m-d");
+                                unset($arrayFromObject['id']);
+                                DB::table('left_plan')->insert($arrayFromObject);
+                                $final_photoviwe = $edited_plan_details->photoviwe + $plan->membership_plan_no_of_photo;
+                                $final_sendmessage = $edited_plan_details->sendmessage + $plan->membership_plan_of_send_message;
+                                $final_horscope = $edited_plan_details->horscope + $plan->membership_plan_no_of_horscope;
+                                $final_contact_view = $edited_plan_details->contact_view + $plan->membership_plan_no_of_contact;
+                                $final_contact_view_other = $edited_plan_details->contact_view_other + $plan->membership_plan_show_contact_number_other;
+                                $final_chating = $edited_plan_details->chating + $plan->membership_plan_chating;
+                                $finalprofile_viwe = $edited_plan_details->profile_viwe + $plan->membership_plan_visibility;
+                                $plan_end_date = $userplandeatils->plan_ending_date;
+
+
+                                $edited_plan_details = DB::table('plan_details')->where('User_id', $id)->update([
+                                    'photoviwe' => $final_photoviwe,
+                                    'sendmessage' => $final_sendmessage,
+                                    'horscope' => $final_horscope,
+                                    'contact_view' => $final_contact_view,
+                                    'contact_view_other' => $final_contact_view_other,
+                                    'chating' => $final_chating,
+                                    'profile_viwe' => $finalprofile_viwe
+                                ]);
+
+                                $edited_plan_details = DB::table('edited_plan_details')->where('User_id', $id)->update([
+                                    'photoviwe' => $final_photoviwe,
+                                    'sendmessage' => $final_sendmessage,
+                                    'horscope' => $final_horscope,
+                                    'contact_view' => $final_contact_view,
+                                    'contact_view_other' => $final_contact_view_other,
+                                    'chating' => $final_chating,
+                                    'profile_viwe' => $finalprofile_viwe
+                                ]);
+
+                                DB::table('user_plan_deatils')->where('user_id', $id)->update([
+                                    'active_status' => 0
+                                ]);
+
+                                $insertdata = DB::table('user_info')->where('user_id', $id)->update([
+                                    'user_membership_plan_type' => $plan->membership_plan_type,
+                                ]);
+                                $Date = date('Y-m-d h:i:s');
+                                $valid = date('Y-m-d h:i:s', strtotime($Date . ' +' . $plan->membership_plan_validity_date . 'days'));
+                                DB::table('user_plan_deatils')->insert([
+                                    'user_id' => $id,
+                                    'user_email' => $userplandeatils->user_email,
+                                    'user_plan_type' => $plan->membership_plan_type,
+                                    'user_plan_id' => $plan->membership_plan_id,
+                                    'plan_ending_date' => $valid,
+                                    'planactiveted_mode' => $paymentType
+                                ]);
+                                //dd('lll');
+                                $user_arr = array(
+                                    "status" => true,
+                                    "success" => true,
+                                    "message" => "Plan Upgraded ",
+                                );
+                            }
+
+                        }
                     }
-                }
-            } else {
-                
-                $membership_plan_table = DB::table('membership_plan')->where('membership_plan_id', $planId)->where('membership_plan_default', 0)->get();
-                $avtiveplan = DB::table('user_plan_deatils')->where('user_id', $id)->where('active_status', 1)->first();
-                $edited_plan_details = DB::table('edited_plan_details')->where('User_id', $id)->get();
-
-                $plan_end_date = $avtiveplan->plan_ending_date;
-
-                $curentdateinstring = strtotime($curenttim);
-                $expirydate = strtotime($plan_end_date);
-                $plan_expire_in_days = $expirydate - $curentdateinstring;
-                // return round($plan_expire_in_days / 86400);
-                if (round($plan_expire_in_days / 86400) < 0) {
-                    //dd('1');
-                    $plan = DB::table('membership_plan')->where('membership_plan_id', $planId)->get();
-                    $ispresent = DB::table('edited_plan_details')->where('User_id', $id)->exists();
-                    $ispresentplan = DB::table('plan_details')->where('User_id', $id)->exists();
-                    $activecurentplan = DB::table('user_plan_deatils')->where('user_id', $id)->update([
-                        'active_status' => 0
-                    ]);
-                    if ($ispresentplan) {
-                        $plan_details = DB::table('plan_details')->where('User_id', $id)->update([
-                            'photoviwe' => $plan[0]->membership_plan_no_of_photo,
-                            'sendmessage' => $plan[0]->membership_plan_of_send_message,
-                            'horscope' => $plan[0]->membership_plan_no_of_horscope,
-                            'contact_view' => $plan[0]->membership_plan_no_of_contact,
-                            'contact_view_other' => $plan[0]->membership_plan_show_contact_number_other,
-                            'chating' => $plan[0]->membership_plan_chating,
-                            'profile_viwe' => $plan[0]->membership_plan_visibility
-                        ]);
-                    } else {
-                        $plan_details = DB::table('plan_details')->insert([
-                            'user_id' => $id,
-                            'photoviwe' => $plan[0]->membership_plan_no_of_photo,
-                            'sendmessage' => $plan[0]->membership_plan_of_send_message,
-                            'horscope' => $plan[0]->membership_plan_no_of_horscope,
-                            'contact_view' => $plan[0]->membership_plan_no_of_contact,
-                            'contact_view_other' => $plan[0]->membership_plan_show_contact_number_other,
-                            'chating' => $plan[0]->membership_plan_chating,
-                            'profile_viwe' => $plan[0]->membership_plan_visibility
-                        ]);
-                    }
-                    if ($ispresent) {
-                        $edited_plan_details = DB::table('edited_plan_details')->where('User_id', $id)->update([
-                            'photoviwe' => $plan[0]->membership_plan_no_of_photo,
-                            'sendmessage' => $plan[0]->membership_plan_of_send_message,
-                            'horscope' => $plan[0]->membership_plan_no_of_horscope,
-                            'contact_view' => $plan[0]->membership_plan_no_of_contact,
-                            'contact_view_other' => $plan[0]->membership_plan_show_contact_number_other,
-                            'chating' => $plan[0]->membership_plan_chating,
-                            'profile_viwe' => $plan[0]->membership_plan_visibility
-                        ]);
-                    } else {
-                        $edited_plan_details = DB::table('edited_plan_details')->insert([
-                            'user_id' => $id,
-                            'photoviwe' => $plan[0]->membership_plan_no_of_photo,
-                            'sendmessage' => $plan[0]->membership_plan_of_send_message,
-                            'horscope' => $plan[0]->membership_plan_no_of_horscope,
-                            'contact_view' => $plan[0]->membership_plan_no_of_contact,
-                            'contact_view_other' => $plan[0]->membership_plan_show_contact_number_other,
-                            'chating' => $plan[0]->membership_plan_chating,
-                            'profile_viwe' => $plan[0]->membership_plan_visibility
-                        ]);
-                    }
-
-                    $Date = date('Y-m-d h:i:s');
-                    $valid = date('Y-m-d h:i:s', strtotime($Date . ' +' . $plan[0]->membership_plan_validity_date . 'days'));
-                    $insertdata = DB::table('user_info')->where('user_id', $id)->update([
-                        'user_membership_plan_type' => $plan[0]->membership_plan_type,
-                    ]);
-                    $insertdatain_user_plan_deatils = DB::table('user_plan_deatils')->insert([
-                        'user_id' => $id,
-                        'user_email' => $userdeatils[0]->user_email,
-                        'user_plan_type' => $plan[0]->membership_plan_type,
-                        'user_plan_id' => $plan[0]->membership_plan_id,
-                        'plan_ending_date' => $valid,
-                        'planactiveted_mode' => $paymentType
-                    ]);
-
-
-                    if ($edited_plan_details && $insertdatain_user_plan_deatils && $ispresentplan) {
-
-                        $user_arr = array(
-                            "status" => true,
-                            "success" => true,
-                            "message" => "Update Successfully!",
-                        );
-                    } else {
-                        $user_arr = array(
-                            "status" => false,
-                            "success" => false,
-                            "message" => "Not Update Successfully!",
-                        );
-                    }
-
+                    DB::commit();
                 } else {
-                   // return 'e';
-                    $plan = DB::table('membership_plan')->where('membership_plan_id', $planId)->get();
-                    $ispresent = DB::table('edited_plan_details')->where('User_id', $id)->exists();
-                    $edited_plan_details = DB::table('edited_plan_details')->where('User_id', $id)->get();
-                    
-                    //return  $edited_plan_details;
-                    $ispresentplan = DB::table('plan_details')->where('User_id', $id)->exists();
-
-                    $final_photoviwe = $edited_plan_details[0]->photoviwe + $plan[0]->membership_plan_no_of_photo;
-                    $final_sendmessage = $edited_plan_details[0]->sendmessage + $plan[0]->membership_plan_of_send_message;
-                    $final_horscope = $edited_plan_details[0]->horscope + $plan[0]->membership_plan_no_of_horscope;
-                    $final_contact_view = $edited_plan_details[0]->contact_view + $plan[0]->membership_plan_no_of_contact;
-                    $final_contact_view_other = $edited_plan_details[0]->contact_view_other + $plan[0]->membership_plan_show_contact_number_other;
-                    $final_chating = $edited_plan_details[0]->chating + $plan[0]->membership_plan_chating;
-                    $finalprofile_viwe = $edited_plan_details[0]->profile_viwe + $plan[0]->membership_plan_visibility;
-                    $plan_end_date = $avtiveplan->plan_ending_date;
-                    if ($ispresentplan) {
-                        $edited_plan_details = DB::table('plan_details')->where('User_id', $id)->update([
-                            'photoviwe' => $final_photoviwe,
-                            'sendmessage' => $final_sendmessage,
-                            'horscope' => $final_horscope,
-                            'contact_view' => $final_contact_view,
-                            'contact_view_other' => $final_contact_view_other,
-                            'chating' => $final_chating,
-                            'profile_viwe' => $finalprofile_viwe
-                        ]);
-                    } else {
-                        $edited_plan_details = DB::table('plan_details')->insert([
-                            'user_id' => $id,
-                            'photoviwe' => $final_photoviwe,
-                            'sendmessage' => $final_sendmessage,
-                            'horscope' => $final_horscope,
-                            'contact_view' => $final_contact_view,
-                            'contact_view_other' => $final_contact_view_other,
-                            'chating' => $final_chating,
-                            'profile_viwe' => $finalprofile_viwe
-                        ]);
-                    }
-                    if ($ispresent) {
-                        $edited_plan_details = DB::table('edited_plan_details')->where('User_id', $id)->update([
-                            'photoviwe' => $final_photoviwe,
-                            'sendmessage' => $final_sendmessage,
-                            'horscope' => $final_horscope,
-                            'contact_view' => $final_contact_view,
-                            'contact_view_other' => $final_contact_view_other,
-                            'chating' => $final_chating,
-                            'profile_viwe' => $finalprofile_viwe
-                        ]);
-                    } else {
-                        $edited_plan_details = DB::table('edited_plan_details')->insert([
-                            'user_id' => $id,
-                            'photoviwe' => $final_photoviwe,
-                            'sendmessage' => $final_sendmessage,
-                            'horscope' => $final_horscope,
-                            'contact_view' => $final_contact_view,
-                            'contact_view_other' => $final_contact_view_other,
-                            'chating' => $final_chating,
-                            'profile_viwe' => $finalprofile_viwe
-                        ]);
-                    }
-                    $Date = date('Y-m-d h:i:s');
-                    $valid = date('Y-m-d h:i:s', strtotime($Date . ' +' . $plan[0]->membership_plan_validity_date . 'days'));
-                    $avtiveplan = DB::table('user_plan_deatils')->where('user_id', $id)->where('active_status', 1)->first();
-
-                    $plan_end_date = $avtiveplan->plan_ending_date;
-                   
-                    $curentdateinstring = strtotime($curenttim);
-                    $expirydate = strtotime($plan_end_date);
-                    $plan_expire_in_days = $expirydate - $curentdateinstring;
-                     $restday= round($plan_expire_in_days / 86400);
-                    $finalexfitydate = date('Y-m-d h:i:s', strtotime($valid . ' +' . $restday . 'days'));
-                    $activecurentplan = DB::table('user_plan_deatils')->where('user_id', $id)->update([
-                        'active_status' => 0
-                    ]);
-                    $insertdata = DB::table('user_info')->where('user_id', $id)->update([
-                        'user_membership_plan_type' => $plan[0]->membership_plan_type,
-                    ]);
-                    $insertdatain_user_plan_deatils = DB::table('user_plan_deatils')->insert([
-                        'user_id' => $id,
-                        'user_email' => $userdeatils[0]->user_email,
-                        'user_plan_type' => $plan[0]->membership_plan_type,
-                        'user_plan_id' => $plan[0]->membership_plan_id,
-                        'plan_ending_date' => $finalexfitydate,
-                        'planactiveted_mode' => $paymentType
-                    ]);
-                    if ($edited_plan_details && $insertdatain_user_plan_deatils && $ispresentplan) {
-
-                        $user_arr = array(
-                            "status" => true,
-                            "success" => true,
-                            "message" => "Update Successfully!",
-                        );
-                    } else {
-                        $user_arr = array(
-                            "status" => false,
-                            "success" => false,
-                            "message" => "Not Update Successfully!",
-                        );
-                    }
-
+                    $user_arr = array(
+                        "status" => false,
+                        "success" => false,
+                        "message" => "Not Approved contact admin with User id " . $id,
+                    );
                 }
-
+            } catch (Exception $e) {
+                DB::rollback();
+                $user_arr = array(
+                    "status" => false,
+                    "success" => false,
+                    "message" => "Contact To admin!",
+                    "e" => $e
+                );
             }
+
         }
+
         return json_encode($user_arr);
     }
 

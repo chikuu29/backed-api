@@ -71,7 +71,7 @@ $router->group(['middleware' => ['App\Http\Middleware\JwtMiddleware']], function
     $router->post("/secondPass", "forgetPasswordController@secondPass");
     $router->post("/firstPass", "forgetPasswordController@firstPass");
     $router->post("/passwordresetbyadmin", "forgetPasswordController@passwordresetbyadmin");
-    $router->post("/updateEditedPlanDetails", "memberController@updateEditedPlanDetails");
+   
     $router->post("/getUserBlockList", "activityController@getUserBlockList");
     $router->post("/waterMark", "uplodeController@waterMark");
     $router->post("/barCode", "uplodeController@barCode");
@@ -93,4 +93,5 @@ $router->post("/addUserDataSecondApi", "userController@addUserDataSecondApi");
 $router->post("/getAllData", "memberController@getAllData");
 $router->post("/aboutus", "addItemControler@aboutus");
 $router->post("/unsecuredFatchquary", "dynamic_Crud_controller@unsecuredFatchquary");
+$router->post("/updateEditedPlanDetails", "memberController@updateEditedPlanDetails");
 
