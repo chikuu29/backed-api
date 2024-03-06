@@ -8,6 +8,8 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 
 
+use App\Mail\RegistrationAlert;
+
 use DateTime;
 
 use function FastRoute\TestFixtures\empty_options_cached;
@@ -56,6 +58,7 @@ class userController extends Controller
 
             if ($getAuthUserCount == 0) {
                 try {
+                    DB::beginTransaction();
                     DB::transaction(function () use ($userId, $age, $profiletype, $gender, $email, $fname, $lname, $dob, $password, $phone, $url, $usermothertoungh, $usermaritalstatus, $userreligion, $usercaste, $usersubcaste) {
                         DB::table('auth_user')->insert([
                             'auth_ID' => $userId,
@@ -91,7 +94,7 @@ class userController extends Controller
                     });
 
                     // try {
-                        
+
                     //     $fadata['user_email'] = $email;
                     //     $fadata['name'] = $fname;
                     //     $fadata['url'] = $url;
@@ -99,20 +102,23 @@ class userController extends Controller
                     //         $message->from('info@choicemarriage.com', 'choicemarriage');
                     //         $message->to($fadata['user_email'], $fadata['name'])->subject($fadata['Subject']);
                     //     });
-                        
+
                     // } catch (\Exception $e) {
                     //     // Log the exception
                     //     \Log::error('Error sending email: ' . $e->getMessage());
                     // }
 
-                        $fadata['user_email'] = $email;
-                        $fadata['name'] = $fname;
-                        $fadata['url'] = $url;
-                        $fadata['Subject'] = 'Registration Successful';
-                        Mail::send('mail.registration_alert', $fadata, function ($message) use ($fadata) {
-                            $message->from('info@choicemarriage.com', 'choicemarriage');
-                            $message->to($fadata['user_email'], $fadata['name'])->subject($fadata['Subject']);
-                        });
+                    // $fadata['user_email'] = $email;
+                    // $fadata['name'] = $fname;
+                    // $fadata['url'] = $url;
+                    // $fadata['Subject'] = 'Registration Successful';
+                    // Mail::send('mail.registration_alert', $fadata, function ($message) use ($fadata) {
+                    //     $message->from('info@choicemarriage.com', 'choicemarriage');
+                    //     $message->to($fadata['user_email'], $fadata['name'])->subject($fadata['Subject']);
+                    // });
+                  
+                        
+
                     $user_arr = [
                         "status" => true,
                         "success" => true,

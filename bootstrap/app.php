@@ -84,6 +84,9 @@ $app->routeMiddleware([
 ]);
 
 // $app->register(\Illuminate\Mail\MailServi/ceProvider::class);
+$app->register(\Illuminate\Mail\MailServiceProvider::class);
+
+
 
 
 /*
