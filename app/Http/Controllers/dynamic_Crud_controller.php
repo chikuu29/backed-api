@@ -136,7 +136,7 @@ class dynamic_Crud_controller extends Controller
                     $response = [
                         "status" => true,
                         "success" => true,
-                        "message" => "Insert Successful",
+                        "message" => "Save Successful",
                     ];
                 }
             } else {
@@ -144,7 +144,7 @@ class dynamic_Crud_controller extends Controller
                 $response = [
                     "status" => true,
                     "success" => true,
-                    "message" => "Insert Successful",
+                    "message" => "Save Successful",
                 ];
             }
         } catch (\Exception $e) {
