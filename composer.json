@@ -15,7 +15,7 @@
         "illuminate/macroable": "^10.0",
         "illuminate/mail": "^10.0",
         "laravel/lumen-framework": "^10.0",
-        "symfony/http-client": "^7.0",
+        "symfony/http-client": "^6.0",
         "symfony/mailer": "^6.4"
     },
     "require-dev": {
