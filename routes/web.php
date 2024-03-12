@@ -36,7 +36,7 @@ $router->group(['middleware' => ['App\Http\Middleware\JwtMiddleware']], function
     $router->post("/state", "addItemControler@state");
     $router->post("/makeActinForMultipulData", "dynamic_Crud_controller@makeActinForMultipulData");
     $router->post("/insertData", "dynamic_Crud_controller@insertData");
-   
+
     $router->post("/getprofile", "userController@fatchAllaDataByUserId");
     $router->post("/zodiacs", "addItemControler@zodiacs");
     $router->post("/nakshatra", "addItemControler@nakshatra");
@@ -48,7 +48,7 @@ $router->group(['middleware' => ['App\Http\Middleware\JwtMiddleware']], function
     $router->post("/privacypolicy", "addItemControler@privacypolicy");
     $router->post("/contactus", "addItemControler@contactus");
     $router->post("/termandcondition", "addItemControler@termandcondition");
-    
+
     $router->post("/userActivation", "userController@userActivation");
     $router->post("/profileValidation", "userController@profileValidation");
 
@@ -61,6 +61,7 @@ $router->group(['middleware' => ['App\Http\Middleware\JwtMiddleware']], function
     $router->post("/sendMessageCalculation", "planCalculationController@sendMessageCalculation");
     $router->post("/horscopeCalculation", "planCalculationController@horscopeCalculation");
     $router->post("/contactViewOtherCalculation", "planCalculationController@contactViewOtherCalculation");
+    $router->post("/contactViewCalculation", "planCalculationController@contactViewCalculation");
     $router->post("/logoUplode", "uplodeController@logoUplode");
     $router->post("/homeLogoUplode", "uplodeController@homeLogoUplode");
     $router->post("/bannerUplode", "uplodeController@bannerUplode");
@@ -85,7 +86,7 @@ $router->group(['middleware' => ['App\Http\Middleware\JwtMiddleware']], function
     $router->post("/getAllDataById", "userController@getAllDataById");
     $router->post("/successStory", "successStoryConlroller@successStory");
     $router->post("/getAllCount", "AppController@getAllCount");
-   
+
 });
 
 $router->get("/setting", "AppController@settings");

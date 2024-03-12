@@ -47,7 +47,6 @@ class memberController extends Controller
                         "message" => "Data Not Inserted !",
                     );
                 }
-
             } catch (Exception $e) {
                 $user_arr = array(
                     "status" => false,
@@ -141,7 +140,6 @@ class memberController extends Controller
                     "currect_active_plan_information" => $plan,
                     "plan_expire_in_days" => (round($plan_expire_in_days / 86400))
                 );
-
             } catch (\Throwable $th) {
                 $user_arr = array(
                     "status" => false,
@@ -150,7 +148,6 @@ class memberController extends Controller
                     "ERROR" => $th
                 );
             }
-
         }
 
         return json_encode($user_arr);
@@ -227,7 +224,6 @@ class memberController extends Controller
                             "success" => true,
                             "message" => "Plan Upgraded free to",
                         );
-
                     } else {
                         $date = Date($userplandeatils->plan_ending_date);
                         $currentDate = Date('Y-m-d h:i:s');
@@ -266,7 +262,7 @@ class memberController extends Controller
                                 'user_email' => $userinfo->user_email,
                                 'user_plan_type' => $plan->membership_plan_type,
                                 'user_plan_id' => $plan->membership_plan_id,
-                                'plan_ending_date' => $userplandeatils->plan_ending_date,
+                                'plan_ending_date' => $valid,
                                 'planactiveted_mode' => $paymentType
                             ]);
                             $user_arr = array(
@@ -395,7 +391,6 @@ class memberController extends Controller
                                     "message" => "Plan Upgraded ",
                                 );
                             }
-
                         }
                     }
                     DB::commit();
@@ -415,11 +410,8 @@ class memberController extends Controller
                     "e" => $e
                 );
             }
-
         }
 
         return json_encode($user_arr);
     }
-
 }
-

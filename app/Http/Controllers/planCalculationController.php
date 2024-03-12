@@ -136,19 +136,61 @@ class planCalculationController extends Controller
             $user_arr = array(
                 "status" => false,
                 "success" => false,
-                "message" => "Used"
+                "message" => "Used Contact Admin"
             );
+        }
+        return json_encode($user_arr);
+    }
+    public function contactViewCalculation(Request $res)
+    {
+        $data = $res->all();
+        $userid = isset($data['userid']) ? $data['userid'] : '';
+        if ($userid == '') {
+            $user_arr = array(
+                "status" => false,
+                "success" => false,
+                "message" => "Contact Admin"
+            );
+        } else {
+            $edited_plan_details = DB::table('edited_plan_details')->where('User_id', $userid)->first();
+            //dd($edited_plan_details->contact_view_other > 0);
+            if ($edited_plan_details->contact_view > 0) {
+                $substractiondata = $edited_plan_details->contact_view - 1;
+                //dd($substractiondata);
+                $data = DB::table('edited_plan_details')->where('User_id', $userid)->update([
+                    "contact_view" => $substractiondata
+                ]);
+                if ($data) {
+                    $user_arr = array(
+                        "status" => true,
+                        "success" => true,
+                        "message" => "Done"
+                    );
+                } else {
+                    $user_arr = array(
+                        "status" => false,
+                        "success" => false,
+                        "message" => "Not Done"
+                    );
+                }
+            } else {
+                $user_arr = array(
+                    "status" => false,
+                    "success" => false,
+                    "message" => "Used Contact Admin"
+                );
+            }
         }
         return json_encode($user_arr);
     }
     public function profileView(Request $res)
     {
-        
+
         $data = $res->all();
         $loginuserid = isset($data['loginuserid']) ? $data['loginuserid'] : '';
         $viewuserid = isset($data['viewuserid']) ? $data['viewuserid'] : '';
-        $viwe = DB::table('user_activities_for_view_profile')->where('profile_view_by_profile_id',$loginuserid)->where('viewed_profile_id',$viewuserid)->exists();
-        if(!$viwe){
+        $viwe = DB::table('user_activities_for_view_profile')->where('profile_view_by_profile_id', $loginuserid)->where('viewed_profile_id', $viewuserid)->exists();
+        if (!$viwe) {
             $edited_plan_details = DB::table('edited_plan_details')->where('User_id', $loginuserid)->first();
             if ($edited_plan_details->profile_viwe > 0) {
                 $substractiondata = $edited_plan_details->profile_viwe - 1;
@@ -176,7 +218,7 @@ class planCalculationController extends Controller
                     "message" => "Used"
                 );
             }
-        }else{
+        } else {
             $user_arr = array(
                 "status" => false,
                 "success" => false,
@@ -213,5 +255,4 @@ class planCalculationController extends Controller
         // }
         return json_encode($user_arr);
     }
-
 }
