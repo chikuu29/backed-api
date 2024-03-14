@@ -97,5 +97,7 @@ $router->post("/addUserDataSecondApi", "userController@addUserDataSecondApi");
 $router->post("/getAllData", "memberController@getAllData");
 $router->post("/aboutus", "addItemControler@aboutus");
 $router->post("/unsecuredFatchquary", "dynamic_Crud_controller@unsecuredFatchquary");
+$router->post("/feedback", "AppController@feedback");
+
 
 

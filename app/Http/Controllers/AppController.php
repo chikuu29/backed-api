@@ -58,64 +58,90 @@ class AppController extends Controller
                 "msg" => 'id Not Given'
             ];
         } else {
-            try{
+            try {
 
                 $iviewedcontact = DB::table('user_activities_for_contact_details')
-                ->where('profile_view_by_profile_id', $userid)
-                ->where('viewed_contact', 1)
-                ->count();
-            $iviewedcontact = ($iviewedcontact < 10) ? "0$iviewedcontact" : $iviewedcontact;
-            
-            $ViewedMyContact = DB::table('user_activities_for_contact_details')
-                ->where('viewed_profile_id', $userid)
-                ->where('viewed_contact', 1)
-                ->count();
-            $ViewedMyContact = ($ViewedMyContact < 10) ? "0$ViewedMyContact" : $ViewedMyContact;
-            
-            $iviewedprofile = DB::table('user_activities_for_view_profile')
-                ->where('profile_view_by_profile_id', $userid)
-                ->count();
-            $iviewedprofile = ($iviewedprofile < 10) ? "0$iviewedprofile" : $iviewedprofile;
-            
-            $viewedmyprofile = DB::table('user_activities_for_view_profile')
-                ->where('viewed_profile_id', $userid)
-                ->count();
-            $viewedmyprofile = ($viewedmyprofile < 10) ? "0$viewedmyprofile" : $viewedmyprofile;
-            
-            $Shortlistedprofile = DB::table('user_activities_for_shortlisted_profile')
-                ->where('shortlist_user_id', $userid)
-                ->count();
-            $Shortlistedprofile = ($Shortlistedprofile < 10) ? "0$Shortlistedprofile" : $Shortlistedprofile;
-            
-            $BlockedProfile = 5; // No need to change this as it's not a count.
-            
-            $LikeProfile = DB::table('user_like')
-                ->where('liked_by_profile_id', $userid)
-                ->count();
-            $LikeProfile = ($LikeProfile < 10) ? "0$LikeProfile" : $LikeProfile;
-            
-            $user_arr = [
-                "status" => true,
-                "success" => true,
-                "iviewedcontact" => $iviewedcontact,
-                "ViewedMyContact"=> $ViewedMyContact,
-                "iviewedprofile" => $iviewedprofile,
-                "viewedmyprofile" => $viewedmyprofile,
-                "Shortlistedprofile" => $Shortlistedprofile,
-                "BlockedProfile" => $BlockedProfile,
-                "LikeProfile" => $LikeProfile,
-            ];
-            
-            }catch(\Exception $e){
+                    ->where('profile_view_by_profile_id', $userid)
+                    ->where('viewed_contact', 1)
+                    ->count();
+                $iviewedcontact = ($iviewedcontact < 10) ? "0$iviewedcontact" : $iviewedcontact;
+
+                $ViewedMyContact = DB::table('user_activities_for_contact_details')
+                    ->where('viewed_profile_id', $userid)
+                    ->where('viewed_contact', 1)
+                    ->count();
+                $ViewedMyContact = ($ViewedMyContact < 10) ? "0$ViewedMyContact" : $ViewedMyContact;
+
+                $iviewedprofile = DB::table('user_activities_for_view_profile')
+                    ->where('profile_view_by_profile_id', $userid)
+                    ->count();
+                $iviewedprofile = ($iviewedprofile < 10) ? "0$iviewedprofile" : $iviewedprofile;
+
+                $viewedmyprofile = DB::table('user_activities_for_view_profile')
+                    ->where('viewed_profile_id', $userid)
+                    ->count();
+                $viewedmyprofile = ($viewedmyprofile < 10) ? "0$viewedmyprofile" : $viewedmyprofile;
+
+                $Shortlistedprofile = DB::table('user_activities_for_shortlisted_profile')
+                    ->where('shortlist_user_id', $userid)
+                    ->count();
+                $Shortlistedprofile = ($Shortlistedprofile < 10) ? "0$Shortlistedprofile" : $Shortlistedprofile;
+
+                $BlockedProfile = 5; // No need to change this as it's not a count.
+
+                $LikeProfile = DB::table('user_like')
+                    ->where('liked_by_profile_id', $userid)
+                    ->count();
+                $LikeProfile = ($LikeProfile < 10) ? "0$LikeProfile" : $LikeProfile;
+
+                $user_arr = [
+                    "status" => true,
+                    "success" => true,
+                    "iviewedcontact" => $iviewedcontact,
+                    "ViewedMyContact" => $ViewedMyContact,
+                    "iviewedprofile" => $iviewedprofile,
+                    "viewedmyprofile" => $viewedmyprofile,
+                    "Shortlistedprofile" => $Shortlistedprofile,
+                    "BlockedProfile" => $BlockedProfile,
+                    "LikeProfile" => $LikeProfile,
+                ];
+            } catch (\Exception $e) {
                 $user_arr = [
                     "status" => false,
                     "success" => false,
                     "msg" => $e
                 ];
             }
-
         }
         return json_encode($user_arr);
+    }
+    public function feedback(Request $request)
+    {
 
+        // Retrieve all input data from the request and sanitize it
+        $sanitizedInput = array_map('htmlspecialchars', $request->all());
+        //return $sanitizedInput;
+        // Insert the sanitized data into the 'enquir_feedback' table
+        $insert =  DB::table('enquir_feedback')->insert([
+            'Name' => $sanitizedInput['Name'],
+            'Email' => $sanitizedInput['Email'],
+            'Contac_No' => $sanitizedInput['Contac_No'],
+            'Subject' => $sanitizedInput['Subject'],
+            'Feedback' => $sanitizedInput['Feedback']
+        ]);
+        if ($insert) {
+            $user_arr = [
+                "status" => true,
+                "success" => true,
+                "msg" => 'data inseted'
+            ];
+        }else{
+            $user_arr = [
+                "status" => false,
+                "success" => false,
+                "msg" => 'error'
+            ];
+        }
+        return json_encode($user_arr);
     }
 }

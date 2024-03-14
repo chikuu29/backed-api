@@ -277,7 +277,7 @@ class memberController extends Controller
                             $currentDateTime = Carbon::now();
                             $planEndDate = Carbon::createFromFormat('Y-m-d H:i:s', $userPlanEndingDate);
                             $daysLeft = $currentDateTime->diffInDays($planEndDate, false); // false to get absolute value
-                            if ($daysLeft > $plan->membership_plan_validity_date) {
+                            if ($daysLeft >= $plan->membership_plan_validity_date) {
                                 $arrayFromObject['plan_deatils'] = "Previous not expired. Previous validity add.   Previous plan: " . $curentplan . ". Current plan: " . $palnType . ". curent plan Taken at: " . date("Y-m-d");
                                 unset($arrayFromObject['id']);
                                 DB::table('left_plan')->insert($arrayFromObject);
