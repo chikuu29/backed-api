@@ -78,17 +78,17 @@ $router->group(['middleware' => ['App\Http\Middleware\JwtMiddleware']], function
     $router->post("/waterMark", "uplodeController@waterMark");
     $router->post("/barCode", "uplodeController@barCode");
     $router->post("/profileView", "planCalculationController@profileView");
-    $router->post("/sendEmail", "mailcontroller@sendEmail");
+
     $router->post("/getAllDataById", "userController@getAllDataById");
     $router->post("/filterData", "filterController@filterData");
-    $router->post("/sendEmail", "mailcontroller@sendEmail");
+    // $router->post("/sendEmail", "mailcontroller@sendEmail");
     $router->post("/sendData", "mailcontroller@sendData");
     $router->post("/getAllDataById", "userController@getAllDataById");
     $router->post("/successStory", "successStoryConlroller@successStory");
     $router->post("/getAllCount", "AppController@getAllCount");
     $router->post("/checkpass", "forgetPasswordController@checkpass");
 });
-
+$router->post("/sendEmail", "mailcontroller@sendEmail");
 $router->get("/setting", "AppController@settings");
 $router->post("/adminLogin", "AuthController@adminLogin");
 $router->post("/auth", "AuthController@userLogin");
@@ -98,6 +98,8 @@ $router->post("/getAllData", "memberController@getAllData");
 $router->post("/aboutus", "addItemControler@aboutus");
 $router->post("/unsecuredFatchquary", "dynamic_Crud_controller@unsecuredFatchquary");
 $router->post("/feedback", "AppController@feedback");
+$router->post("/sendmailtesting", "mailcontroller@sendmailtesting");
+
 
 
 

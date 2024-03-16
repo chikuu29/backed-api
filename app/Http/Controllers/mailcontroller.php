@@ -11,22 +11,30 @@ class mailcontroller extends Controller
 {
     public function sendEmail()
     {
-		
+
          $fadata['name'] = 'gyana';
 
-       Mail::send('name',$fadata,function($message) use ($fadata) {
+       Mail::send('mail.example',$fadata,function($message) use ($fadata) {
         $message->from('info@choicemarriage.com','choicemarriage');
         $message->to('cchiku1999@gmail.com','gyana')->subject($fadata['name']);
        });
+    //    $fadata['user_email'] = "g@gmail.com";
+    //    $fadata['name'] = 'gyana';
+    //    $fadata['url'] = '';
+    //    $fadata['Subject'] = 'Registration Successful';
+    //    Mail::send('mail.registrationalert', $fadata, function ($message) use ($fadata) {
+    //     $message->from('info@choicemarriage.com', 'choicemarriage');
+    //     $message->to($fadata['user_email'], $fadata['name'])->subject($fadata['Subject']);
+    // });
 
-			
+
         return response()->json(['message' => 'Email sent successfully']);
-      
+
     }
 	public function sendData(Request $res)
     {
 		$input =  $data = json_decode(file_get_contents("php://input"), true);
-		
+
 		//return $input['ids'];
 		$ids = (($input['ids'] == '') ? [] : $input['ids'] );
 		$sendid = (($input['sendid'] == null) ? '' : $input['sendid'] );
@@ -42,10 +50,10 @@ class mailcontroller extends Controller
             } else {
                 $ids = '""';
             }
-		
-	     $alluserusers = DB::select("select * from user_info as a left join user_education_occupations as b on a.user_id = b.user_ID left join                                user_locations as c on a.user_id = c.user_ID 
+
+	     $alluserusers = DB::select("select * from user_info as a left join user_education_occupations as b on a.user_id = b.user_ID left join                                user_locations as c on a.user_id = c.user_ID
                                 where a.Id  IN ($ids)");
-		
+
 		//$alluserusers = DB::table('user_info')->whereIn('Id',$ids)->get();
 		 $senddata = DB::table('user_info')->where('user_id',$sendid)->get();
 		 $icoin = DB::table('logo_table')->where('status',1)->get();
@@ -62,11 +70,14 @@ class mailcontroller extends Controller
         $message->from('info@choicemarriage.com','choicemarriage');
         $message->to($fadata['user_email'],$fadata['name'])->subject($fadata['Subject']);
        });
-		
+
 		//return $maildata;
 
-			
+
         return response()->json(['message' => 'Email sent successfully' , 'code' => 200]);
-      
+
+    }
+    public function sendmailtesting(){
+
     }
 }

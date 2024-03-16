@@ -108,16 +108,18 @@ class userController extends Controller
                     //     \Log::error('Error sending email: ' . $e->getMessage());
                     // }
 
-                    // $fadata['user_email'] = $email;
-                    // $fadata['name'] = $fname;
-                    // $fadata['url'] = $url;
-                    // $fadata['Subject'] = 'Registration Successful';
-                    // Mail::send('mail.registration_alert', $fadata, function ($message) use ($fadata) {
-                    //     $message->from('info@choicemarriage.com', 'choicemarriage');
-                    //     $message->to($fadata['user_email'], $fadata['name'])->subject($fadata['Subject']);
-                    // });
-                  
-                        
+                    $fadata['user_email'] = $email;
+                    $fadata['name'] = $fname;
+                    $fadata['url'] = $url;
+                    $fadata['Subject'] = 'Registration Successful';
+                    // DB::rollback();
+                    // return $fadata;
+                    Mail::send('mail.registration', $fadata, function ($message) use ($fadata) {
+                        $message->from('info@choicemarriage.com', 'choicemarriage');
+                        $message->to($fadata['user_email'], $fadata['name'])->subject($fadata['Subject']);
+                    });
+
+
 
                     $user_arr = [
                         "status" => true,
@@ -151,7 +153,7 @@ class userController extends Controller
 
 
     //     $data = json_decode(file_get_contents("php://input"));
-    //    // return $data;   
+    //    // return $data;
 
     //     $profiletype = !isset($data->profiletype) ? 'myself' : $data->profiletype;
 
