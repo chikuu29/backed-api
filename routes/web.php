@@ -86,7 +86,7 @@ $router->group(['middleware' => ['App\Http\Middleware\JwtMiddleware']], function
     $router->post("/getAllDataById", "userController@getAllDataById");
     $router->post("/successStory", "successStoryConlroller@successStory");
     $router->post("/getAllCount", "AppController@getAllCount");
-
+    $router->post("/checkpass", "forgetPasswordController@checkpass");
 });
 
 $router->get("/setting", "AppController@settings");
