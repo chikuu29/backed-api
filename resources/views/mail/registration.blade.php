@@ -45,7 +45,7 @@
 <body>
     <div class="container">
         <h1>Registration Successful</h1>
-        <p>Hello <?php echo $data['name'] ?>,</p>
+        <p>Hello <?php echo $name ?>,</p>
         <p>Congratulations! Your registration was successful. Welcome to our community.</p>
         <p>You can now log in to your account and start exploring our features and services.</p>
         <p>Thank you for joining us!</p>
@@ -53,7 +53,7 @@
         <p>Best Regards,<br>Your patrabibaha Team</p>
 
         <p style="text-align: center;">
-            <a href="<?php echo $data['url'] ?>" class="cta-button">Log In Now</a>
+            <a href="<?php echo $url ?>" class="cta-button">Log In Now</a>
         </p>
     </div>
 </body>
