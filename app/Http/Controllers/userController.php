@@ -123,6 +123,7 @@ class userController extends Controller
                             'user_email' => $email,
                             'name' => $fname,
                             'url' => $url
+                          
                            
                         ],
                         'subject' => 'Registration Successful',
