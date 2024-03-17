@@ -209,7 +209,7 @@ class AuthController extends Controller
                 // echo $jwtToken;
                 // Return the reset link with the JWT token
 
-                $resetLink = $application_url . 'reset_link/' . $jwtToken;
+                $resetLink = $application_url . 'auth/reset_link/' . $jwtToken;
 
                 $emailData = [
                     'view' => 'mail.resetLink', // The view for the email content
