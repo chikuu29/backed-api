@@ -92,6 +92,7 @@ $router->group(['middleware' => ['App\Http\Middleware\JwtMiddleware']], function
 $router->get("/setting", "AppController@settings");
 $router->post("/adminLogin", "AuthController@adminLogin");
 $router->post("/auth", "AuthController@userLogin");
+$router->post("/reset_password", "AuthController@generateResetLink");
 $router->post("/addUserDataFirstApi", "userController@addUserDataFirstApi");
 $router->post("/addUserDataSecondApi", "userController@addUserDataSecondApi");
 $router->post("/getAllData", "memberController@getAllData");

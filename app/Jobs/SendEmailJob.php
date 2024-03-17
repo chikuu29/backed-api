@@ -25,7 +25,7 @@ class SendEmailJob implements ShouldQueue
         try {
             // Attempt to send the email
             Mail::send($this->emailData['view'], $this->emailData['data'], function ($message) {
-                $message->from($this->emailData['from'], $this->emailData['from_name'])
+                $message->from('info@choicemarriage.com',"choicemarriage")
                         ->to($this->emailData['to'], $this->emailData['to_name'])
                         ->subject($this->emailData['subject']);
             });

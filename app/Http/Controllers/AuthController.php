@@ -5,7 +5,10 @@ namespace App\Http\Controllers;
 use Firebase\JWT\JWT;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 use Carbon\Carbon;
+use App\Jobs\SendEmailJob;
+use Illuminate\Support\Facades\Queue;
 
 
 class AuthController extends Controller
@@ -14,8 +17,8 @@ class AuthController extends Controller
     {
         // Validate user credentials (e.g., username and password)
         // ...
-       // $requestedData = $request->all();
-         $data = json_decode(file_get_contents("php://input"));
+        // $requestedData = $request->all();
+        $data = json_decode(file_get_contents("php://input"));
         //dd($data->userId);
 
         try {
@@ -69,7 +72,7 @@ class AuthController extends Controller
             }
         } catch (\Exception $e) {
 
-            return response()->json(['error' => 'Token not provided','error1'=>$e], 401);
+            return response()->json(['error' => 'Token not provided', 'error1' => $e], 401);
         }
 
         return json_encode($user_arr);
@@ -171,6 +174,81 @@ class AuthController extends Controller
         }
 
         // return array("id" => base64_encode(json_encode($user_arr)));
+    }
+
+
+
+    public function generateResetLink(Request $request)
+    {
+        $requestedData = $request->all();
+        $userID = $requestedData['userID'];
+        $application_url=$requestedData['application_url'];
+        if (empty($userID) &&  empty($application_url)) {
+            return response()->json([
+                "status" => false,
+                "success" => false,
+                "message" => "Please Enter Your Credentials",
+            ], 401);
+        }
+
+        try {
+            $userdata = DB::table('auth_user')->orWhere('auth_ID', $userID)->orWhere('auth_email', $userID)->first();
+            if ($userdata) {
+               
+                // Generate a random token
+                $token = Str::random(60);
+                $expiration = Carbon::now()->addHours(12)->timestamp;
+                $key = env('JWT_SECRET');  // Secret key from .env or configuration
+                $payload = [
+                    'email' => $userdata->auth_email,
+                    'token' => $token,
+                    'exp' => $expiration,
+                ];
+                $algorithm = 'HS256';
+                $jwtToken = JWT::encode($payload, $key, $algorithm);
+                // echo $jwtToken;
+                // Return the reset link with the JWT token
+
+                $resetLink = $application_url . 'reset_link/' . $jwtToken;
+
+                $emailData = [
+                    'view' => 'mail.resetLink', // The view for the email content
+                    'data' => [
+                        'user_email' => $userdata->auth_email,
+                        'name' => $userdata->auth_name,
+                        'resetLink' => $resetLink,
+                        'profile_id' => $userdata->auth_ID
+                    ],
+                    'subject' => 'Password Reset Link',
+                    'from' => 'info@choicemarriage.com', // Sender email address
+                    'from_name' => 'choicemarriage', // Sender name
+                    'to' => $userdata->auth_email, // Recipient email address
+                    'to_name' => $userdata->auth_name, // Recipient name
+                ];
+
+
+                Queue::push(new SendEmailJob($emailData), '', 'emails');
+                return response()->json([
+                    "status" => true,
+                    "success" => true,
+                    "message" => "Please Check You Mail - Reset link generated successfully",
+                ]);
+            } else {
+                return response()->json([
+                    "status" => false,
+                    "success" => false,
+                    "message" => "Email not found. Please enter a valid email.",
+                ]);
+            }
+        } catch (\Exception $e) {
+            return response()->json([
+                "status" => false,
+                "success" => false,
+                "error"=>$e,
+                "dta"=>$userdata,
+                "message" => "Unauthorized Access!",
+            ], 401);
+        }
     }
 
     public function decrypt_openssl($payload)
