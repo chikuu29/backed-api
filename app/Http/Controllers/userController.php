@@ -5,14 +5,12 @@ namespace App\Http\Controllers;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Mail;
 
-
-use App\Mail\RegistrationAlert;
+use App\Jobs\SendEmailJob;
+use Illuminate\Support\Facades\Queue;
 
 use DateTime;
 
-use function FastRoute\TestFixtures\empty_options_cached;
 
 class userController extends Controller
 {
@@ -108,14 +106,34 @@ class userController extends Controller
                     //     \Log::error('Error sending email: ' . $e->getMessage());
                     // }
 
-                    $fadata['user_email'] = $email;
-                    $fadata['name'] = $fname;
-                    $fadata['url'] = $url;
-                    $fadata['Subject'] = 'Registration Successful';
-                    Mail::send('mail.registration', $fadata, function ($message) use ($fadata) {
-                        $message->from('info@choicemarriage.com', 'choicemarriage');
-                        $message->to($fadata['user_email'], $fadata['name'])->subject($fadata['Subject']);
-                    });
+                    // $fadata['user_email'] = $email;
+                    // $fadata['name'] = $fname;
+                    // $fadata['url'] = $url;
+                    // $fadata['Subject'] = 'Registration Successful';
+                    // Mail::send('mail.registration', $fadata, function ($message) use ($fadata) {
+                    //     $message->from('info@choicemarriage.com', 'choicemarriage');
+                    //     $message->to($fadata['user_email'], $fadata['name'])->subject($fadata['Subject']);
+                    // });
+
+
+
+                    $emailData = [
+                        'view' => 'mail.registration', // The view for the email content
+                        'data' => [
+                            'user_email' => $email,
+                            'name' => $fname,
+                            'url' => $url,
+                            'Subject' => 'Registration Successful',
+                        ],
+                        'from' => 'info@choicemarriage.com', // Sender email address
+                        'from_name' => 'choicemarriage', // Sender name
+                        'to' => $email, // Recipient email address
+                        'to_name' => $fname, // Recipient name
+                    ];
+                    
+                    // SendEmailJob::dispatch($emailData)->onQueue('emails');
+                    Queue::push(new SendEmailJob($emailData), '', 'emails');
+                    // SendEmailJob::dispatch($emailData)->onQueue('emails');
 
 
 
