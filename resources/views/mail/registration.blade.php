@@ -47,6 +47,7 @@
         <h1>Registration Successful</h1>
         <p>Hello <?php echo $name ?>,</p>
         <p>Congratulations! Your registration was successful. Welcome to our community.</p>
+        <p>Your profile ID : <strong><?php echo $profile_id ?></strong></p>
         <p>You can now log in to your account and start exploring our features and services.</p>
         <p>Thank you for joining us!</p>
 
@@ -55,6 +56,8 @@
         <p style="text-align: center;">
             <a href="<?php echo $url ?>" class="cta-button">Log In Now</a>
         </p>
+        <br>
+     
     </div>
 </body>
 

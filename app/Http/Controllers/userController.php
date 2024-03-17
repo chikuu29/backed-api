@@ -91,29 +91,6 @@ class userController extends Controller
                         ]);
                     });
 
-                    // try {
-
-                    //     $fadata['user_email'] = $email;
-                    //     $fadata['name'] = $fname;
-                    //     $fadata['url'] = $url;
-                    //    Mail::send('mail.registration_alert', $fadata, function ($message) use ($fadata) {
-                    //         $message->from('info@choicemarriage.com', 'choicemarriage');
-                    //         $message->to($fadata['user_email'], $fadata['name'])->subject($fadata['Subject']);
-                    //     });
-
-                    // } catch (\Exception $e) {
-                    //     // Log the exception
-                    //     \Log::error('Error sending email: ' . $e->getMessage());
-                    // }
-
-                    // $fadata['user_email'] = $email;
-                    // $fadata['name'] = $fname;
-                    // $fadata['url'] = $url;
-                    // $fadata['Subject'] = 'Registration Successful';
-                    // Mail::send('mail.registration', $fadata, function ($message) use ($fadata) {
-                    //     $message->from('info@choicemarriage.com', 'choicemarriage');
-                    //     $message->to($fadata['user_email'], $fadata['name'])->subject($fadata['Subject']);
-                    // });
 
 
 
@@ -122,9 +99,8 @@ class userController extends Controller
                         'data' => [
                             'user_email' => $email,
                             'name' => $fname,
-                            'url' => $url
-                          
-                           
+                            'url' => $url,
+                            'profile_id' => $userId
                         ],
                         'subject' => 'Registration Successful',
                         'from' => 'info@choicemarriage.com', // Sender email address
@@ -132,11 +108,9 @@ class userController extends Controller
                         'to' => $email, // Recipient email address
                         'to_name' => $fname, // Recipient name
                     ];
-                    
-                    // SendEmailJob::dispatch($emailData)->onQueue('emails');
-                    Queue::push(new SendEmailJob($emailData), '', 'emails');
-                    // SendEmailJob::dispatch($emailData)->onQueue('emails');
 
+
+                    Queue::push(new SendEmailJob($emailData), '', 'emails');
 
 
                     $user_arr = [
@@ -165,7 +139,6 @@ class userController extends Controller
         }
 
         return json_encode($user_arr);
-
     }
     // {
 
