@@ -45,7 +45,7 @@
 <body>
     <div class="container">
         <h1>Registration Successful</h1>
-        <p>Hello <?php echo $to_name ?>,</p>
+        <p>Hello <?php echo $data['to_name'] ?>,</p>
         <p>Congratulations! Your registration was successful. Welcome to our community.</p>
         <p>You can now log in to your account and start exploring our features and services.</p>
         <p>Thank you for joining us!</p>
