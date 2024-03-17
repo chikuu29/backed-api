@@ -125,7 +125,7 @@ class userController extends Controller
                             'url' => $url
                            
                         ],
-                        'Subject' => 'Registration Successful',
+                        'subject' => 'Registration Successful',
                         'from' => 'info@choicemarriage.com', // Sender email address
                         'from_name' => 'choicemarriage', // Sender name
                         'to' => $email, // Recipient email address
