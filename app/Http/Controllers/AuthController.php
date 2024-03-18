@@ -397,7 +397,7 @@ class AuthController extends Controller
 
                 if ($authData) {
                     // Update the password with the new MD5 hashed password
-                    // print_r($authData);
+                    print_r($authData);
                     if ($request->input('password') == $request->input('confrim_password')) {
 
 
@@ -408,9 +408,9 @@ class AuthController extends Controller
                             ->update(['auth_password' => $password]);
 
 
-                        DB::table('password_resets')
-                            ->where('email', $decodedToken->email)
-                            ->update(['isTokenActive' => false]);
+                        // DB::table('password_resets')
+                        //     ->where('email', $decodedToken->email)
+                        //     ->update(['isTokenActive' => false]);
 
                         return response()->json(['success' => true, 'message' => 'Password updated successfully']);
                     } else {
