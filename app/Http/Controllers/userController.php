@@ -69,6 +69,7 @@ class userController extends Controller
                         DB::table('user_info')->insert([
                             'user_id' => $userId,
                             'user_profileType' => $profiletype,
+                            'user_phone_no' => $phone,
                             'user_gender' => $gender,
                             'user_email' => $email,
                             'user_fname' => $fname,
