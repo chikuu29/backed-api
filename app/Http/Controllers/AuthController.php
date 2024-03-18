@@ -401,7 +401,7 @@ class AuthController extends Controller
                 
                     if ($request->input('password') == $request->input('confrim_password')) {
 
-                        print_r($authData);
+                        // print_r($authData);
                         $password = md5($request->input('password'));
                         DB::table('auth_user')
                             ->where('auth_ID', $authData->auth_ID)
