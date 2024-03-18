@@ -239,6 +239,7 @@ class AuthController extends Controller
                 // $token = str_random(100); // Generate your token here
                 DB::table('password_resets')->insert([
                     'email' => $userdata->auth_email,
+                    'profile_id' => $userdata->auth_ID,
                     'token' => $jwtToken,
                     'created_at' => Carbon::now(),
                     'isTokenActive' => true // Set it to true for the new record
@@ -301,7 +302,16 @@ class AuthController extends Controller
                     // throw new \Firebase\JWT\ExpiredException('The JWT token has expired.');
                     return response()->json(['error' => 'The JWT token has expired.'], 401);
                 } else {
-                    return  response()->json(['success' => true, 'message' => "Token Validated Successfully!", "encryptedAccessData" =>  cryptoJsAesEncrypt($decoded)], 200);
+                    $password_resets = DB::table('password_resets')
+                        ->where('profile_id',  $decoded->profile_id)
+                        ->where('email',  $decoded->email)
+                        ->where('token', $token)
+                        ->where('isTokenActive', true)->first();
+                    if ($password_resets) {
+                        return  response()->json(['success' => true, 'message' => "Token Validated Successfully!", "encryptedAccessData" =>  cryptoJsAesEncrypt($decoded)], 200);
+                    } else {
+                        return response()->json(['error' => 'Unauthorized access'], 401);
+                    }
                 }
             } catch (\Firebase\JWT\ExpiredException $e) {
                 // Handle expired tokens
@@ -371,27 +381,46 @@ class AuthController extends Controller
             $decodedToken = $request->attributes->get('decoded_token');
             // print_r($decodedToken);
             // Fetch the user from the database using profile ID or email
-            $authData = DB::table('auth_user')
-                ->where('auth_ID', $decodedToken->profile_id)
-                ->orWhere('auth_email', $decodedToken->email)
-                ->first(); // Assuming you expect only one user, use 'first()' instead of 'get()'
 
-            if ($authData) {
-                // Update the password with the new MD5 hashed password
-                print_r($authData);
-                if ($request->input('password') == $request->input('confrim_password')) {
-                    $password = md5($request->input('password'));
-                    // DB::table('auth_user')
-                    //     ->where('auth_ID', $decodedToken['profile_id'])
-                    //     ->orWhere('auth_email', $decodedToken['email'])
-                    //     ->update(['auth_password' => $password]);
+            $token = $request->bearerToken(); // Get the JWT from the Authorization header
+            $password_resets = DB::table('password_resets')
+                ->where('profile_id',  $decodedToken->profile_id)
+                ->where('email',  $decodedToken->email)
+                ->where('token', $token)
+                ->where('isTokenActive', true)->first();
+            // ->update(['auth_password' => $token]); // Assuming $password contains the new password
+            if ($password_resets) {
+                $authData = DB::table('auth_user')
+                    ->where('auth_ID', $decodedToken->profile_id)
+                    ->orWhere('auth_email', $decodedToken->email)
+                    ->first(); // Assuming you expect only one user, use 'first()' instead of 'get()'
 
-                    return response()->json(['success' => true, 'message' => 'Password updated successfully']);
+                if ($authData) {
+                    // Update the password with the new MD5 hashed password
+                    print_r($authData);
+                    if ($request->input('password') == $request->input('confrim_password')) {
+
+
+                        $password = md5($request->input('password'));
+                        DB::table('auth_user')
+                            ->where('auth_ID', $decodedToken['profile_id'])
+                            ->orWhere('auth_email', $decodedToken['email'])
+                            ->update(['auth_password' => $password]);
+
+
+                        DB::table('password_resets')
+                            ->where('email', $decodedToken->email)
+                            ->update(['isTokenActive' => false]);
+
+                        return response()->json(['success' => true, 'message' => 'Password updated successfully']);
+                    } else {
+                        return response()->json(['success' => false, 'message' => 'Enter Password Mismatch'], 404);
+                    }
                 } else {
-                    return response()->json(['success' => false, 'message' => 'Enter Password Mismatch'], 404);
+                    return response()->json(['success' => false, 'message' => 'User not found'], 404);
                 }
             } else {
-                return response()->json(['success' => false, 'message' => 'User not found'], 404);
+                return response()->json(['success' => false, 'message' => 'Unautorize Access'], 404);
             }
         } catch (\Exception $e) {
 
