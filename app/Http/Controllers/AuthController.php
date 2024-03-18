@@ -412,7 +412,7 @@ class AuthController extends Controller
                         //     ->where('email', $decodedToken->email)
                         //     ->update(['isTokenActive' => false]);
 
-                        return response()->json(['success' => true, 'message' => 'Password updated successfully']);
+                        return response()->json(['success' => true, 'message' => 'Password updated successfully'],200);
                     } else {
                         return response()->json(['success' => false, 'message' => 'Enter Password Mismatch'], 404);
                     }
