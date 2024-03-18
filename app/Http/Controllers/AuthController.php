@@ -403,8 +403,8 @@ class AuthController extends Controller
 
                         $password = md5($request->input('password'));
                         DB::table('auth_user')
-                            ->where('auth_ID', $authData['profile_id'])
-                            ->where('auth_email', $authData['email'])
+                            ->where('auth_ID', $authData->profile_id)
+                            ->where('auth_email', $authData->email)
                             ->update(['auth_password' => $password]);
 
 
