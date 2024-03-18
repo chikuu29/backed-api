@@ -93,6 +93,7 @@ $router->get("/setting", "AppController@settings");
 $router->post("/adminLogin", "AuthController@adminLogin");
 $router->post("/auth", "AuthController@userLogin");
 $router->post("/reset_password", "AuthController@generateResetLink");
+$router->post("/reset_password_token_validator", "AuthController@validate_token");
 $router->post("/addUserDataFirstApi", "userController@addUserDataFirstApi");
 $router->post("/addUserDataSecondApi", "userController@addUserDataSecondApi");
 $router->post("/getAllData", "memberController@getAllData");

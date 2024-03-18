@@ -3,13 +3,14 @@
 namespace App\Http\Controllers;
 
 use Firebase\JWT\JWT;
+use Firebase\JWT\Key;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Carbon\Carbon;
 use App\Jobs\SendEmailJob;
 use Illuminate\Support\Facades\Queue;
-
+use Exception;
 
 class AuthController extends Controller
 {
@@ -182,7 +183,7 @@ class AuthController extends Controller
     {
         $requestedData = $request->all();
         $userID = $requestedData['userID'];
-        $application_url=$requestedData['application_url'];
+        $application_url = $requestedData['application_url'];
         if (empty($userID) &&  empty($application_url)) {
             return response()->json([
                 "status" => false,
@@ -194,13 +195,15 @@ class AuthController extends Controller
         try {
             $userdata = DB::table('auth_user')->orWhere('auth_ID', $userID)->orWhere('auth_email', $userID)->first();
             if ($userdata) {
-               
+
                 // Generate a random token
                 $token = Str::random(60);
                 $expiration = Carbon::now()->addHours(12)->timestamp;
                 $key = env('JWT_SECRET');  // Secret key from .env or configuration
                 $payload = [
                     'email' => $userdata->auth_email,
+                    'name' => $userdata->auth_name,
+                    'profile_id' => $userdata->auth_ID,
                     'token' => $token,
                     'exp' => $expiration,
                 ];
@@ -244,10 +247,60 @@ class AuthController extends Controller
             return response()->json([
                 "status" => false,
                 "success" => false,
-                "error"=>$e,
-                "dta"=>$userdata,
+                "error" => $e,
                 "message" => "Unauthorized Access!",
             ], 401);
+        }
+    }
+
+
+
+    public function validate_token(Request $request)
+    {
+
+        $authorizationHeader = $request->header('Authorization');
+        if ($authorizationHeader) {
+            // list($bearer, $token) = explode(' ', $authHeader, 2);
+            // echo $token;
+            try {
+                $token = $request->bearerToken(); // Get the JWT from the Authorization header
+                if (!$token) {
+                    return response()->json(['error' => 'Token not provided'], 401);
+                }
+                // Now, you have the token in the $token variable.
+                // You can use this token for authentication or other purposes.
+                $key = env('JWT_SECRET');
+
+                $decoded = JWT::decode($token, new Key($key, 'HS256'));
+                // $decoded = (array) $decoded;
+                // print_r($decoded);
+                // return $next($request);
+                // return response()->json($decoded);
+                // Process the decoded payload
+                // ...
+                $expirationTime = $decoded->exp;
+                // Get the current Unix timestamp
+                $currentTime = time();
+                // Check if the token has expired
+                if ($currentTime > $expirationTime) {
+                    // echo "Token has expired.";
+                    // throw new \Firebase\JWT\ExpiredException('The JWT token has expired.');
+                    return response()->json(['error' => 'The JWT token has expired.'], 401);
+                } else {
+                    return  response()->json(['success' => true, 'message' => "Token Validated Successfully!", "encryptedAccessData" =>  cryptoJsAesEncrypt($decoded)], 200);
+                }
+            } catch (\Firebase\JWT\ExpiredException $e) {
+                // Handle expired tokens
+                return response()->json(['error' => 'Token has expired'], 401);
+            } catch (\Firebase\JWT\SignatureInvalidException $e) {
+                // Handle invalid signatures
+                return response()->json(['error' => 'Invalid token signature'], 401);
+            } catch (\Exception $e) {
+                // Handle other JWT decoding/validation errors
+                return response()->json(['error' => 'Invalid token', 'msg' => $e], 401);
+            }
+        } else {
+            return response()->json(['error' => 'Token not provided'], 401);
         }
     }
 
@@ -259,5 +312,53 @@ class AuthController extends Controller
         $data = substr($raw, $iv_size);
         $key = '1E99412323A4ED2WAYWALASECRET_KEY';
         return openssl_decrypt($data, 'AES-128-CBC', $key, OPENSSL_RAW_DATA, $iv);
+    }
+
+
+    function cryptoJsAesDecrypt($jsonString)
+    {
+        $passphrase = '1E99412323A4ED2WAYWALASECRET_KEY';
+        $jsondata = json_decode($jsonString, true);
+        try {
+            $salt = hex2bin($jsondata["s"]);
+            $iv  = hex2bin($jsondata["iv"]);
+        } catch (Exception $e) {
+            return null;
+        }
+        $ct = base64_decode($jsondata["ct"]);
+        $concatedPassphrase = $passphrase . $salt;
+        $md5 = array();
+        $md5[0] = md5($concatedPassphrase, true);
+        $result = $md5[0];
+        for ($i = 1; $i < 3; $i++) {
+            $md5[$i] = md5($md5[$i - 1] . $concatedPassphrase, true);
+            $result .= $md5[$i];
+        }
+        $key = substr($result, 0, 32);
+        $data = openssl_decrypt($ct, 'aes-256-cbc', $key, true, $iv);
+        return json_decode($data, true);
+    }
+    /**
+     * Encrypt value to a cryptojs compatiable json encoding string
+     *
+     * @param mixed $passphrase
+     * @param mixed $value
+     * @return string
+     */
+    function cryptoJsAesEncrypt($value)
+    {
+        $passphrase = '1E99412323A4ED2WAYWALASECRET_KEY';
+        $salt = openssl_random_pseudo_bytes(8);
+        $salted = '';
+        $dx = '';
+        while (strlen($salted) < 48) {
+            $dx = md5($dx . $passphrase . $salt, true);
+            $salted .= $dx;
+        }
+        $key = substr($salted, 0, 32);
+        $iv  = substr($salted, 32, 16);
+        $encrypted_data = openssl_encrypt(json_encode($value), 'aes-256-cbc', $key, true, $iv);
+        $data = array("ct" => base64_encode($encrypted_data), "iv" => bin2hex($iv), "s" => bin2hex($salt));
+        return json_encode($data);
     }
 }
