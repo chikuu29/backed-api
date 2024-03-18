@@ -230,6 +230,19 @@ class AuthController extends Controller
                 ];
 
 
+
+                DB::table('password_resets')
+                    ->where('email', $userdata->auth_email)
+                    ->update(['isTokenActive' => false]);
+
+                // Now, insert the new data into the password_resets table
+                // $token = str_random(100); // Generate your token here
+                DB::table('password_resets')->insert([
+                    'email' => $userdata->auth_email,
+                    'token' => $jwtToken,
+                    'created_at' => Carbon::now(),
+                    'isTokenActive' => true // Set it to true for the new record
+                ]);
                 Queue::push(new SendEmailJob($emailData), '', 'emails');
                 return response()->json([
                     "status" => true,
@@ -313,6 +326,99 @@ class AuthController extends Controller
         $data = substr($raw, $iv_size);
         $key = '1E99412323A4ED2WAYWALASECRET_KEY';
         return openssl_decrypt($data, 'AES-128-CBC', $key, OPENSSL_RAW_DATA, $iv);
+    }
+
+
+
+    public function reset_password(Request $request)
+    {
+        // $authorizationHeader = $request->header('Authorization');
+        // echo $authorizationHeader;
+        // if ($authorizationHeader) {
+        //     // list($bearer, $token) = explode(' ', $authHeader, 2);
+        //     // echo $token;
+        //     try {
+        // $token = $request->bearerToken(); // Get the JWT from the Authorization header
+        // if (!$token) {
+        //     return response()->json(['error' => 'Token not provided'], 401);
+        // }
+        // Now, you have the token in the $token variable.
+        // You can use this token for authentication or other purposes.
+        // $key = env('JWT_SECRET');
+        // $decoded = JWT::decode($token, new Key($key, 'HS256'));
+        // $decoded = (array) $decoded;
+        // print_r($decoded);
+        // return $next($request);
+        // return response()->json($decoded);
+        // Process the decoded payload
+        // ...
+        // $expirationTime = $decoded->exp;
+        // // Get the current Unix timestamp
+        // $currentTime = time();
+        // // Check if the token has expired
+        // if ($currentTime > $expirationTime) {
+        //     // echo "Token has expired.";
+        //     // throw new \Firebase\JWT\ExpiredException('The JWT token has expired.');
+        //     return response()->json(['error' => 'The JWT token has expired.'], 401);
+        // } else {
+
+        // Log::info($request->attributes->all());
+
+
+
+        try {
+            // Retrieve the decoded token from the request attributes
+            $decodedToken = $request->attributes->get('decoded_token');
+            // print_r($decodedToken);
+            // Fetch the user from the database using profile ID or email
+            $authData = DB::table('auth_user')
+                ->where('auth_ID', $decodedToken->profile_id)
+                ->orWhere('auth_email', $decodedToken->email)
+                ->first(); // Assuming you expect only one user, use 'first()' instead of 'get()'
+
+            if ($authData) {
+                // Update the password with the new MD5 hashed password
+                print_r($authData);
+                if ($request->input('password') == $request->input('confrim_password')) {
+                    $password = md5($request->input('password'));
+                    // DB::table('auth_user')
+                    //     ->where('auth_ID', $decodedToken['profile_id'])
+                    //     ->orWhere('auth_email', $decodedToken['email'])
+                    //     ->update(['auth_password' => $password]);
+
+                    return response()->json(['success' => true, 'message' => 'Password updated successfully']);
+                } else {
+                    return response()->json(['success' => false, 'message' => 'Enter Password Mismatch'], 404);
+                }
+            } else {
+                return response()->json(['success' => false, 'message' => 'User not found'], 404);
+            }
+        } catch (\Exception $e) {
+
+            return response()->json(array(
+                "status" => false,
+                "success" => false,
+                "id" => '',
+                "name" => '',
+                "message" => "Unauthorize Access!",
+            ), 401);
+        }
+
+        return  response()->json(['success' => true, 'message' => "Token Validated Successfully!", "encryptedAccessData" =>  $decodedToken], 200);
+        // }
+        // } catch (\Firebase\JWT\ExpiredException $e) {
+        //     // Handle expired tokens
+        //     return response()->json(['error' => 'Token has expired'], 401);
+        // } catch (\Firebase\JWT\SignatureInvalidException $e) {
+        //     // Handle invalid signatures
+        //     return response()->json(['error' => 'Invalid token signature'], 401);
+        // } catch (\Exception $e) {
+        //     // Handle other JWT decoding/validation errors
+        //     return response()->json(['error' => 'Invalid token', 'msg' => $e], 401);
+        // }
+        // } else {
+        //     return response()->json(['error' => 'Token not provided'], 401);
+        // }
     }
 }
 

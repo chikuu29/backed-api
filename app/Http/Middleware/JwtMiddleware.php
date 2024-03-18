@@ -41,6 +41,8 @@ class JwtMiddleware
                     // echo "Token has expired.";
                     throw new \Firebase\JWT\ExpiredException('The JWT token has expired.');
                 } else {
+
+                    $request->attributes->add(['decoded_token' => $decoded]);
                     return $next($request);
                 }
             } catch (\Firebase\JWT\ExpiredException $e) {
