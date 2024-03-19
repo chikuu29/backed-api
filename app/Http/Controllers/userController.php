@@ -455,7 +455,8 @@ class userController extends Controller
                 } else {
                     return response()->json([
                         "success" => false,
-                        "message" => "Unsupported file format"
+                        "message" => "Unsupported file format",
+                        "error"=>$imageName . $imageExtension
                     ]);
                 }
             }
