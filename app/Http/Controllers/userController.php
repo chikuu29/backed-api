@@ -365,116 +365,50 @@ class userController extends Controller
 
     public function uploadImage(Request $request)
     {
-
-        // $alldata = $request->all();
-
-        // $targetDir = env('FILE_UPLOAD_PATH'); // Replace with your desired path
-
-        // // Check if the upload directory exists; if not, create it
-        // if (!file_exists($targetDir)) {
-        //     // echo "hi";
-        //     mkdir($targetDir, 0777, true);
-        // }
-        // // print_r($alldata);
-        // $id = $alldata['q'];
-        // if ($request->hasFile('uploadfile')) {
-        //     $file = $request->file('uploadfile');
-        //     $imagedata = $_FILES['uploadfile']['name'];
-        //     $temp = $_FILES['uploadfile']['tmp_name'];
-        //     $datainarryform = array();
-        //     for ($i = 0; $i < count($imagedata); $i++) {
-        //         $imgstoreindatabase[$i] = $i . time() . '.' . $_FILES['uploadfile']['name'][$i];
-        //         $a[$i] = str_replace($_FILES['uploadfile']['name'][$i], 'jpg', $imgstoreindatabase[$i]);
-        //         // $c = move_uploaded_file($temp[$i], storage_path() . '/' . $a[$i]);
-        //         $c = move_uploaded_file($temp[$i], $targetDir . '/' . $a[$i]);
-        //         array_push($datainarryform, $a[$i]);
-        //     }
-        //     $d = implode(',', $datainarryform);
-
-        //     // $user_info = DB::table('user_info')->where('user_id', $id)->update([
-        //     //     'user_profile_image' => $d
-        //     // ]);
-        //     $profile_image_table = DB::table('user_profile_images')->insert([
-        //         'completed' => 1,
-        //         'user_ID' => $id,
-        //         'user_feature_images' => $d,
-        //         'user_profile_images' => $d
-        //     ]);
-        //     // $user_info > 0 &&
-        //     if ($profile_image_table > 0) {
-        //         $user_arr = array(
-        //             "success" => true,
-        //             "message" => "File Uploaded Successfully",
-        //             "data" => $d,
-        //             "e" => $c
-        //         );
-        //     } else {
-        //         $user_arr = array(
-        //             "success" => false,
-        //             "message" => "Unable to Store Data"
-
-        //         );
-        //     }
-
-        //     return json_encode($user_arr);
-        // }
-
-
         $alldata = $request->all();
         $targetDir = env('FILE_UPLOAD_PATH');
 
         if (!file_exists($targetDir)) {
             mkdir($targetDir, 0777, true);
         }
+        if ($request->hasFile('file')) {
 
-        $id = $alldata['q'];
+            $maxFileSize = 5 * 1024 * 1024; // 5 MB in bytes
+            $uploadedFileSize = $request->file('file')->getSize();
 
-        if ($request->hasFile('uploadfile')) {
-            $file = $request->file('uploadfile');
-            $datainarryform = [];
-
-            foreach ($file as $index => $uploadedFile) {
-                $imageName = $uploadedFile->getClientOriginalName();
-                $imageExtension = $uploadedFile->getClientOriginalExtension();
-                $allowedExtensions = ['jpg', 'jpeg', 'png','PNG','JPG'];
-
-                // Check if the file extension is allowed
-                if (in_array($imageExtension, $allowedExtensions)) {
-                    $imgstoreindatabase = $index . time() . '.' . $imageName;
-                    $newImageName = str_replace($imageName, $imageExtension, $imgstoreindatabase);
-                    $uploadSuccess = $uploadedFile->move($targetDir, $newImageName);
-
-                    if (!$uploadSuccess) {
-                        return response()->json([
-                            "success" => false,
-                            "message" => "Failed to upload image(s)"
-                        ]);
-                    }
-
-                    $datainarryform[] = $newImageName;
-                } else {
-                    return response()->json([
-                        "success" => false,
-                        "message" => "Unsupported file format",
-                        "error"=>$imageName . $imageExtension
-                    ]);
-                }
+            if ($uploadedFileSize > $maxFileSize) {
+                return response()->json([
+                    "success" => false,
+                    "message" => "File size exceeds the maximum allowed limit of 5 MB"
+                ]);
             }
+            $profile_id = $alldata['q'];
 
-            $d = implode(',', $datainarryform);
+            $temp = $_FILES['file']['tmp_name'];
+
+            $fileReadyToMove = md5(uniqid($profile_id . '_' . time(), true)) . '.' . $_FILES['file']['name'];
+
+            $generatedFileName = str_replace($_FILES['file']['name'], 'jpg', $fileReadyToMove);
+            move_uploaded_file($temp, $targetDir . '/' . $generatedFileName);
+
 
             $profile_image_table = DB::table('user_profile_images')->insert([
                 'completed' => 1,
-                'user_ID' => $id,
-                'user_feature_images' => $d,
-                'user_profile_images' => $d
+                'user_ID' => $profile_id,
+                'user_feature_images' => $generatedFileName,
+                'user_profile_images' => $generatedFileName
             ]);
 
             if ($profile_image_table) {
                 return response()->json([
                     "success" => true,
                     "message" => "File Uploaded Successfully",
-                    "data" => $d
+                    "data" => [
+                        'completed' => 1,
+                        'user_ID' => $profile_id,
+                        'user_feature_images' => $generatedFileName,
+                        'user_profile_images' => $generatedFileName
+                    ]
                 ]);
             } else {
                 return response()->json([
