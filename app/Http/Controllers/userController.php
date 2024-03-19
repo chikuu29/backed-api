@@ -436,7 +436,7 @@ class userController extends Controller
             foreach ($file as $index => $uploadedFile) {
                 $imageName = $uploadedFile->getClientOriginalName();
                 $imageExtension = $uploadedFile->getClientOriginalExtension();
-                $allowedExtensions = ['jpg', 'jpeg', 'png'];
+                $allowedExtensions = ['jpg', 'jpeg', 'png','PNG','JPG'];
 
                 // Check if the file extension is allowed
                 if (in_array($imageExtension, $allowedExtensions)) {
