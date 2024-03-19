@@ -431,23 +431,33 @@ class userController extends Controller
 
         if ($request->hasFile('uploadfile')) {
             $file = $request->file('uploadfile');
-            $imagedata = $_FILES['uploadfile']['name'];
-            $temp = $_FILES['uploadfile']['tmp_name'];
             $datainarryform = [];
 
-            foreach ($imagedata as $index => $imageName) {
-                $imgstoreindatabase = $index . time() . '.' . $imageName;
-                $newImageName = str_replace($imageName, 'jpg', $imgstoreindatabase);
-                $uploadSuccess = move_uploaded_file($temp[$index], $targetDir . '/' . $newImageName);
+            foreach ($file as $index => $uploadedFile) {
+                $imageName = $uploadedFile->getClientOriginalName();
+                $imageExtension = $uploadedFile->getClientOriginalExtension();
+                $allowedExtensions = ['jpg', 'jpeg', 'png'];
 
-                if (!$uploadSuccess) {
+                // Check if the file extension is allowed
+                if (in_array($imageExtension, $allowedExtensions)) {
+                    $imgstoreindatabase = $index . time() . '.' . $imageName;
+                    $newImageName = str_replace($imageName, $imageExtension, $imgstoreindatabase);
+                    $uploadSuccess = $uploadedFile->move($targetDir, $newImageName);
+
+                    if (!$uploadSuccess) {
+                        return response()->json([
+                            "success" => false,
+                            "message" => "Failed to upload image(s)"
+                        ]);
+                    }
+
+                    $datainarryform[] = $newImageName;
+                } else {
                     return response()->json([
                         "success" => false,
-                        "message" => "Failed to upload image(s)"
+                        "message" => "Unsupported file format"
                     ]);
                 }
-
-                $datainarryform[] = $newImageName;
             }
 
             $d = implode(',', $datainarryform);
