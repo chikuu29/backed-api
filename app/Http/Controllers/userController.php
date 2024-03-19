@@ -366,57 +366,116 @@ class userController extends Controller
     public function uploadImage(Request $request)
     {
 
+        // $alldata = $request->all();
+
+        // $targetDir = env('FILE_UPLOAD_PATH'); // Replace with your desired path
+
+        // // Check if the upload directory exists; if not, create it
+        // if (!file_exists($targetDir)) {
+        //     // echo "hi";
+        //     mkdir($targetDir, 0777, true);
+        // }
+        // // print_r($alldata);
+        // $id = $alldata['q'];
+        // if ($request->hasFile('uploadfile')) {
+        //     $file = $request->file('uploadfile');
+        //     $imagedata = $_FILES['uploadfile']['name'];
+        //     $temp = $_FILES['uploadfile']['tmp_name'];
+        //     $datainarryform = array();
+        //     for ($i = 0; $i < count($imagedata); $i++) {
+        //         $imgstoreindatabase[$i] = $i . time() . '.' . $_FILES['uploadfile']['name'][$i];
+        //         $a[$i] = str_replace($_FILES['uploadfile']['name'][$i], 'jpg', $imgstoreindatabase[$i]);
+        //         // $c = move_uploaded_file($temp[$i], storage_path() . '/' . $a[$i]);
+        //         $c = move_uploaded_file($temp[$i], $targetDir . '/' . $a[$i]);
+        //         array_push($datainarryform, $a[$i]);
+        //     }
+        //     $d = implode(',', $datainarryform);
+
+        //     // $user_info = DB::table('user_info')->where('user_id', $id)->update([
+        //     //     'user_profile_image' => $d
+        //     // ]);
+        //     $profile_image_table = DB::table('user_profile_images')->insert([
+        //         'completed' => 1,
+        //         'user_ID' => $id,
+        //         'user_feature_images' => $d,
+        //         'user_profile_images' => $d
+        //     ]);
+        //     // $user_info > 0 &&
+        //     if ($profile_image_table > 0) {
+        //         $user_arr = array(
+        //             "success" => true,
+        //             "message" => "File Uploaded Successfully",
+        //             "data" => $d,
+        //             "e" => $c
+        //         );
+        //     } else {
+        //         $user_arr = array(
+        //             "success" => false,
+        //             "message" => "Unable to Store Data"
+
+        //         );
+        //     }
+
+        //     return json_encode($user_arr);
+        // }
+
+
         $alldata = $request->all();
+        $targetDir = env('FILE_UPLOAD_PATH');
 
-        $targetDir = env('FILE_UPLOAD_PATH'); // Replace with your desired path
-
-        // Check if the upload directory exists; if not, create it
         if (!file_exists($targetDir)) {
-            // echo "hi";
             mkdir($targetDir, 0777, true);
         }
-        // print_r($alldata);
+
         $id = $alldata['q'];
+
         if ($request->hasFile('uploadfile')) {
             $file = $request->file('uploadfile');
             $imagedata = $_FILES['uploadfile']['name'];
             $temp = $_FILES['uploadfile']['tmp_name'];
-            $datainarryform = array();
-            for ($i = 0; $i < count($imagedata); $i++) {
-                $imgstoreindatabase[$i] = $i . time() . '.' . $_FILES['uploadfile']['name'][$i];
-                $a[$i] = str_replace($_FILES['uploadfile']['name'][$i], 'jpg', $imgstoreindatabase[$i]);
-                // $c = move_uploaded_file($temp[$i], storage_path() . '/' . $a[$i]);
-                $c = move_uploaded_file($temp[$i], $targetDir . '/' . $a[$i]);
-                array_push($datainarryform, $a[$i]);
+            $datainarryform = [];
+
+            foreach ($imagedata as $index => $imageName) {
+                $imgstoreindatabase = $index . time() . '.' . $imageName;
+                $newImageName = str_replace($imageName, 'jpg', $imgstoreindatabase);
+                $uploadSuccess = move_uploaded_file($temp[$index], $targetDir . '/' . $newImageName);
+
+                if (!$uploadSuccess) {
+                    return response()->json([
+                        "success" => false,
+                        "message" => "Failed to upload image(s)"
+                    ]);
+                }
+
+                $datainarryform[] = $newImageName;
             }
+
             $d = implode(',', $datainarryform);
 
-            // $user_info = DB::table('user_info')->where('user_id', $id)->update([
-            //     'user_profile_image' => $d
-            // ]);
             $profile_image_table = DB::table('user_profile_images')->insert([
                 'completed' => 1,
                 'user_ID' => $id,
                 'user_feature_images' => $d,
                 'user_profile_images' => $d
             ]);
-            // $user_info > 0 &&
-            if ($profile_image_table > 0) {
-                $user_arr = array(
+
+            if ($profile_image_table) {
+                return response()->json([
                     "success" => true,
                     "message" => "File Uploaded Successfully",
-                    "data" => $d,
-                    "e" => $c
-                );
+                    "data" => $d
+                ]);
             } else {
-                $user_arr = array(
+                return response()->json([
                     "success" => false,
                     "message" => "Unable to Store Data"
-
-                );
+                ]);
             }
-
-            return json_encode($user_arr);
+        } else {
+            return response()->json([
+                "success" => false,
+                "message" => "No file uploaded"
+            ]);
         }
     }
 
