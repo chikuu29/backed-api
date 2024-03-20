@@ -26,8 +26,6 @@ $router->group(['middleware' => ['App\Http\Middleware\JwtMiddleware']], function
     $router->post("/delete", "dynamic_Crud_controller@delete");
     $router->post("/update", "dynamic_Crud_controller@update");
     $router->post("/getDataFormQuery", "dynaController@dynaQuay");
-
-
     $router->post("/addUserDataFirstApi", "userController@addUserDataFirstApi");
     $router->post("/addUserDataSecondApi", "userController@addUserDataSecondApi");
     $router->post("/socialMediaLink", "addItemControler@socialMediaLink");
@@ -36,7 +34,6 @@ $router->group(['middleware' => ['App\Http\Middleware\JwtMiddleware']], function
     $router->post("/state", "addItemControler@state");
     $router->post("/makeActinForMultipulData", "dynamic_Crud_controller@makeActinForMultipulData");
     $router->post("/insertData", "dynamic_Crud_controller@insertData");
-
     $router->post("/getprofile", "userController@fatchAllaDataByUserId");
     $router->post("/zodiacs", "addItemControler@zodiacs");
     $router->post("/nakshatra", "addItemControler@nakshatra");
@@ -48,10 +45,8 @@ $router->group(['middleware' => ['App\Http\Middleware\JwtMiddleware']], function
     $router->post("/privacypolicy", "addItemControler@privacypolicy");
     $router->post("/contactus", "addItemControler@contactus");
     $router->post("/termandcondition", "addItemControler@termandcondition");
-
     $router->post("/userActivation", "userController@userActivation");
     $router->post("/profileValidation", "userController@profileValidation");
-
     $router->post("/matches", "filterController@matches");
     $router->post("/matchesforindivisual", "filterController@matchesforindivisual");
     $router->post("/matchPersent", "filterController@matchPersent");
@@ -87,15 +82,12 @@ $router->group(['middleware' => ['App\Http\Middleware\JwtMiddleware']], function
     $router->post("/successStory", "successStoryConlroller@successStory");
     $router->post("/getAllCount", "AppController@getAllCount");
     $router->post("/checkpass", "forgetPasswordController@checkpass");
-
-
     $router->post("/reset_password", "AuthController@reset_password");
 });
 
 $router->get("/setting", "AppController@settings");
 $router->post("/adminLogin", "AuthController@adminLogin");
 $router->post("/auth", "AuthController@userLogin");
-
 $router->post("/generate_reset_password", "AuthController@generateResetLink");
 $router->get("/reset_password_token_validator", "AuthController@validate_token");
 $router->post("/addUserDataFirstApi", "userController@addUserDataFirstApi");
@@ -104,3 +96,7 @@ $router->post("/getAllData", "memberController@getAllData");
 $router->post("/aboutus", "addItemControler@aboutus");
 $router->post("/unsecuredFatchquary", "dynamic_Crud_controller@unsecuredFatchquary");
 $router->post("/feedback", "AppController@feedback");
+$router->post("/idProofUplode", "uplodeController@idProofUplode");
+$router->post("/horoscopeUplode", "uplodeController@horoscopeUplode");
+
+

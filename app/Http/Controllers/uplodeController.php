@@ -7,6 +7,125 @@ use Illuminate\Support\Facades\DB;
 
 class uplodeController extends Controller
 {
+
+
+    public function idProofUplode(Request $res)
+    {
+        $input = $res->all();
+
+        $date = $input['data'];
+        $id = $input['user_Id'];
+        $image = explode(';base64,', $input['data']);
+        $image_base64 = base64_decode($image[1]);
+        $extention = explode('/', $image[0]);
+        $root = env('FILE_UPLOAD_PATH');
+        $uniqid = uniqid();
+        $storageFile = $root . '/' . 'idproof/' . $id . $uniqid . '.' . $extention[1];
+       //dd($storageFile);
+        if (file_put_contents($storageFile, $image_base64)) {
+            $useidupload = DB::table('use_id_upload')->where('user_ID', $id)->first();
+            if ($useidupload) {
+                unlink($root . '/' . 'idproof/' . $useidupload->ID_image);
+                DB::table('use_id_upload')->where('user_ID', $id)->update([
+                    "ID_image" => $id . $uniqid . '.' . $extention[1],
+                ]);
+                return response()->json([
+                    "success" => true,
+                    "message" => "File Uploaded Successfully",
+                ]);
+            } else {
+                DB::table('use_id_upload')->insert([
+                    "user_ID" => $id,
+                    "ID_image" => $id . $uniqid . '.' . $extention[1],
+                ]);
+                return response()->json([
+                    "success" => true,
+                    "message" => "File Uploaded Successfully",
+                ]);
+            }
+        }else{
+            return response()->json(['success' => false, 'message' => 'File could not be saved.'], 500);
+        }
+
+    }
+    public function horoscopeUplode(Request $res)
+    {
+        $input = $res->all();
+
+        $date = $input['data'];
+        $id = $input['user_Id'];
+        $image = explode(';base64,', $input['data']);
+        $image_base64 = base64_decode($image[1]);
+        $extention = explode('/', $image[0]);
+        $root = env('FILE_UPLOAD_PATH');
+        $uniqid = uniqid();
+        $storageFile = $root . '/' . 'horoscope/' . $id . $uniqid . '.' . $extention[1];
+       //dd($storageFile);
+        if (file_put_contents($storageFile, $image_base64)) {
+            $useidupload = DB::table('use_horoscope_upload')->where('user_ID', $id)->first();
+            if ($useidupload) {
+                unlink(storage_path() . '/' . 'horoscope/' . $useidupload->ID_image);
+                DB::table('use_horoscope_upload')->where('user_ID', $id)->update([
+                    "ID_image" => $id . $uniqid . '.' . $extention[1],
+                ]);
+                return response()->json([
+                    "success" => true,
+                    "message" => "File Uploaded Successfully",
+                ]);
+            } else {
+                DB::table('use_horoscope_upload')->insert([
+                    "user_ID" => $id,
+                    "ID_image" => $id . $uniqid . '.' . $extention[1],
+                ]);
+                return response()->json([
+                    "success" => true,
+                    "message" => "File Uploaded Successfully",
+                ]);
+            }
+        }else{
+            return response()->json(['success' => false, 'message' => 'File could not be saved.'], 500);
+        }
+
+    }
+    public function paymentSlipUplode(Request $res)
+    {
+        $input = $res->all();
+
+        $date = $input['data'];
+        $id = $input['user_Id'];
+        $image = explode(';base64,', $input['data']);
+        $image_base64 = base64_decode($image[1]);
+        $extention = explode('/', $image[0]);
+        $root = env('FILE_UPLOAD_PATH');
+        $uniqid = uniqid();
+        $storageFile = $root . '/' . 'paymentslip/' . $id . $uniqid . '.' . $extention[1];
+       //dd($storageFile);
+        if (file_put_contents($storageFile, $image_base64)) {
+            $useidupload = DB::table('use_payment_slip_upload')->where('user_ID', $id)->first();
+            if ($useidupload) {
+                unlink(storage_path() . '/' . 'paymentslip/' . $useidupload->ID_image);
+                DB::table('use_payment_slip_upload')->where('user_ID', $id)->update([
+                    "ID_image" => $id . $uniqid . '.' . $extention[1],
+                ]);
+                return response()->json([
+                    "success" => true,
+                    "message" => "File Uploaded Successfully",
+                ]);
+            } else {
+                DB::table('use_horoscope_upload')->insert([
+                    "user_ID" => $id,
+                    "ID_image" => $id . $uniqid . '.' . $extention[1],
+                ]);
+                return response()->json([
+                    "success" => true,
+                    "message" => "File Uploaded Successfully",
+                ]);
+            }
+        }else{
+            return response()->json(['success' => false, 'message' => 'File could not be saved.'], 500);
+        }
+
+    }
     public function logoUplode(Request $res)
     {
 
@@ -130,7 +249,7 @@ class uplodeController extends Controller
                 'created_At' => $date,
                 'name' => $name,
                 'phoneno' => $phoneno,
-                'upi' =>$upi
+                'upi' => $upi
             ]);
             if ($data) {
                 $user_arr = array(
