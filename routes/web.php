@@ -98,5 +98,7 @@ $router->post("/unsecuredFatchquary", "dynamic_Crud_controller@unsecuredFatchqua
 $router->post("/feedback", "AppController@feedback");
 $router->post("/idProofUplode", "uplodeController@idProofUplode");
 $router->post("/horoscopeUplode", "uplodeController@horoscopeUplode");
+$router->post("/paymentSlipUplode", "uplodeController@paymentSlipUplode");
+
 
 

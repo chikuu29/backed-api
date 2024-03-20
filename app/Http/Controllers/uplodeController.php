@@ -28,6 +28,7 @@ class uplodeController extends Controller
                 unlink($root . '/' . 'idproof/' . $useidupload->ID_image);
                 DB::table('use_id_upload')->where('user_ID', $id)->update([
                     "ID_image" => $id . $uniqid . '.' . $extention[1],
+                    "status" => 0
                 ]);
                 return response()->json([
                     "success" => true,
@@ -64,9 +65,10 @@ class uplodeController extends Controller
         if (file_put_contents($storageFile, $image_base64)) {
             $useidupload = DB::table('use_horoscope_upload')->where('user_ID', $id)->first();
             if ($useidupload) {
-                unlink(storage_path() . '/' . 'horoscope/' . $useidupload->ID_image);
+                unlink($root . '/' . 'horoscope/' . $useidupload->ID_image);
                 DB::table('use_horoscope_upload')->where('user_ID', $id)->update([
                     "ID_image" => $id . $uniqid . '.' . $extention[1],
+                    "status" => 0
                 ]);
                 return response()->json([
                     "success" => true,
@@ -103,16 +105,17 @@ class uplodeController extends Controller
         if (file_put_contents($storageFile, $image_base64)) {
             $useidupload = DB::table('use_payment_slip_upload')->where('user_ID', $id)->first();
             if ($useidupload) {
-                unlink(storage_path() . '/' . 'paymentslip/' . $useidupload->ID_image);
+                unlink($root . '/' . 'paymentslip/' . $useidupload->ID_image);
                 DB::table('use_payment_slip_upload')->where('user_ID', $id)->update([
                     "ID_image" => $id . $uniqid . '.' . $extention[1],
+                    "status" => 0
                 ]);
                 return response()->json([
                     "success" => true,
                     "message" => "File Uploaded Successfully",
                 ]);
             } else {
-                DB::table('use_horoscope_upload')->insert([
+                DB::table('use_payment_slip_upload')->insert([
                     "user_ID" => $id,
                     "ID_image" => $id . $uniqid . '.' . $extention[1],
                 ]);
