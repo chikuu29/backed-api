@@ -96,6 +96,8 @@ class filterController extends Controller
             $user_max_height = $user_partnerpreference->user_max_height;
             $user_max_anual_income = $user_partnerpreference->user_max_anual_income;
             $user_min_anual_income = $user_partnerpreference->user_min_anual_income;
+            $to_age = $user_partnerpreference->to_user_age;
+            $from_age =  $user_partnerpreference->from_user_age;
             $user = DB::table('user_info')->where('user_ID', $user_id)->get('user_gender');
             $gender = $user[0]->user_gender == "male" ? 'female' : 'male';
             $user_activities = DB::table('user_activities')->where('user_id', $user_id)->get('user_block_list');
@@ -103,11 +105,11 @@ class filterController extends Controller
                 $user_block_list = $user_activities[0]->user_block_list;
                 $elements = explode(',', $user_block_list);
                 // Enclose each element in double quotes
-                $user_marital_status = array_map(function ($element) {
+                $user_marital_status1 = array_map(function ($element) {
                     return '"' . $element . '"';
                 }, $elements);
                 // Join the elements with commas
-                $outputString = implode(",", $user_marital_status);
+                $outputString = implode(",", $user_marital_status1);
             } else {
                 $outputString = '""';
             }
@@ -236,16 +238,16 @@ class filterController extends Controller
                 $gotra = '""';
             }
             // user_employed_In
-            if (count($user_partnerpreference->user_employed_In) > 0) {
-                $elements = $user_partnerpreference->user_employed_In;
+            if (count($user_partnerpreference->user_cast) > 0) {
+                $elements = $user_partnerpreference->user_cast;
                 // Enclose each element in double quotes
                 $quotedElements = array_map(function ($element) {
                     return '"' . $element . '"';
                 }, $elements);
                 // Join the elements with commas
-                $employed_In = implode(",", $quotedElements);
+                $user_cast = implode(",", $quotedElements);
             } else {
-                $employed_In = '""';
+                $user_cast = '""';
             }
             // OR user_height BETWEEN '$user_min_height' AND '$user_max_height'
 
@@ -273,9 +275,10 @@ class filterController extends Controller
              OR  user_horoscope.user_zodiacs IN ($zodiacs)
              OR  user_horoscope.user_nakhyatra IN ($nakshatra)
              OR  user_horoscope.user_gotra IN ($gotra)
-             OR  user_education_occupations.user_employed_In  IN ($employed_In)
+             OR  user_religion.user_caste  IN ($user_cast)
              OR  user_education_occupations.user_anual_income BETWEEN '$user_min_anual_income' AND '$user_max_anual_income'
              OR  user_physical_details.user_height BETWEEN '$user_min_height' AND '$user_max_height')
+             OR user_info.user_age BETWEEN '$from_age' AND '$to_age'
             AND
             ( user_info.user_gender = '$gender'  AND user_info.user_status = 'Approved' AND user_info.deleted = 1 AND user_info.status = 1 AND user_info.user_id NOT IN ($outputString)  AND user_info.marriage_status = 0 AND user_info.user_all_table_complited = 1);");
 
@@ -349,7 +352,7 @@ class filterController extends Controller
 
             // print_r($user_partnerpreference);
             // print_r($other_user_partnerpreference);
-            $matchPercentage =$this->calculateMatchPercentage($user_partnerpreference, $other_user_partnerpreference);
+            $matchPercentage = $this->calculateMatchPercentage($user_partnerpreference, $other_user_partnerpreference);
             //dd($user_partnerpreference);
             // $user_min_height = $user_partnerpreference->user_min_height;
             // $user_max_height = $user_partnerpreference->user_max_height;
@@ -448,7 +451,7 @@ class filterController extends Controller
                 "status" => false,
                 "success" => false,
                 "matches_Count" => 0,
-                 "message"=> $e
+                "message" => $e
             );
         }
         return json_encode($user_arr);
@@ -1225,7 +1228,16 @@ class filterController extends Controller
              OR  user_horoscope.user_gotra IN ($gotra)
              OR  user_education_occupations.user_employed_In  IN ($employed_In)
              OR  user_education_occupations.user_anual_income BETWEEN '$user_min_anual_income' AND '$user_max_anual_income'
-             AND user_info.user_id <> '$user_id')");
+             AND user_info.user_id <> '$user_id'
+             AND user_info.user_gender = '$gender'
+             AND user_info.user_status = 'Approved'
+             AND  user_info.user_id NOT IN ($outputString)
+             AND user_info.deleted = 1
+             AND user_info.status = 1
+             AND user_info.marriage_status = 0
+              ;
+             )");
+            // WHERE         AND user_info.status = 1 AND user_info.marriage_status = 0 AND user_info.user_has_complete_profile = 1 ;");
 
             // dd($alldata);
             if (count($alldata) > 0) {
@@ -1252,5 +1264,11 @@ class filterController extends Controller
 
         }
         return json_encode($user_arr);
+    }
+
+    function add()
+    {
+        $adat = DB::table('user_info')->get();
+
     }
 }

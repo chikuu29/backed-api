@@ -48,7 +48,6 @@ $router->group(['middleware' => ['App\Http\Middleware\JwtMiddleware']], function
     $router->post("/userActivation", "userController@userActivation");
     $router->post("/profileValidation", "userController@profileValidation");
     $router->post("/matches", "filterController@matches");
-    $router->post("/matchesforindivisual", "filterController@matchesforindivisual");
     $router->post("/matchPersent", "filterController@matchPersent");
     $router->post("/getplandata", "filterController@getplandata");
     $router->post("/getUserPlan", "memberController@getMembersheepPlan");
@@ -99,3 +98,5 @@ $router->post("/getAllData", "memberController@getAllData");
 $router->post("/aboutus", "addItemControler@aboutus");
 $router->post("/unsecuredFatchquary", "dynamic_Crud_controller@unsecuredFatchquary");
 $router->post("/feedback", "AppController@feedback");
+$router->post("/matchesforindivisual", "filterController@matchesforindivisual");
+
