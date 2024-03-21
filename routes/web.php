@@ -83,6 +83,9 @@ $router->group(['middleware' => ['App\Http\Middleware\JwtMiddleware']], function
     $router->post("/getAllCount", "AppController@getAllCount");
     $router->post("/checkpass", "forgetPasswordController@checkpass");
     $router->post("/reset_password", "AuthController@reset_password");
+    $router->post("/idProofUplode", "uplodeController@idProofUplode");
+    $router->post("/horoscopeUplode", "uplodeController@horoscopeUplode");
+    $router->post("/paymentSlipUplode", "uplodeController@paymentSlipUplode");
 });
 
 $router->get("/setting", "AppController@settings");
@@ -96,9 +99,3 @@ $router->post("/getAllData", "memberController@getAllData");
 $router->post("/aboutus", "addItemControler@aboutus");
 $router->post("/unsecuredFatchquary", "dynamic_Crud_controller@unsecuredFatchquary");
 $router->post("/feedback", "AppController@feedback");
-$router->post("/idProofUplode", "uplodeController@idProofUplode");
-$router->post("/horoscopeUplode", "uplodeController@horoscopeUplode");
-$router->post("/paymentSlipUplode", "uplodeController@paymentSlipUplode");
-
-
-
