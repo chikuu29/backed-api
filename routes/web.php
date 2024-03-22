@@ -85,7 +85,9 @@ $router->group(['middleware' => ['App\Http\Middleware\JwtMiddleware']], function
     $router->post("/idProofUplode", "uplodeController@idProofUplode");
     $router->post("/horoscopeUplode", "uplodeController@horoscopeUplode");
     $router->post("/paymentSlipUplode", "uplodeController@paymentSlipUplode");
-
+    $router->post("/getOnlinedata", "filterController@getOnlinedata");
+    $router->post("/RecentlyJoinedMatches", "filterController@RecentlyJoinedMatches");
+    $router->post("/recommend_matches", "filterController@matchesforindivisual");
     $router->post("/Perfect_Match", "filterController@perfactMatch");
     $router->post("/spotlight", "filterController@getSpotlightdata");
 });
@@ -101,9 +103,3 @@ $router->post("/getAllData", "memberController@getAllData");
 $router->post("/aboutus", "addItemControler@aboutus");
 $router->post("/unsecuredFatchquary", "dynamic_Crud_controller@unsecuredFatchquary");
 $router->post("/feedback", "AppController@feedback");
-$router->post("/spotlight", "filterController@getSpotlightdata");
-$router->post("/getOnlinedata", "filterController@getOnlinedata");
-$router->post("/RecentlyJoinedMatches", "filterController@RecentlyJoinedMatches");
-$router->post("/recommend_matches", "filterController@matchesforindivisual");
-
-
