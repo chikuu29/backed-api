@@ -232,13 +232,13 @@ class dynamic_Crud_controller extends Controller
                 $user_arr = array(
                     "status" => true,
                     "success" => true,
-                    "message" => 'Data Deleted Successfully!',
+                    "message" => 'Delete Successfully!',
                 );
             } else {
                 $user_arr = array(
                     "status" => false,
                     "success" => false,
-                    "message" => 'Data Not Deleted Successfully!',
+                    "message" => 'Delete Unsuccessfully!',
                 );
             }
         }
