@@ -819,11 +819,11 @@ class filterController extends Controller
                 $user_block_list = $user_activities[0]->user_block_list;
                 $elements = explode(',', $user_block_list);
                 // Enclose each element in double quotes
-                $user_marital_status = array_map(function ($element) {
+                $user_marital_status1 = array_map(function ($element) {
                     return '"' . $element . '"';
                 }, $elements);
                 // Join the elements with commas
-                $outputString = implode(",", $user_marital_status);
+                $outputString = implode(",", $user_marital_status1);
             } else {
                 $outputString = '""';
             }
@@ -952,16 +952,16 @@ class filterController extends Controller
                 $gotra = '""';
             }
             // user_employed_In
-            if (count($user_partnerpreference->user_employed_In) > 0) {
-                $elements = $user_partnerpreference->user_employed_In;
+            if (count($user_partnerpreference->user_cast) > 0) {
+                $elements = $user_partnerpreference->user_cast;
                 // Enclose each element in double quotes
                 $quotedElements = array_map(function ($element) {
                     return '"' . $element . '"';
                 }, $elements);
                 // Join the elements with commas
-                $employed_In = implode(",", $quotedElements);
+                $user_cast = implode(",", $quotedElements);
             } else {
-                $employed_In = '""';
+                $user_cast = '""';
             }
             // OR user_height BETWEEN '$user_min_height' AND '$user_max_height'
 
@@ -989,11 +989,11 @@ class filterController extends Controller
              OR  user_horoscope.user_zodiacs IN ($zodiacs)
              OR  user_horoscope.user_nakhyatra IN ($nakshatra)
              OR  user_horoscope.user_gotra IN ($gotra)
-             OR  user_education_occupations.user_employed_In  IN ($employed_In)
+             OR  user_education_occupations.user_employed_In  IN ($user_employed_In)
              OR  user_education_occupations.user_anual_income BETWEEN '$user_min_anual_income' AND '$user_max_anual_income'
              OR  user_physical_details.user_height BETWEEN '$user_min_height' AND '$user_max_height')
             AND
-            ( user_info.user_gender = '$gender'  AND user_info.user_status = 'Approved' AND user_info.deleted = 1 AND user_info.status = 1 AND user_info.user_id NOT IN ($outputString)  AND user_info.marriage_status = 0 AND user_info.user_membership_plan_type <> '$membership_plan_type' AND user_info.user_all_table_complited = 1);");
+            ( user_info.user_gender = '$gender'  AND user_info.user_status = 'Approved' AND user_info.deleted = 1 AND user_info.status = 1 AND user_info.user_id NOT IN ($outputString)  AND user_info.marriage_status = 0 AND user_info.user_id <> '$user_id' AND user_info.user_membership_plan_type <> '$membership_plan_type' AND user_info.user_all_table_complited = 1);");
 
             // dd($alldata);
             if (count($alldata) > 0) {
