@@ -23,7 +23,7 @@ $router->group(['middleware' => ['App\Http\Middleware\JwtMiddleware']], function
 
     $router->post("/fetch", "dynamic_Crud_controller@fetch");
     $router->post("/save", "dynamic_Crud_controller@save");
-    $router->post("/delete", "dynamic_Crud_controller@delete");
+    $router->delete("/delete", "dynamic_Crud_controller@delete");
     $router->post("/update", "dynamic_Crud_controller@update");
     $router->post("/getDataFormQuery", "dynaController@dynaQuay");
     $router->post("/addUserDataFirstApi", "userController@addUserDataFirstApi");
