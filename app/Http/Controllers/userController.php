@@ -302,6 +302,8 @@ class userController extends Controller
 
         try {
             $user_info = DB::table('user_info')->where('user_id', $userid)->first();
+            $auth_user = DB::table('auth_user')->where('auth_ID', $userid)->first(['auth_phone_no']);
+            $user_info->phone = $auth_user->auth_phone_no;
             $user_education_occupations = DB::table('user_education_occupations')->where('user_ID', $userid)->first();
             //dd($user_education_occupations);
             $user_religion = DB::table('user_religion')->where('user_ID', $userid)->first();

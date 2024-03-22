@@ -95,14 +95,14 @@ class planCalculationController extends Controller
                 $user_arr = array(
                     "status" => false,
                     "success" => false,
-                    "message" => "Not Done"
+                    "message" => "Not Done T issue"
                 );
             }
         } else {
             $user_arr = array(
                 "status" => false,
                 "success" => false,
-                "message" => "Used"
+                "message" => "Plan End"
             );
         }
         return json_encode($user_arr);
