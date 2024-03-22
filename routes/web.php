@@ -60,7 +60,7 @@ $router->group(['middleware' => ['App\Http\Middleware\JwtMiddleware']], function
     $router->post("/homeLogoUplode", "uplodeController@homeLogoUplode");
     $router->post("/bannerUplode", "uplodeController@bannerUplode");
     $router->post("/cast_matches", "filterController@matchByCast");
-    $router->post("/recommend_matches", "filterController@matches");
+    //$router->post("/recommend_matches", "filterController@matches");
     $router->post("/premium_matches", "filterController@premimusMatches");
     $router->post("/getLoginCount", "activityController@getLoginCount");
     $router->post("/getLikeCount", "activityController@getLikeCount");
@@ -85,6 +85,9 @@ $router->group(['middleware' => ['App\Http\Middleware\JwtMiddleware']], function
     $router->post("/idProofUplode", "uplodeController@idProofUplode");
     $router->post("/horoscopeUplode", "uplodeController@horoscopeUplode");
     $router->post("/paymentSlipUplode", "uplodeController@paymentSlipUplode");
+    $router->post("/recommend_matches", "filterController@matchesforindivisual");
+    $router->post("/Perfect_Match", "filterController@perfactMatch");
+    $router->post("/spotlight", "filterController@getSpotlightdata");
 });
 
 $router->get("/setting", "AppController@settings");
@@ -98,5 +101,8 @@ $router->post("/getAllData", "memberController@getAllData");
 $router->post("/aboutus", "addItemControler@aboutus");
 $router->post("/unsecuredFatchquary", "dynamic_Crud_controller@unsecuredFatchquary");
 $router->post("/feedback", "AppController@feedback");
-$router->post("/matchesforindivisual", "filterController@matchesforindivisual");
+$router->post("/spotlight", "filterController@getSpotlightdata");
+$router->post("/getOnlinedata", "filterController@getOnlinedata");
+$router->post("/RecentlyJoinedMatches", "filterController@RecentlyJoinedMatches");
+
 

@@ -56,7 +56,6 @@ class addItemControler extends Controller
         }
         return json_encode($user_arr);
     }
-
     public function getsocialMediaLink()
     {
 
@@ -93,7 +92,6 @@ class addItemControler extends Controller
 
         return json_encode($user_arr);
     }
-
     public function country()
     {
         $data = json_decode(file_get_contents("php://input"));
@@ -328,7 +326,7 @@ class addItemControler extends Controller
             }
         }
         return json_encode($user_arr);
- 
+
     }
     public function annual_income(){
         $data = json_decode(file_get_contents("php://input"));
@@ -423,11 +421,11 @@ class addItemControler extends Controller
                     "message" => [],
                 );
             }
-            
-        }  
-        
+
+        }
+
         return json_encode($user_arr);
-  
+
     }
     public function city(){
         $data = json_decode(file_get_contents("php://input"));
@@ -453,7 +451,6 @@ class addItemControler extends Controller
 
         return json_encode($user_arr);
     }
-
     public function privacypolicy(){
         $data = json_decode(file_get_contents("php://input"));
         $status = !(isset($data->status)) ? '' : $data->status;
@@ -570,7 +567,6 @@ class addItemControler extends Controller
         }
         return json_encode($user_arr);
     }
-
     public function termandcondition(){
         $data = json_decode(file_get_contents("php://input"));
         $status = !(isset($data->status)) ? '' : $data->status;
@@ -629,7 +625,6 @@ class addItemControler extends Controller
         }
         return json_encode($user_arr);
     }
-
     public function aboutus(){
         $data = json_decode(file_get_contents("php://input"));
         $status = !(isset($data->status)) ? '' : $data->status;
@@ -688,6 +683,6 @@ class addItemControler extends Controller
         }
         return json_encode($user_arr);
     }
- 
-    
+
+
 }

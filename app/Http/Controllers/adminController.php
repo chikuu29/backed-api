@@ -8,8 +8,8 @@ use Illuminate\Support\Facades\DB;
 class adminController extends Controller
 {
     public function logouplode(Request $request){
-       
-    
+
+
             $alldata = $request->all();
             // print_r($alldata);
             $id = $alldata['q'];
@@ -25,7 +25,7 @@ class adminController extends Controller
                     array_push($datainarryform, $a[$i]);
                 }
                 $d = implode(',', $datainarryform);
-    
+
                 // $user_info = DB::table('user_info')->where('user_id', $id)->update([
                 //     'user_profile_image' => $d
                 // ]);
@@ -46,13 +46,13 @@ class adminController extends Controller
                     $user_arr = array(
                         "success" => false,
                         "message" => "Unable to Store Data"
-    
+
                     );
                 }
-    
+
                 return json_encode($user_arr);
             }
-        
+
     }
     public function bannerUplode(Request $request){
         $alldata = $request->all();
@@ -97,8 +97,8 @@ class adminController extends Controller
 
             return json_encode($user_arr);
         }
-    
+
     }
 
-    
+
 }
