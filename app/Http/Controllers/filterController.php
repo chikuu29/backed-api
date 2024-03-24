@@ -91,7 +91,6 @@ class filterController extends Controller
             // try {
             $user_partnerpreference = DB::table('user_partnerpreference')->where('user_ID', $user_id)->get();
             $user_partnerpreference = json_decode($user_partnerpreference[0]->json_data);
-            //dd($user_partnerpreference);
             $user_min_height = $user_partnerpreference->user_min_height;
             $user_max_height = $user_partnerpreference->user_max_height;
             $user_max_anual_income = $user_partnerpreference->user_max_anual_income;
@@ -281,7 +280,7 @@ class filterController extends Controller
              OR user_info.user_age BETWEEN '$from_age' AND '$to_age'
              )
             AND
-            ( user_info.user_gender = '$gender' AND user_info.user_id <> '$user_id'  AND user_info.user_status = 'Approved' AND user_info.deleted = 1 AND user_info.status = 1 AND user_info.user_id NOT IN ($outputString)  AND user_info.marriage_status = 0 AND user_info.user_all_table_complited = 1);");
+            ( user_info.user_gender = '$gender' AND user_info.user_id <> '$user_id'  AND user_info.user_status = 'Approved' AND user_info.deleted = 1 AND user_info.status = 1 AND user_info.user_id NOT IN ($outputString)  AND user_info.marriage_status = 0 AND user_info.user_all_table_complited = 1 );");
 
             // dd("SELECT * FROM user_info
             // INNER JOIN user_religion ON user_info.user_id = user_religion.user_ID
@@ -314,11 +313,15 @@ class filterController extends Controller
             //  )
             // AND
             // ( user_info.user_gender = '$gender'  AND user_info.user_status = 'Approved' AND user_info.deleted = 1 AND user_info.status = 1 AND user_info.user_id NOT IN ($outputString)  AND user_info.marriage_status = 0 AND user_info.user_all_table_complited = 1);");
+            //dd(typeOf($alldata));
+            $shuffledData = $alldata;
+            shuffle($shuffledData);
+
             if (count($alldata) > 0) {
                 $user_arr = array(
                     "status" => true,
                     "success" => true,
-                    "data" => $alldata,
+                    "data" => $shuffledData,
                     "message" => count($alldata) . ' records Match'
                 );
             } else {
@@ -1933,7 +1936,7 @@ class filterController extends Controller
             } else {
                 $outputString = '""';
             }
-            $user_creation_date = date('Y-m-d H:i:s', strtotime('-5 days'));
+            $user_creation_date = date('Y-m-d H:i:s', strtotime('-30 days'));
 
             $alldata = DB::select("SELECT * FROM user_info
             LEFT JOIN user_religion ON user_info.user_id = user_religion.user_ID

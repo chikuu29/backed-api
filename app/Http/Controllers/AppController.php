@@ -87,8 +87,11 @@ class AppController extends Controller
                     ->count();
                 $Shortlistedprofile = ($Shortlistedprofile < 10) ? "0$Shortlistedprofile" : $Shortlistedprofile;
 
-                $BlockedProfile = 5; // No need to change this as it's not a count.
-
+                $BlockedProfile =DB::table('user_activities')
+                ->where('user_id', $userid)
+                ->first(['user_block_list']);
+                $blcount = count(explode(',',$BlockedProfile->user_block_list));
+                $BlockedProfiledata =  $blcount < 10 ? "0$blcount" : $blcount ;
                 $LikeProfile = DB::table('user_like')
                     ->where('liked_by_profile_id', $userid)
                     ->count();
@@ -102,7 +105,7 @@ class AppController extends Controller
                     "iviewedprofile" => $iviewedprofile,
                     "viewedmyprofile" => $viewedmyprofile,
                     "Shortlistedprofile" => $Shortlistedprofile,
-                    "BlockedProfile" => $BlockedProfile,
+                    "BlockedProfile" => $BlockedProfiledata,
                     "LikeProfile" => $LikeProfile,
                 ];
             } catch (\Exception $e) {
