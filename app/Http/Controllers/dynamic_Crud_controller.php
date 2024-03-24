@@ -46,7 +46,7 @@ class dynamic_Crud_controller extends Controller
                 // Get the total count of rows
 
                 if (count($whereConditions) == 0) {
-                    if (isEmpty($order_by)) {
+                    if (empty($order_by)) {
 
 
                         $fatchdata = DB::table($table)->skip($offset)
@@ -59,7 +59,7 @@ class dynamic_Crud_controller extends Controller
                             ->get($projection);
                     }
                 } else {
-                    if (isEmpty($order_by)) {
+                    if (empty($order_by)) {
                         $fatchdata = DB::table($table)->where($whereConditions)->skip($offset)
                             ->take($limit)->get($projection);
                     } else {
