@@ -1285,168 +1285,177 @@ class filterController extends Controller
 
             // try {
             $user_partnerpreference = DB::table('user_partnerpreference')->where('user_ID', $user_id)->get();
-            $user_partnerpreference = json_decode($user_partnerpreference[0]->json_data);
-            //dd($user_partnerpreference);
-            $user_min_height = $user_partnerpreference->user_min_height;
-            $user_max_height = $user_partnerpreference->user_max_height;
-            $user_max_anual_income = $user_partnerpreference->user_max_anual_income;
-            $user_min_anual_income = $user_partnerpreference->user_min_anual_income;
-            $to_age = $user_partnerpreference->to_user_age;
-            $from_age =  $user_partnerpreference->from_user_age;
-            $user = DB::table('user_info')->where('user_ID', $user_id)->get('user_gender');
-            $gender = $user[0]->user_gender == "male" ? 'female' : 'male';
-            $user_activities = DB::table('user_activities')->where('user_id', $user_id)->get('user_block_list');
-            if (count($user_activities) > 0) {
-                $user_block_list = $user_activities[0]->user_block_list;
-                $elements = explode(',', $user_block_list);
-                // Enclose each element in double quotes
-                $user_marital_status1 = array_map(function ($element) {
-                    return '"' . $element . '"';
-                }, $elements);
-                // Join the elements with commas
-                $outputString = implode(",", $user_marital_status1);
+            if (!empty($user_partnerpreference)) {
+                $user_arr = array(
+                    "status" => false,
+                    "success" => false,
+                    "message" => "No Match Found",
+                );
             } else {
-                $outputString = '""';
-            }
-            if (count($user_partnerpreference->user_marital_status) > 0) {
-                $elements = $user_partnerpreference->user_marital_status;
-                // Enclose each element in double quotes
-                $quotedElements = array_map(function ($element) {
-                    return '"' . $element . '"';
-                }, $elements);
-                // Join the elements with commas
-                $user_marital_status = implode(",", $quotedElements);
-            } else {
-                $user_marital_status = '""';
-            }
-            if (count($user_partnerpreference->user_religion) > 0) {
-                $elements = $user_partnerpreference->user_religion;
-                // Enclose each element in double quotes
-                $quotedElements = array_map(function ($element) {
-                    return '"' . $element . '"';
-                }, $elements);
-                // Join the elements with commas
-                $user_religion = implode(",", $quotedElements);
-            } else {
-                $user_religion = '""';
-            }
-            if (count($user_partnerpreference->user_employed_In) > 0) {
-                $elements = $user_partnerpreference->user_employed_In;
-                // Enclose each element in double quotes
-                $quotedElements = array_map(function ($element) {
-                    return '"' . $element . '"';
-                }, $elements);
-                // Join the elements with commas
-                $user_employed_In = implode(",", $quotedElements);
-            } else {
-                $user_employed_In = '""';
-            }
-            if (count($user_partnerpreference->user_occupation) > 0) {
-                $elements = $user_partnerpreference->user_occupation;
-                // Enclose each element in double quotes
-                $quotedElements = array_map(function ($element) {
-                    return '"' . $element . '"';
-                }, $elements);
-                // Join the elements with commas
-                $user_occupation = implode(",", $quotedElements);
-            } else {
-                $user_occupation = '""';
-            }
-            if (count($user_partnerpreference->user_mother_toungh) > 0) {
-                $elements = $user_partnerpreference->user_mother_toungh;
-                // Enclose each element in double quotes
-                $quotedElements = array_map(function ($element) {
-                    return '"' . $element . '"';
-                }, $elements);
-                // Join the elements with commas
-                $user_mother_toungh = implode(",", $quotedElements);
-            } else {
-                $user_mother_toungh = '""';
-            }
-            if (count($user_partnerpreference->user_country) > 0) {
-                $elements = $user_partnerpreference->user_country;
-                // Enclose each element in double quotes
-                $quotedElements = array_map(function ($element) {
-                    return '"' . $element . '"';
-                }, $elements);
-                // Join the elements with commas
-                $user_country = implode(",", $quotedElements);
-            } else {
-                $user_country = '""';
-            }
-            if (count($user_partnerpreference->user_city) > 0) {
-                $elements = $user_partnerpreference->user_city;
-                // Enclose each element in double quotes
-                $quotedElements = array_map(function ($element) {
-                    return '"' . $element . '"';
-                }, $elements);
-                // Join the elements with commas
-                $user_city = implode(",", $quotedElements);
-            } else {
-                $user_city = '""';
-            }
-            if (count($user_partnerpreference->user_state) > 0) {
-                $elements = $user_partnerpreference->user_state;
-                // Enclose each element in double quotes
-                $quotedElements = array_map(function ($element) {
-                    return '"' . $element . '"';
-                }, $elements);
-                // Join the elements with commas
-                $user_state = implode(",", $quotedElements);
-            } else {
-                $user_state = '""';
-            }
-            //user_zodiacs
-            if (count($user_partnerpreference->user_zodiacs) > 0) {
-                $elements = $user_partnerpreference->user_zodiacs;
-                // Enclose each element in double quotes
-                $quotedElements = array_map(function ($element) {
-                    return '"' . $element . '"';
-                }, $elements);
-                // Join the elements with commas
-                $zodiacs = implode(",", $quotedElements);
-            } else {
-                $zodiacs = '""';
-            }
-            //user_nakshatra
-            if (count($user_partnerpreference->user_nakshatra) > 0) {
-                $elements = $user_partnerpreference->user_nakshatra;
-                // Enclose each element in double quotes
-                $quotedElements = array_map(function ($element) {
-                    return '"' . $element . '"';
-                }, $elements);
-                // Join the elements with commas
-                $nakshatra = implode(",", $quotedElements);
-            } else {
-                $nakshatra = '""';
-            }
-            // user_gotra
-            if (count($user_partnerpreference->user_gotra) > 0) {
-                $elements = $user_partnerpreference->user_gotra;
-                // Enclose each element in double quotes
-                $quotedElements = array_map(function ($element) {
-                    return '"' . $element . '"';
-                }, $elements);
-                // Join the elements with commas
-                $gotra = implode(",", $quotedElements);
-            } else {
-                $gotra = '""';
-            }
-            // user_employed_In
-            if (count($user_partnerpreference->user_cast) > 0) {
-                $elements = $user_partnerpreference->user_cast;
-                // Enclose each element in double quotes
-                $quotedElements = array_map(function ($element) {
-                    return '"' . $element . '"';
-                }, $elements);
-                // Join the elements with commas
-                $user_cast = implode(",", $quotedElements);
-            } else {
-                $user_cast = '""';
-            }
-            // OR user_height BETWEEN '$user_min_height' AND '$user_max_height'
 
-            $alldata = DB::select("SELECT * FROM user_info
+
+                $user_partnerpreference = json_decode($user_partnerpreference[0]->json_data);
+                //dd($user_partnerpreference);
+                $user_min_height = $user_partnerpreference->user_min_height;
+                $user_max_height = $user_partnerpreference->user_max_height;
+                $user_max_anual_income = $user_partnerpreference->user_max_anual_income;
+                $user_min_anual_income = $user_partnerpreference->user_min_anual_income;
+                $to_age = $user_partnerpreference->to_user_age;
+                $from_age =  $user_partnerpreference->from_user_age;
+                $user = DB::table('user_info')->where('user_ID', $user_id)->get('user_gender');
+                $gender = $user[0]->user_gender == "male" ? 'female' : 'male';
+                $user_activities = DB::table('user_activities')->where('user_id', $user_id)->get('user_block_list');
+                if (count($user_activities) > 0) {
+                    $user_block_list = $user_activities[0]->user_block_list;
+                    $elements = explode(',', $user_block_list);
+                    // Enclose each element in double quotes
+                    $user_marital_status1 = array_map(function ($element) {
+                        return '"' . $element . '"';
+                    }, $elements);
+                    // Join the elements with commas
+                    $outputString = implode(",", $user_marital_status1);
+                } else {
+                    $outputString = '""';
+                }
+                if (count($user_partnerpreference->user_marital_status) > 0) {
+                    $elements = $user_partnerpreference->user_marital_status;
+                    // Enclose each element in double quotes
+                    $quotedElements = array_map(function ($element) {
+                        return '"' . $element . '"';
+                    }, $elements);
+                    // Join the elements with commas
+                    $user_marital_status = implode(",", $quotedElements);
+                } else {
+                    $user_marital_status = '""';
+                }
+                if (count($user_partnerpreference->user_religion) > 0) {
+                    $elements = $user_partnerpreference->user_religion;
+                    // Enclose each element in double quotes
+                    $quotedElements = array_map(function ($element) {
+                        return '"' . $element . '"';
+                    }, $elements);
+                    // Join the elements with commas
+                    $user_religion = implode(",", $quotedElements);
+                } else {
+                    $user_religion = '""';
+                }
+                if (count($user_partnerpreference->user_employed_In) > 0) {
+                    $elements = $user_partnerpreference->user_employed_In;
+                    // Enclose each element in double quotes
+                    $quotedElements = array_map(function ($element) {
+                        return '"' . $element . '"';
+                    }, $elements);
+                    // Join the elements with commas
+                    $user_employed_In = implode(",", $quotedElements);
+                } else {
+                    $user_employed_In = '""';
+                }
+                if (count($user_partnerpreference->user_occupation) > 0) {
+                    $elements = $user_partnerpreference->user_occupation;
+                    // Enclose each element in double quotes
+                    $quotedElements = array_map(function ($element) {
+                        return '"' . $element . '"';
+                    }, $elements);
+                    // Join the elements with commas
+                    $user_occupation = implode(",", $quotedElements);
+                } else {
+                    $user_occupation = '""';
+                }
+                if (count($user_partnerpreference->user_mother_toungh) > 0) {
+                    $elements = $user_partnerpreference->user_mother_toungh;
+                    // Enclose each element in double quotes
+                    $quotedElements = array_map(function ($element) {
+                        return '"' . $element . '"';
+                    }, $elements);
+                    // Join the elements with commas
+                    $user_mother_toungh = implode(",", $quotedElements);
+                } else {
+                    $user_mother_toungh = '""';
+                }
+                if (count($user_partnerpreference->user_country) > 0) {
+                    $elements = $user_partnerpreference->user_country;
+                    // Enclose each element in double quotes
+                    $quotedElements = array_map(function ($element) {
+                        return '"' . $element . '"';
+                    }, $elements);
+                    // Join the elements with commas
+                    $user_country = implode(",", $quotedElements);
+                } else {
+                    $user_country = '""';
+                }
+                if (count($user_partnerpreference->user_city) > 0) {
+                    $elements = $user_partnerpreference->user_city;
+                    // Enclose each element in double quotes
+                    $quotedElements = array_map(function ($element) {
+                        return '"' . $element . '"';
+                    }, $elements);
+                    // Join the elements with commas
+                    $user_city = implode(",", $quotedElements);
+                } else {
+                    $user_city = '""';
+                }
+                if (count($user_partnerpreference->user_state) > 0) {
+                    $elements = $user_partnerpreference->user_state;
+                    // Enclose each element in double quotes
+                    $quotedElements = array_map(function ($element) {
+                        return '"' . $element . '"';
+                    }, $elements);
+                    // Join the elements with commas
+                    $user_state = implode(",", $quotedElements);
+                } else {
+                    $user_state = '""';
+                }
+                //user_zodiacs
+                if (count($user_partnerpreference->user_zodiacs) > 0) {
+                    $elements = $user_partnerpreference->user_zodiacs;
+                    // Enclose each element in double quotes
+                    $quotedElements = array_map(function ($element) {
+                        return '"' . $element . '"';
+                    }, $elements);
+                    // Join the elements with commas
+                    $zodiacs = implode(",", $quotedElements);
+                } else {
+                    $zodiacs = '""';
+                }
+                //user_nakshatra
+                if (count($user_partnerpreference->user_nakshatra) > 0) {
+                    $elements = $user_partnerpreference->user_nakshatra;
+                    // Enclose each element in double quotes
+                    $quotedElements = array_map(function ($element) {
+                        return '"' . $element . '"';
+                    }, $elements);
+                    // Join the elements with commas
+                    $nakshatra = implode(",", $quotedElements);
+                } else {
+                    $nakshatra = '""';
+                }
+                // user_gotra
+                if (count($user_partnerpreference->user_gotra) > 0) {
+                    $elements = $user_partnerpreference->user_gotra;
+                    // Enclose each element in double quotes
+                    $quotedElements = array_map(function ($element) {
+                        return '"' . $element . '"';
+                    }, $elements);
+                    // Join the elements with commas
+                    $gotra = implode(",", $quotedElements);
+                } else {
+                    $gotra = '""';
+                }
+                // user_employed_In
+                if (count($user_partnerpreference->user_cast) > 0) {
+                    $elements = $user_partnerpreference->user_cast;
+                    // Enclose each element in double quotes
+                    $quotedElements = array_map(function ($element) {
+                        return '"' . $element . '"';
+                    }, $elements);
+                    // Join the elements with commas
+                    $user_cast = implode(",", $quotedElements);
+                } else {
+                    $user_cast = '""';
+                }
+                // OR user_height BETWEEN '$user_min_height' AND '$user_max_height'
+
+                $alldata = DB::select("SELECT * FROM user_info
             INNER JOIN user_religion ON user_info.user_id = user_religion.user_ID
             INNER JOIN user_locations ON user_info.user_id = user_locations.user_ID
             INNER JOIN user_family ON user_info.user_id = user_family.user_ID
@@ -1475,28 +1484,28 @@ class filterController extends Controller
              AND user_info.user_age BETWEEN '$from_age' AND '$to_age'
             AND
             ( user_info.user_gender = '$gender'  AND user_info.user_status = 'Approved' AND user_info.deleted = 1 AND user_info.status = 1 AND user_info.user_id NOT IN ($outputString)  AND user_info.marriage_status = 0 AND user_info.user_all_table_complited = 1);");
-            if (count($alldata) > 0) {
-                $user_arr = array(
-                    "status" => true,
-                    "success" => true,
-                    "data" => $alldata,
-                    "message" => count($alldata) . ' records Match'
-                );
-            } else {
-                $user_arr = array(
-                    "status" => false,
-                    "success" => false,
-                    "message" => "No Match Found",
-                );
+                if (count($alldata) > 0) {
+                    $user_arr = array(
+                        "status" => true,
+                        "success" => true,
+                        "data" => $alldata,
+                        "message" => count($alldata) . ' records Match'
+                    );
+                } else {
+                    $user_arr = array(
+                        "status" => false,
+                        "success" => false,
+                        "message" => "No Match Found",
+                    );
+                }
+                // } catch (Exception $e) {
+                //     $user_arr = array(
+                //         "status" => false,
+                //         "success" => false,
+                //         "message" => "No Match Found",
+                //     );
+                // }
             }
-            // } catch (Exception $e) {
-            //     $user_arr = array(
-            //         "status" => false,
-            //         "success" => false,
-            //         "message" => "No Match Found",
-            //     );
-            // }
-
         }
         return json_encode($user_arr);
     }
@@ -1658,7 +1667,8 @@ class filterController extends Controller
         }
     }
     //  RecentlyJoined filterData
-    public function RecentlyJoined(){
+    public function RecentlyJoined()
+    {
         $data = json_decode(file_get_contents("php://input"));
         // return $data;
         $user_id = isset($data->user_id) ? $data->user_id : '';
@@ -1895,7 +1905,8 @@ class filterController extends Controller
         return json_encode($user_arr);
     }
     //  RecentlyJoined matches
-    public function RecentlyJoinedMatches(){
+    public function RecentlyJoinedMatches()
+    {
         $data = json_decode(file_get_contents("php://input"));
         $user_id = isset($data->user_id) ? $data->user_id : '';
         if ($user_id == '') {

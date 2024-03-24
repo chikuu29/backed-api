@@ -303,9 +303,8 @@ class userController extends Controller
         try {
             $user_info = DB::table('user_info')->where('user_id', $userid)->first();
             $auth_user = DB::table('auth_user')->where('auth_ID', $userid)->first(['auth_phone_no']);
-            $user_info->phone = $auth_user->auth_phone_no;
+            $user_info->user_phone_no = $auth_user->auth_phone_no;
             $user_education_occupations = DB::table('user_education_occupations')->where('user_ID', $userid)->first();
-            //dd($user_education_occupations);
             $user_religion = DB::table('user_religion')->where('user_ID', $userid)->first();
             $user_about = DB::table('user_about')->where('user_ID', $userid)->first();
             $user_diet_hobbies = DB::table('user_diet_hobbies')->where('user_ID', $userid)->first();
@@ -318,7 +317,7 @@ class userController extends Controller
             $user_plan_deatils = DB::table('user_plan_deatils')->where('user_id', $userid)->get();
             $user_horoscope_deatils = DB::table('user_horoscope')->where('user_id', $userid)->first();
             //dd( @$user_profile_images[0]);
-            if (@$user_info->user_has_complete_profile == 1 && @$user_education_occupations->completed == 1 && @$user_religion->completed == 1 && @$user_about->completed == 1 && @$user_diet_hobbies->completed == 1 && @$user_family->completed == 1 && @$user_locations->completed == 1 && @$user_physical_details->completed == 1 && @$user_profile_images[0]->completed == 1 && @$user_horoscope_deatils->completed == 1 && !empty(empty($user_partnerpreference))) {
+            if (@$user_info->user_has_complete_profile == 1 && @$user_education_occupations->completed == 1 && @$user_religion->completed == 1 && @$user_about->completed == 1 && @$user_diet_hobbies->completed == 1 && @$user_family->completed == 1 && @$user_locations->completed == 1 && @$user_physical_details->completed == 1 && @$user_profile_images[0]->completed == 1 && @$user_horoscope_deatils->completed == 1 && !(empty($user_partnerpreference))) {
                 $user_arr = array(
                     "status" => true,
                     "success" => true,
