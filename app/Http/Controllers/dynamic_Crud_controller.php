@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rules\Exists;
 
+use function PHPUnit\Framework\isEmpty;
+
 class dynamic_Crud_controller extends Controller
 {
     public function fetch(Request $request)
@@ -29,6 +31,7 @@ class dynamic_Crud_controller extends Controller
             $projection = isset($requestedData['projection']) ? $requestedData['projection'] : [];
             $offset = isset($requestedData['offset']) ? $requestedData['offset'] : 0;
             $limit = isset($requestedData['limit']) ? $requestedData['limit'] : 1000;
+            $order_by = isset($requestedData['order_by']) ? $requestedData['order_by'] : '';
             if (empty($table)) {
                 $user_arr = array(
                     "status" => false,
@@ -43,15 +46,33 @@ class dynamic_Crud_controller extends Controller
                 // Get the total count of rows
 
                 if (count($whereConditions) == 0) {
-                    $fatchdata = DB::table($table)->skip($offset)
-                        ->take($limit)->get($projection);
+                    if (isEmpty($order_by)) {
+
+
+                        $fatchdata = DB::table($table)->skip($offset)
+                            ->take($limit)->get($projection);
+                    } else {
+                        $fatchdata = DB::table($table)
+                            ->orderBy($order_by, 'desc')
+                            ->skip($offset)
+                            ->take($limit)
+                            ->get($projection);
+                    }
                 } else {
-                    $fatchdata = DB::table($table)->where($whereConditions)->skip($offset)
-                        ->take($limit)->get($projection);
+                    if (isEmpty($order_by)) {
+                        $fatchdata = DB::table($table)->where($whereConditions)->skip($offset)
+                            ->take($limit)->get($projection);
+                    } else {
+                        $fatchdata = DB::table($table)
+                            ->orderBy($order_by, 'desc')
+                            ->where($whereConditions)
+                            ->skip($offset)
+                            ->take($limit)->get($projection);
+                    }
                 }
-               
+
                 $total_count = DB::select("SELECT COUNT(1) AS total_count FROM $table");
-                
+
                 $user_arr = array(
                     "status" => true,
                     "success" => true,
@@ -69,12 +90,11 @@ class dynamic_Crud_controller extends Controller
                 "success" => true,
                 "totalCount" => 0,
                 "count" => 0,
-                "message" => 'Total Fetch Data 0' ,
+                "message" => 'Total Fetch Data 0',
                 "data" => [],
-                "erroe"=>$e
+                "erroe" => $e
             );
             return json_encode($user_arr);
-
         }
     }
 
