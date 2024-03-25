@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\CryptoHelper;
+
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rules\Exists;
@@ -24,8 +26,8 @@ class dynamic_Crud_controller extends Controller
         try {
             //code...
 
-
-            $requestedData = $request->all();
+            $encrypted = $request->getContent();
+            $requestedData = CryptoHelper::cryptoJsAesDecrypt($encrypted);
             $whereConditions = isset($requestedData['whereConditions']) ? $requestedData['whereConditions'] : [];
             $table = isset($requestedData['table']) ? $requestedData['table'] : '';
             $projection = isset($requestedData['projection']) ? $requestedData['projection'] : [];
@@ -82,7 +84,8 @@ class dynamic_Crud_controller extends Controller
                     "data" => $fatchdata
                 );
             }
-            return json_encode($user_arr);
+            // return json_encode($user_arr);
+            return CryptoHelper::cryptoJsAesEncrypt($user_arr);
         } catch (\Exception $e) {
             //throw $th;
             $user_arr = array(
@@ -94,7 +97,7 @@ class dynamic_Crud_controller extends Controller
                 "data" => [],
                 "erroe" => $e
             );
-            return json_encode($user_arr);
+            return CryptoHelper::cryptoJsAesEncrypt($user_arr);
         }
     }
 
@@ -102,8 +105,8 @@ class dynamic_Crud_controller extends Controller
     {
 
 
-        $requestedData = $request->all();
-
+        $encrypted = $request->getContent();
+        $requestedData = CryptoHelper::cryptoJsAesDecrypt($encrypted);
         $data =  $requestedData['data'];
         $table = isset($requestedData['table']) ? $requestedData['table'] : '';
 
@@ -188,7 +191,9 @@ class dynamic_Crud_controller extends Controller
         //     ]
         // } Upadte data parametr formate 
         // $requestedData = json_decode(file_get_contents("php://input"));
-        $requestedData = $request->all();
+        $encrypted=$request->getContent();
+        $requestedData = CryptoHelper::cryptoJsAesDecrypt($encrypted); 
+        // $requestedData = $request->all();
         $whereConditions = isset($requestedData['whereConditions']) ? $requestedData['whereConditions'] : [];
         $table = isset($requestedData['table']) ? $requestedData['table'] : '';;
         $data = isset($requestedData['data']) ? $requestedData['data'] : '';
@@ -232,10 +237,11 @@ class dynamic_Crud_controller extends Controller
         //     ]
         // } Upadte data parametr formate 
         // $data = json_decode(file_get_contents('php:://input'));
-        $requestedData = $request->all();
+        // $requestedData = $request->all();
         // $id = empty($data->id) ? '' : $data->id;
         // $table = empty($data->table) ? '' : $data->table;
-
+        $encrypted=$request->getContent();
+        $requestedData = CryptoHelper::cryptoJsAesDecrypt($encrypted); 
         $whereConditions = isset($requestedData['whereConditions']) ? $requestedData['whereConditions'] : [];
         $table = isset($requestedData['table']) ? $requestedData['table'] : '';
         // $data = $requestedData['data'];
