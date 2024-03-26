@@ -2073,7 +2073,7 @@ class filterController extends Controller
                 $outputString = $elements;
                 //implode(",", $quotedElements);
             } else {
-                $outputString = '""';
+                $outputString = [];
             }
             $user_creation_date = date('Y-m-d H:i:s', strtotime('-30 days'));
 
@@ -2167,7 +2167,7 @@ class filterController extends Controller
                 $outputString = $quotedElements;
                 //implode(",", $quotedElements);
             } else {
-                $outputString = '""';
+                $outputString = [];
             }
             $alldata = DB::table('user_info')
                 ->select('*')
@@ -2740,7 +2740,7 @@ class filterController extends Controller
                 $outputString = $elements;
                 //implode(",", $quotedElements);
             } else {
-                $outputString = '""';
+                $outputString = [];
             }
             $user_creation_date = date('Y-m-d H:i:s', strtotime('-30 days'));
 
@@ -2834,7 +2834,7 @@ class filterController extends Controller
                 $outputString = $quotedElements;
                 //implode(",", $quotedElements);
             } else {
-                $outputString = '""';
+                $outputString = [];
             }
             $alldata = DB::table('user_info')
                 ->select('*')
