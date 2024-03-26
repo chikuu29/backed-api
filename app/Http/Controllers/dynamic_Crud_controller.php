@@ -20,8 +20,8 @@ class dynamic_Crud_controller extends Controller
         //     "whereConditions":{
         //     "country_name", "INDIA"
         //     }
-        //  }  
-        // } fetch data parametr formate 
+        //  }
+        // } fetch data parametr formate
 
         try {
             //code...
@@ -189,10 +189,10 @@ class dynamic_Crud_controller extends Controller
         //     "whereConditions":[
         //         ["country_name", "INDIA"]
         //     ]
-        // } Upadte data parametr formate 
+        // } Upadte data parametr formate
         // $requestedData = json_decode(file_get_contents("php://input"));
         $encrypted=$request->getContent();
-        $requestedData = CryptoHelper::cryptoJsAesDecrypt($encrypted); 
+        $requestedData = CryptoHelper::cryptoJsAesDecrypt($encrypted);
         // $requestedData = $request->all();
         $whereConditions = isset($requestedData['whereConditions']) ? $requestedData['whereConditions'] : [];
         $table = isset($requestedData['table']) ? $requestedData['table'] : '';;
@@ -235,13 +235,13 @@ class dynamic_Crud_controller extends Controller
         //     "whereConditions":[
         //         ["country_name", "INDIA"]
         //     ]
-        // } Upadte data parametr formate 
+        // } Upadte data parametr formate
         // $data = json_decode(file_get_contents('php:://input'));
         // $requestedData = $request->all();
         // $id = empty($data->id) ? '' : $data->id;
         // $table = empty($data->table) ? '' : $data->table;
         $encrypted=$request->getContent();
-        $requestedData = CryptoHelper::cryptoJsAesDecrypt($encrypted); 
+        $requestedData = CryptoHelper::cryptoJsAesDecrypt($encrypted);
         $whereConditions = isset($requestedData['whereConditions']) ? $requestedData['whereConditions'] : [];
         $table = isset($requestedData['table']) ? $requestedData['table'] : '';
         // $data = $requestedData['data'];
@@ -314,14 +314,14 @@ class dynamic_Crud_controller extends Controller
             //     "whereConditions":{
             //     "country_name", "INDIA"
             //     }
-            //  }  
-            // } fetch data parametr formate 
+            //  }
+            // } fetch data parametr formate
 
             $requestedData = $request->all();
             $whereConditions = isset($requestedData['whereConditions']) ? $requestedData['whereConditions'] : [];
             $table = isset($requestedData['table']) ? $requestedData['table'] : '';
             $projection = isset($requestedData['projection']) ? $requestedData['projection'] : [];
-            $selectedtavle = array('mother_tongue', 'religion', 'cast_table', 'sub_cast', 'country');
+            $selectedtavle = array('mother_tongue','success_story_by_user' ,'religion', 'cast_table', 'sub_cast', 'country');
             if (in_array($table, $selectedtavle)) {
                 if (empty($table)) {
                     $user_arr = array(
