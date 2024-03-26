@@ -23,11 +23,13 @@ class successStoryConlroller extends Controller
         $the_proposal = isset($data->the_proposal) ? $data->the_proposal : '';
         $wedding_photo = isset($data->wedding_photo) ? $data->wedding_photo : '';
         $login_id = isset($data->login_id) ? $data->login_id : '';
+        $root = env('FILE_UPLOAD_PATH');
         if ($id == '') {
+
             $image = explode(';base64,',  $wedding_photo);
             $image_base64 = base64_decode($image[1]);
             $extention = explode('/', $image[0]);
-            $path = storage_path() . '/successstory/';
+            $path = $root . '/successstory/';
             $uniqid = uniqid();
             $file = $path . $uniqid . '.' . $extention[1];
             if (file_put_contents($file, $image_base64)) {
@@ -82,7 +84,7 @@ class successStoryConlroller extends Controller
                 $image = explode(';base64,',  $wedding_photo);
                 $image_base64 = base64_decode($image[1]);
                 $extention = explode('/', $image[0]);
-                $path = storage_path() . '/successstory/';
+                $path = $root . '/successstory/';
                 $uniqid = uniqid();
                 $file = $path . $uniqid . '.' . $extention[1];
                 if (file_put_contents($file, $image_base64)) {
