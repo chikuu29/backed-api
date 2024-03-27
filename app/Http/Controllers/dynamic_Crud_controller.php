@@ -191,7 +191,7 @@ class dynamic_Crud_controller extends Controller
         //     ]
         // } Upadte data parametr formate
         // $requestedData = json_decode(file_get_contents("php://input"));
-        $encrypted=$request->getContent();
+        $encrypted = $request->getContent();
         $requestedData = CryptoHelper::cryptoJsAesDecrypt($encrypted);
         // $requestedData = $request->all();
         $whereConditions = isset($requestedData['whereConditions']) ? $requestedData['whereConditions'] : [];
@@ -240,7 +240,7 @@ class dynamic_Crud_controller extends Controller
         // $requestedData = $request->all();
         // $id = empty($data->id) ? '' : $data->id;
         // $table = empty($data->table) ? '' : $data->table;
-        $encrypted=$request->getContent();
+        $encrypted = $request->getContent();
         $requestedData = CryptoHelper::cryptoJsAesDecrypt($encrypted);
         $whereConditions = isset($requestedData['whereConditions']) ? $requestedData['whereConditions'] : [];
         $table = isset($requestedData['table']) ? $requestedData['table'] : '';
@@ -307,54 +307,53 @@ class dynamic_Crud_controller extends Controller
         return json_encode($user_arr);
     }
     public function unsecuredFatchquary(Request $request)
-    { {
-            // {
-            //     "table":"country_table",
-            //     "projection":["*"],
-            //     "whereConditions":{
-            //     "country_name", "INDIA"
-            //     }
-            //  }
-            // } fetch data parametr formate
+    {
+        // {
+        //     "table":"country_table",
+        //     "projection":["*"],
+        //     "whereConditions":{
+        //     "country_name", "INDIA"
+        //     }
+        //  }
+        // } fetch data parametr formate
 
-            $requestedData = $request->all();
-            $whereConditions = isset($requestedData['whereConditions']) ? $requestedData['whereConditions'] : [];
-            $table = isset($requestedData['table']) ? $requestedData['table'] : '';
-            $projection = isset($requestedData['projection']) ? $requestedData['projection'] : [];
-            $selectedtavle = array('mother_tongue','success_story_by_user' ,'religion', 'cast_table', 'sub_cast', 'country');
-            if (in_array($table, $selectedtavle)) {
-                if (empty($table)) {
-                    $user_arr = array(
-                        "status" => false,
-                        "success" => false,
-                        "message" => 'You Provid Empty data',
-                        'data' => [],
-                        'e' => $request->input()
-                    );
-                } else {
-                    // Get the total count of rows
-                    if (count($whereConditions) == 0) {
-                        $fatchdata = DB::table($table)
-                            ->get($projection);
-                    } else {
-                        $fatchdata = DB::table($table)->where($whereConditions)
-                            ->get($projection);
-                    }
-                    $user_arr = array(
-                        "status" => true,
-                        "success" => true,
-                        "data" => $fatchdata
-                    );
-                }
+        $requestedData = $request->all();
+        $whereConditions = isset($requestedData['whereConditions']) ? $requestedData['whereConditions'] : [];
+        $table = isset($requestedData['table']) ? $requestedData['table'] : '';
+        $projection = isset($requestedData['projection']) ? $requestedData['projection'] : [];
+        $selectedtavle = array('mother_tongue', 'success_story_by_user', 'religion', 'cast_table', 'sub_cast', 'country');
+        if (in_array($table, $selectedtavle)) {
+            if (empty($table)) {
+                $user_arr = array(
+                    "status" => false,
+                    "success" => false,
+                    "message" => 'You Provid Empty data',
+                    'data' => [],
+                    'e' => $request->input()
+                );
             } else {
+                // Get the total count of rows
+                if (count($whereConditions) == 0) {
+                    $fatchdata = DB::table($table)
+                        ->get($projection);
+                } else {
+                    $fatchdata = DB::table($table)->where($whereConditions)
+                        ->get($projection);
+                }
                 $user_arr = array(
                     "status" => true,
                     "success" => true,
-                    "data" => 'Do not act SMART'
+                    "data" => $fatchdata
                 );
             }
-
-            return json_encode($user_arr);
+        } else {
+            $user_arr = array(
+                "status" => true,
+                "success" => true,
+                "data" => 'Do not act SMART'
+            );
         }
+
+        return json_encode($user_arr);
     }
 }

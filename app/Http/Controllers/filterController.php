@@ -869,7 +869,7 @@ class filterController extends Controller
                 ->where('user_info.user_id', '!=', $user_id)
                 ->where('user_info.user_status', 'Approved')
                 ->where('user_info.deleted', 1)
-                ->where('user_info.user_membership_plan_type','<>',$membership_plan_type)
+                ->where('user_info.user_membership_plan_type', '<>', $membership_plan_type)
                 ->where('user_info.status', 1)
                 ->where('user_info.marriage_status', 0)
                 ->get();
@@ -1858,7 +1858,7 @@ class filterController extends Controller
 
 
 
-    public function byCastmatchesforindivisual()
+    public function byCastmatchesforindivisual() //done
     {
         $data = json_decode(file_get_contents("php://input"));
 
@@ -1881,7 +1881,7 @@ class filterController extends Controller
             $user = DB::table('user_info')->where('user_ID', $user_id)->get('user_gender');
             $gender = $user[0]->user_gender == "male" ? 'female' : 'male';
             $user_activities = DB::table('user_activities')->where('user_id', $user_id)->get('user_block_list');
-                //dd($user_activities);
+            //dd($user_activities);
 
 
             $fatchdata = DB::table('user_info')
@@ -2044,7 +2044,7 @@ class filterController extends Controller
         }
         return json_encode($user_arr);
     }
-    public function byCastRecentlyJoinedMatches()
+    public function byCastRecentlyJoinedMatches() //done
     {
         $data = json_decode(file_get_contents("php://input"));
         $user_id = isset($data->user_id) ? $data->user_id : '';
@@ -2056,69 +2056,305 @@ class filterController extends Controller
             );
         } else {
 
-            // try {
+
+
             $user_partnerpreference = DB::table('user_partnerpreference')->where('user_ID', $user_id)->get();
             $user_partnerpreference = json_decode($user_partnerpreference[0]->json_data);
+            //dd($user_partnerpreference);
+
+
+            // dd($user_partnerpreference->user_employed_In);
             $user = DB::table('user_info')->where('user_ID', $user_id)->get('user_gender');
             $gender = $user[0]->user_gender == "male" ? 'female' : 'male';
             $user_activities = DB::table('user_activities')->where('user_id', $user_id)->get('user_block_list');
-            if (count($user_activities) > 0) {
-                $user_block_list = $user_activities[0]->user_block_list;
-                $elements = explode(',', $user_block_list);
-                // Enclose each element in double quotes
-                $quotedElements = array_map(function ($element) {
-                    return '"' . $element . '"';
-                }, $elements);
-                // Join the elements with commas
-                $outputString = $elements;
-                //implode(",", $quotedElements);
+            //dd($user_activities);
+
+
+            $fatchdata = DB::table('user_info')
+                ->select('*')
+                ->join('user_religion', 'user_info.user_id', '=', 'user_religion.user_ID')
+                ->join('user_locations', 'user_info.user_id', '=', 'user_locations.user_ID')
+                ->join('user_family', 'user_info.user_id', '=', 'user_family.user_ID')
+                ->join('user_physical_details', 'user_info.user_id', '=', 'user_physical_details.user_ID')
+                ->join('user_about', 'user_info.user_id', '=', 'user_about.user_ID')
+                ->join('user_diet_hobbies', 'user_info.user_id', '=', 'user_diet_hobbies.user_ID')
+                ->join('user_education_occupations', 'user_info.user_id', '=', 'user_education_occupations.user_ID')
+                ->join('auth_user', 'user_info.user_id', '=', 'auth_user.auth_ID')
+                ->join('user_horoscope', 'user_info.user_id', '=', 'user_horoscope.user_id');
+
+            if ($user_activities != '') {
+                if (count($user_activities) > 0) {
+                    $user_block_list = $user_activities[0]->user_block_list;
+                    $elements = explode(',', $user_block_list);
+
+                    $fatchdata = $fatchdata->whereNotIn('user_info.user_id', $elements);
+                } else {
+                    $outputString = '""';
+                }
+            }
+
+            if ($user_partnerpreference->user_marital_status != '') {
+                $fatchdata = $fatchdata->whereIn('user_info.user_marital_status', $user_partnerpreference->user_marital_status);
             } else {
-                $outputString = [];
+                $user_marital_status = '""';
+            }
+
+            if ($user_partnerpreference->user_religion != '') {
+                $user_religion = implode(',', $user_partnerpreference->user_religion);
+
+                $fatchdata = $fatchdata->whereIn('user_religion.user_religion', $user_partnerpreference->user_religion);
+            } else {
+                $user_religion = '""';
+            }
+
+            if ($user_partnerpreference->user_employed_In != '') {
+                $fatchdata = $fatchdata->whereIn('user_education_occupations.user_employed_In', $user_partnerpreference->user_employed_In);
+            } else {
+                $user_employed_In = '""';
+            }
+
+            if ($user_partnerpreference->user_occupation != '') {
+                $fatchdata = $fatchdata->whereIn('user_education_occupations.user_occupation', $user_partnerpreference->user_occupation);
+                $user_occupation = implode(',', $user_partnerpreference->user_occupation);
+            } else {
+                $user_occupation = '""';
+            }
+
+            if ($user_partnerpreference->user_mother_toungh != '') {
+                $fatchdata = $fatchdata->whereIn('user_info.user_mother_toungh', $user_partnerpreference->user_mother_toungh);
+                $user_mother_toungh = implode(',', $user_partnerpreference->user_mother_toungh);
+            } else {
+                $user_mother_toungh = '""';
+            }
+
+
+
+            if ($user_partnerpreference->user_country != '') {
+                $fatchdata = $fatchdata->whereIn('user_locations.user_country', $user_partnerpreference->user_country);
+                $user_country = implode(',', $user_partnerpreference->user_country);
+            } else {
+                $user_country = '""';
+            }
+
+            if ($user_partnerpreference->user_city != '') {
+                $fatchdata = $fatchdata->whereIn('user_locations.user_city', $user_partnerpreference->user_city);
+                $user_city = implode(',', $user_partnerpreference->user_city);
+            } else {
+                $user_city = '""';
+            }
+
+            if ($user_partnerpreference->user_state != '') {
+                $fatchdata = $fatchdata->whereIn('user_locations.user_state', $user_partnerpreference->user_state);
+                $user_state = implode(',', $user_partnerpreference->user_state);
+            } else {
+                $user_state = '""';
+            }
+
+            if ($user_partnerpreference->user_zodiacs != '') {
+                $fatchdata = $fatchdata->whereIn('user_horoscope.user_zodiacs', $user_partnerpreference->user_zodiacs);
+                $zodiacs = implode(',', $user_partnerpreference->user_zodiacs);
+            } else {
+                $zodiacs = '""';
+            }
+
+            if ($user_partnerpreference->user_nakshatra != '') {
+                $fatchdata = $fatchdata->whereIn('user_horoscope.user_nakhyatra', $user_partnerpreference->user_nakshatra);
+                $nakshatra = implode(',', $user_partnerpreference->user_nakshatra);
+            } else {
+                $nakshatra = '""';
+            }
+
+            if ($user_partnerpreference->user_gotra != '') {
+                $fatchdata = $fatchdata->whereIn('user_horoscope.user_gotra', $user_partnerpreference->user_gotra);
+                $gotra = implode(',', $user_partnerpreference->user_gotra);
+            } else {
+                $gotra = '""';
+            }
+
+            if ($user_partnerpreference->user_cast != '') {
+                $fatchdata = $fatchdata->whereIn('user_religion.user_caste', $user_partnerpreference->user_cast);
+                $user_cast = implode(',', $user_partnerpreference->user_cast);
+            } else {
+                $user_cast = '""';
+            }
+            $user_min_height = $user_partnerpreference->user_min_height;
+            $user_max_height = $user_partnerpreference->user_max_height;
+            if ($user_min_height  != '' && $user_max_height != '') {
+                $fatchdata = $fatchdata->whereBetween('user_physical_details.user_height', [$user_min_height, $user_max_height]);
+            }
+            $user_max_anual_income = $user_partnerpreference->user_max_anual_income;
+            $user_min_anual_income = $user_partnerpreference->user_min_anual_income;
+            if ($user_max_anual_income  != '' && $user_min_anual_income != '') {
+                $fatchdata = $fatchdata->whereBetween('user_education_occupations' . 'user_anual_income', [$user_min_anual_income, $user_max_anual_income]);
+            }
+            $to_age = $user_partnerpreference->to_user_age;
+            $from_age =  $user_partnerpreference->from_user_age;
+            if ($to_age != '' && $from_age != '') {
+                $fatchdata = $fatchdata->whereBetween('user_info.user_age', [$from_age, $to_age]);
             }
             $user_creation_date = date('Y-m-d H:i:s', strtotime('-30 days'));
-
-
-
-            $alldata = DB::table('user_info')
-                ->select('*')
-                ->Join('user_religion', 'user_info.user_id', '=', 'user_religion.user_ID')
-                ->Join('user_locations', 'user_info.user_id', '=', 'user_locations.user_ID')
-                ->Join('user_family', 'user_info.user_id', '=', 'user_family.user_ID')
-                ->Join('user_physical_details', 'user_info.user_id', '=', 'user_physical_details.user_ID')
-                ->Join('user_about', 'user_info.user_id', '=', 'user_about.user_ID')
-                ->Join('user_diet_hobbies', 'user_info.user_id', '=', 'user_diet_hobbies.user_ID')
-                ->Join('user_education_occupations', 'user_info.user_id', '=', 'user_education_occupations.user_ID')
-                ->Join('auth_user', 'user_info.user_id', '=', 'auth_user.auth_ID')
-                ->Join('user_horoscope', 'user_info.user_id', '=', 'user_horoscope.user_id')
+            $fatchdata = $fatchdata
                 ->where('user_info.user_gender', $gender)
-                ->where('user_info.user_id', '<>', $user_id)
+                ->where('user_info.user_id', '!=', $user_id)
                 ->where('user_info.user_status', 'Approved')
-                ->whereNotIn('user_info.user_id', $outputString)
                 ->where('user_info.deleted', 1)
                 ->where('user_info.status', 1)
                 ->where('user_info.marriage_status', 0)
-                ->where('user_info.user_creation_date_time', '>=', $user_creation_date);
-
-
-            if ($user_partnerpreference->user_cast != '') {
-                $alldata = $alldata->whereIn('user_religion.user_caste', $user_partnerpreference->user_cast);
-                $user_cast = implode(',', $user_partnerpreference->user_cast);
-            } else {
-                $user_cast = '""';
-            }
-            $alldata = $alldata->get();
+                ->where('user_info.user_creation_date_time', '>=', $user_creation_date)
+                ->get();
+            //dd($fatchdata);
 
 
 
 
 
 
-            if (count($alldata) > 0) {
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+            // try {
+            // $user_partnerpreference = DB::table('user_partnerpreference')->where('user_ID', $user_id)->get();
+            // $user_partnerpreference = json_decode($user_partnerpreference[0]->json_data);
+            // $user = DB::table('user_info')->where('user_ID', $user_id)->get('user_gender');
+            // $gender = $user[0]->user_gender == "male" ? 'female' : 'male';
+            // $user_activities = DB::table('user_activities')->where('user_id', $user_id)->get('user_block_list');
+            // if (count($user_activities) > 0) {
+            //     $user_block_list = $user_activities[0]->user_block_list;
+            //     $elements = explode(',', $user_block_list);
+            //     // Enclose each element in double quotes
+            //     $quotedElements = array_map(function ($element) {
+            //         return '"' . $element . '"';
+            //     }, $elements);
+            //     // Join the elements with commas
+            //     $outputString = $elements;
+            //     //implode(",", $quotedElements);
+            // } else {
+            //     $outputString = [];
+            // }
+            //
+
+
+
+            // $alldata = DB::table('user_info')
+            //     ->select('*')
+            //     ->Join('user_religion', 'user_info.user_id', '=', 'user_religion.user_ID')
+            //     ->Join('user_locations', 'user_info.user_id', '=', 'user_locations.user_ID')
+            //     ->Join('user_family', 'user_info.user_id', '=', 'user_family.user_ID')
+            //     ->Join('user_physical_details', 'user_info.user_id', '=', 'user_physical_details.user_ID')
+            //     ->Join('user_about', 'user_info.user_id', '=', 'user_about.user_ID')
+            //     ->Join('user_diet_hobbies', 'user_info.user_id', '=', 'user_diet_hobbies.user_ID')
+            //     ->Join('user_education_occupations', 'user_info.user_id', '=', 'user_education_occupations.user_ID')
+            //     ->Join('auth_user', 'user_info.user_id', '=', 'auth_user.auth_ID')
+            //     ->Join('user_horoscope', 'user_info.user_id', '=', 'user_horoscope.user_id')
+            //     ->where('user_info.user_gender', $gender)
+            //     ->where('user_info.user_id', '<>', $user_id)
+            //     ->where('user_info.user_status', 'Approved')
+            //     ->whereNotIn('user_info.user_id', $outputString)
+            //     ->where('user_info.deleted', 1)
+            //     ->where('user_info.status', 1)
+            //     ->where('user_info.marriage_status', 0)
+            //
+
+
+            // if ($user_partnerpreference->user_cast != '') {
+            //     $alldata = $alldata->whereIn('user_religion.user_caste', $user_partnerpreference->user_cast);
+            //     $user_cast = implode(',', $user_partnerpreference->user_cast);
+            // } else {
+            //     $user_cast = '""';
+            // }
+            // $alldata = $alldata->get();
+
+
+
+
+
+
+            if (count($fatchdata) > 0) {
                 $user_arr = array(
                     "status" => true,
                     "success" => true,
-                    "data" => $alldata,
-                    "message" => count($alldata) . ' records Match'
+                    "data" => $fatchdata,
+                    "message" => count($fatchdata) . ' records Match'
                 );
             } else {
                 $user_arr = array(
@@ -2138,7 +2374,7 @@ class filterController extends Controller
         }
         return json_encode($user_arr);
     }
-    public function byCastgetSpotlightdata()
+    public function byCastgetSpotlightdata() //done
     {
         $data = json_decode(file_get_contents("php://input"));
         $user_id = isset($data->user_id) ? $data->user_id : '';
@@ -2150,57 +2386,299 @@ class filterController extends Controller
             );
         } else {
 
+
             // try {
             $user_partnerpreference = DB::table('user_partnerpreference')->where('user_ID', $user_id)->get();
             $user_partnerpreference = json_decode($user_partnerpreference[0]->json_data);
+            //dd($user_partnerpreference);
+
+
+            // dd($user_partnerpreference->user_employed_In);
             $user = DB::table('user_info')->where('user_ID', $user_id)->get('user_gender');
             $gender = $user[0]->user_gender == "male" ? 'female' : 'male';
             $user_activities = DB::table('user_activities')->where('user_id', $user_id)->get('user_block_list');
-            if (count($user_activities) > 0) {
-                $user_block_list = $user_activities[0]->user_block_list;
-                $elements = explode(',', $user_block_list);
-                // Enclose each element in double quotes
-                $quotedElements = array_map(function ($element) {
-                    return '"' . $element . '"';
-                }, $elements);
-                // Join the elements with commas
-                $outputString = $quotedElements;
-                //implode(",", $quotedElements);
-            } else {
-                $outputString = [];
-            }
-            $alldata = DB::table('user_info')
+            //dd($user_activities);
+
+
+            $fatchdata = DB::table('user_info')
                 ->select('*')
-                ->Join('user_religion', 'user_info.user_id', '=', 'user_religion.user_ID')
-                ->Join('user_locations', 'user_info.user_id', '=', 'user_locations.user_ID')
-                ->Join('user_family', 'user_info.user_id', '=', 'user_family.user_ID')
-                ->Join('user_physical_details', 'user_info.user_id', '=', 'user_physical_details.user_ID')
-                ->Join('user_about', 'user_info.user_id', '=', 'user_about.user_ID')
-                ->Join('user_diet_hobbies', 'user_info.user_id', '=', 'user_diet_hobbies.user_ID')
-                ->Join('user_education_occupations', 'user_info.user_id', '=', 'user_education_occupations.user_ID')
-                ->Join('auth_user', 'user_info.user_id', '=', 'auth_user.auth_ID')
-                ->Join('user_horoscope', 'user_info.user_id', '=', 'user_horoscope.user_id')
-                ->where('user_info.user_gender', $gender)
-                ->where('user_info.user_id', '<>', $user_id)
-                ->where('user_info.spotlight', 1)
-                ->whereNotIn('user_info.user_id', $outputString)
-                ->where('user_info.user_status', 'Approved')
-                ->where('user_info.deleted', 1);
+                ->join('user_religion', 'user_info.user_id', '=', 'user_religion.user_ID')
+                ->join('user_locations', 'user_info.user_id', '=', 'user_locations.user_ID')
+                ->join('user_family', 'user_info.user_id', '=', 'user_family.user_ID')
+                ->join('user_physical_details', 'user_info.user_id', '=', 'user_physical_details.user_ID')
+                ->join('user_about', 'user_info.user_id', '=', 'user_about.user_ID')
+                ->join('user_diet_hobbies', 'user_info.user_id', '=', 'user_diet_hobbies.user_ID')
+                ->join('user_education_occupations', 'user_info.user_id', '=', 'user_education_occupations.user_ID')
+                ->join('auth_user', 'user_info.user_id', '=', 'auth_user.auth_ID')
+                ->join('user_horoscope', 'user_info.user_id', '=', 'user_horoscope.user_id');
+
+            if ($user_activities != '') {
+                if (count($user_activities) > 0) {
+                    $user_block_list = $user_activities[0]->user_block_list;
+                    $elements = explode(',', $user_block_list);
+
+                    $fatchdata = $fatchdata->whereNotIn('user_info.user_id', $elements);
+                } else {
+                    $outputString = '""';
+                }
+            }
+
+            if ($user_partnerpreference->user_marital_status != '') {
+                $fatchdata = $fatchdata->whereIn('user_info.user_marital_status', $user_partnerpreference->user_marital_status);
+            } else {
+                $user_marital_status = '""';
+            }
+
+            if ($user_partnerpreference->user_religion != '') {
+                $user_religion = implode(',', $user_partnerpreference->user_religion);
+
+                $fatchdata = $fatchdata->whereIn('user_religion.user_religion', $user_partnerpreference->user_religion);
+            } else {
+                $user_religion = '""';
+            }
+
+            if ($user_partnerpreference->user_employed_In != '') {
+                $fatchdata = $fatchdata->whereIn('user_education_occupations.user_employed_In', $user_partnerpreference->user_employed_In);
+            } else {
+                $user_employed_In = '""';
+            }
+
+            if ($user_partnerpreference->user_occupation != '') {
+                $fatchdata = $fatchdata->whereIn('user_education_occupations.user_occupation', $user_partnerpreference->user_occupation);
+                $user_occupation = implode(',', $user_partnerpreference->user_occupation);
+            } else {
+                $user_occupation = '""';
+            }
+
+            if ($user_partnerpreference->user_mother_toungh != '') {
+                $fatchdata = $fatchdata->whereIn('user_info.user_mother_toungh', $user_partnerpreference->user_mother_toungh);
+                $user_mother_toungh = implode(',', $user_partnerpreference->user_mother_toungh);
+            } else {
+                $user_mother_toungh = '""';
+            }
+
+
+
+            if ($user_partnerpreference->user_country != '') {
+                $fatchdata = $fatchdata->whereIn('user_locations.user_country', $user_partnerpreference->user_country);
+                $user_country = implode(',', $user_partnerpreference->user_country);
+            } else {
+                $user_country = '""';
+            }
+
+            if ($user_partnerpreference->user_city != '') {
+                $fatchdata = $fatchdata->whereIn('user_locations.user_city', $user_partnerpreference->user_city);
+                $user_city = implode(',', $user_partnerpreference->user_city);
+            } else {
+                $user_city = '""';
+            }
+
+            if ($user_partnerpreference->user_state != '') {
+                $fatchdata = $fatchdata->whereIn('user_locations.user_state', $user_partnerpreference->user_state);
+                $user_state = implode(',', $user_partnerpreference->user_state);
+            } else {
+                $user_state = '""';
+            }
+
+            if ($user_partnerpreference->user_zodiacs != '') {
+                $fatchdata = $fatchdata->whereIn('user_horoscope.user_zodiacs', $user_partnerpreference->user_zodiacs);
+                $zodiacs = implode(',', $user_partnerpreference->user_zodiacs);
+            } else {
+                $zodiacs = '""';
+            }
+
+            if ($user_partnerpreference->user_nakshatra != '') {
+                $fatchdata = $fatchdata->whereIn('user_horoscope.user_nakhyatra', $user_partnerpreference->user_nakshatra);
+                $nakshatra = implode(',', $user_partnerpreference->user_nakshatra);
+            } else {
+                $nakshatra = '""';
+            }
+
+            if ($user_partnerpreference->user_gotra != '') {
+                $fatchdata = $fatchdata->whereIn('user_horoscope.user_gotra', $user_partnerpreference->user_gotra);
+                $gotra = implode(',', $user_partnerpreference->user_gotra);
+            } else {
+                $gotra = '""';
+            }
+
             if ($user_partnerpreference->user_cast != '') {
-                $alldata = $alldata->whereIn('user_religion.user_caste', $user_partnerpreference->user_cast);
+                $fatchdata = $fatchdata->whereIn('user_religion.user_caste', $user_partnerpreference->user_cast);
                 $user_cast = implode(',', $user_partnerpreference->user_cast);
             } else {
                 $user_cast = '""';
             }
-            $alldata = $alldata->get();
+            $user_min_height = $user_partnerpreference->user_min_height;
+            $user_max_height = $user_partnerpreference->user_max_height;
+            if ($user_min_height  != '' && $user_max_height != '') {
+                $fatchdata = $fatchdata->whereBetween('user_physical_details.user_height', [$user_min_height, $user_max_height]);
+            }
+            $user_max_anual_income = $user_partnerpreference->user_max_anual_income;
+            $user_min_anual_income = $user_partnerpreference->user_min_anual_income;
+            if ($user_max_anual_income  != '' && $user_min_anual_income != '') {
+                $fatchdata = $fatchdata->whereBetween('user_education_occupations' . 'user_anual_income', [$user_min_anual_income, $user_max_anual_income]);
+            }
+            $to_age = $user_partnerpreference->to_user_age;
+            $from_age =  $user_partnerpreference->from_user_age;
+            if ($to_age != '' && $from_age != '') {
+                $fatchdata = $fatchdata->whereBetween('user_info.user_age', [$from_age, $to_age]);
+            }
+            $fatchdata = $fatchdata
+                ->where('user_info.user_gender', $gender)
+                ->where('user_info.user_id', '!=', $user_id)
+                ->where('user_info.user_status', 'Approved')
+                ->where('user_info.deleted', 1)
+                ->where('user_info.status', 1)
+                ->where('user_info.marriage_status', 0)
+                ->where('user_info.spotlight', 1)
+                ->get();
 
 
-            if (count($alldata) > 0) {
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+            // // try {
+            // $user_partnerpreference = DB::table('user_partnerpreference')->where('user_ID', $user_id)->get();
+            // $user_partnerpreference = json_decode($user_partnerpreference[0]->json_data);
+            // $user = DB::table('user_info')->where('user_ID', $user_id)->get('user_gender');
+            // $gender = $user[0]->user_gender == "male" ? 'female' : 'male';
+            // $user_activities = DB::table('user_activities')->where('user_id', $user_id)->get('user_block_list');
+            // if (count($user_activities) > 0) {
+            //     $user_block_list = $user_activities[0]->user_block_list;
+            //     $elements = explode(',', $user_block_list);
+            //     // Enclose each element in double quotes
+            //     $quotedElements = array_map(function ($element) {
+            //         return '"' . $element . '"';
+            //     }, $elements);
+            //     // Join the elements with commas
+            //     $outputString = $quotedElements;
+            //     //implode(",", $quotedElements);
+            // } else {
+            //     $outputString = [];
+            // }
+            // $alldata = DB::table('user_info')
+            //     ->select('*')
+            //     ->Join('user_religion', 'user_info.user_id', '=', 'user_religion.user_ID')
+            //     ->Join('user_locations', 'user_info.user_id', '=', 'user_locations.user_ID')
+            //     ->Join('user_family', 'user_info.user_id', '=', 'user_family.user_ID')
+            //     ->Join('user_physical_details', 'user_info.user_id', '=', 'user_physical_details.user_ID')
+            //     ->Join('user_about', 'user_info.user_id', '=', 'user_about.user_ID')
+            //     ->Join('user_diet_hobbies', 'user_info.user_id', '=', 'user_diet_hobbies.user_ID')
+            //     ->Join('user_education_occupations', 'user_info.user_id', '=', 'user_education_occupations.user_ID')
+            //     ->Join('auth_user', 'user_info.user_id', '=', 'auth_user.auth_ID')
+            //     ->Join('user_horoscope', 'user_info.user_id', '=', 'user_horoscope.user_id')
+            //     ->where('user_info.user_gender', $gender)
+            //     ->where('user_info.user_id', '<>', $user_id)
+            //     ->where('user_info.spotlight', 1)
+            //     ->whereNotIn('user_info.user_id', $outputString)
+            //     ->where('user_info.user_status', 'Approved')
+            //     ->where('user_info.deleted', 1);
+            // if ($user_partnerpreference->user_cast != '') {
+            //     $alldata = $alldata->whereIn('user_religion.user_caste', $user_partnerpreference->user_cast);
+            //     $user_cast = implode(',', $user_partnerpreference->user_cast);
+            // } else {
+            //     $user_cast = '""';
+            // }
+            // $alldata = $alldata->get();
+
+
+            if (count($fatchdata) > 0) {
                 $user_arr = array(
                     "status" => true,
                     "success" => true,
-                    "data" => $alldata,
-                    "message" => count($alldata) . ' records Match'
+                    "data" => $fatchdata,
+                    "message" => count($fatchdata) . ' records Match'
                 );
             } else {
                 $user_arr = array(
@@ -2220,7 +2698,7 @@ class filterController extends Controller
         }
         return json_encode($user_arr);
     }
-    public function byCastgetOnlinedata()
+    public function byCastgetOnlinedata()//done
     {
         $data = json_decode(file_get_contents("php://input"));
         $user_id = isset($data->user_id) ? $data->user_id : '';
@@ -2231,112 +2709,467 @@ class filterController extends Controller
                 "message" => "Please enter required parameters",
             );
         } else {
+
+            // try {
             $user_partnerpreference = DB::table('user_partnerpreference')->where('user_ID', $user_id)->get();
             $user_partnerpreference = json_decode($user_partnerpreference[0]->json_data);
             //dd($user_partnerpreference);
+
+
+            // dd($user_partnerpreference->user_employed_In);
             $user = DB::table('user_info')->where('user_ID', $user_id)->get('user_gender');
             $gender = $user[0]->user_gender == "male" ? 'female' : 'male';
-            $user_activities = DB::table('user_activities')->where('user_id', $user_id)->get(['user_block_list']);
+            $user_activities = DB::table('user_activities')->where('user_id', $user_id)->get('user_block_list');
             //dd($user_activities);
-            if (count($user_activities) > 0) {
-                $user_block_list = $user_activities[0]->user_block_list;
-                $elements = explode(',', $user_block_list);
-                // Enclose each element in double quotes
-                $quotedElements = array_map(function ($element) {
-                    return '"' . $element . '"';
-                }, $elements);
 
-                // Join the elements with commas
-                $outputString = $quotedElements;
-                //  implode(",", $quotedElements);
-               // dd($outputString);
-            } else {
-                $outputString = [];
-            }
-            $alldata = DB::table('user_info')
+
+            $fatchdata = DB::table('user_info')
                 ->select('*')
-                ->Join('user_religion', 'user_info.user_id', '=', 'user_religion.user_ID')
-                ->Join('user_locations', 'user_info.user_id', '=', 'user_locations.user_ID')
-                ->Join('user_family', 'user_info.user_id', '=', 'user_family.user_ID')
-                ->Join('user_physical_details', 'user_info.user_id', '=', 'user_physical_details.user_ID')
-                ->Join('user_about', 'user_info.user_id', '=', 'user_about.user_ID')
-                ->Join('user_diet_hobbies', 'user_info.user_id', '=', 'user_diet_hobbies.user_ID')
-                ->Join('user_education_occupations', 'user_info.user_id', '=', 'user_education_occupations.user_ID')
-                ->Join('auth_user', 'user_info.user_id', '=', 'auth_user.auth_ID')
-                ->Join('user_horoscope', 'user_info.user_id', '=', 'user_horoscope.user_id')
-                ->where('user_info.user_gender', $gender)
-                ->where('user_info.user_status', 'Approved')
-                ->whereNotIn('user_info.user_id', $outputString)
-                ->where('user_info.user_id', '<>', $user_id)
-                ->where('user_info.deleted', 1)
-                ->where('user_info.status', 1)
-                ->where('user_info.online_status', 1)
-                ->where('user_info.marriage_status', 0);
-                //dd($user_partnerpreference->user_cast);
+                ->join('user_religion', 'user_info.user_id', '=', 'user_religion.user_ID')
+                ->join('user_locations', 'user_info.user_id', '=', 'user_locations.user_ID')
+                ->join('user_family', 'user_info.user_id', '=', 'user_family.user_ID')
+                ->join('user_physical_details', 'user_info.user_id', '=', 'user_physical_details.user_ID')
+                ->join('user_about', 'user_info.user_id', '=', 'user_about.user_ID')
+                ->join('user_diet_hobbies', 'user_info.user_id', '=', 'user_diet_hobbies.user_ID')
+                ->join('user_education_occupations', 'user_info.user_id', '=', 'user_education_occupations.user_ID')
+                ->join('auth_user', 'user_info.user_id', '=', 'auth_user.auth_ID')
+                ->join('user_horoscope', 'user_info.user_id', '=', 'user_horoscope.user_id');
+
+            if ($user_activities != '') {
+                if (count($user_activities) > 0) {
+                    $user_block_list = $user_activities[0]->user_block_list;
+                    $elements = explode(',', $user_block_list);
+
+                    $fatchdata = $fatchdata->whereNotIn('user_info.user_id', $elements);
+                } else {
+                    $outputString = '""';
+                }
+            }
+
+            if ($user_partnerpreference->user_marital_status != '') {
+                $fatchdata = $fatchdata->whereIn('user_info.user_marital_status', $user_partnerpreference->user_marital_status);
+            } else {
+                $user_marital_status = '""';
+            }
+
+            if ($user_partnerpreference->user_religion != '') {
+                $user_religion = implode(',', $user_partnerpreference->user_religion);
+
+                $fatchdata = $fatchdata->whereIn('user_religion.user_religion', $user_partnerpreference->user_religion);
+            } else {
+                $user_religion = '""';
+            }
+
+            if ($user_partnerpreference->user_employed_In != '') {
+                $fatchdata = $fatchdata->whereIn('user_education_occupations.user_employed_In', $user_partnerpreference->user_employed_In);
+            } else {
+                $user_employed_In = '""';
+            }
+
+            if ($user_partnerpreference->user_occupation != '') {
+                $fatchdata = $fatchdata->whereIn('user_education_occupations.user_occupation', $user_partnerpreference->user_occupation);
+                $user_occupation = implode(',', $user_partnerpreference->user_occupation);
+            } else {
+                $user_occupation = '""';
+            }
+
+            if ($user_partnerpreference->user_mother_toungh != '') {
+                $fatchdata = $fatchdata->whereIn('user_info.user_mother_toungh', $user_partnerpreference->user_mother_toungh);
+                $user_mother_toungh = implode(',', $user_partnerpreference->user_mother_toungh);
+            } else {
+                $user_mother_toungh = '""';
+            }
+
+
+
+            if ($user_partnerpreference->user_country != '') {
+                $fatchdata = $fatchdata->whereIn('user_locations.user_country', $user_partnerpreference->user_country);
+                $user_country = implode(',', $user_partnerpreference->user_country);
+            } else {
+                $user_country = '""';
+            }
+
+            if ($user_partnerpreference->user_city != '') {
+                $fatchdata = $fatchdata->whereIn('user_locations.user_city', $user_partnerpreference->user_city);
+                $user_city = implode(',', $user_partnerpreference->user_city);
+            } else {
+                $user_city = '""';
+            }
+
+            if ($user_partnerpreference->user_state != '') {
+                $fatchdata = $fatchdata->whereIn('user_locations.user_state', $user_partnerpreference->user_state);
+                $user_state = implode(',', $user_partnerpreference->user_state);
+            } else {
+                $user_state = '""';
+            }
+
+            if ($user_partnerpreference->user_zodiacs != '') {
+                $fatchdata = $fatchdata->whereIn('user_horoscope.user_zodiacs', $user_partnerpreference->user_zodiacs);
+                $zodiacs = implode(',', $user_partnerpreference->user_zodiacs);
+            } else {
+                $zodiacs = '""';
+            }
+
+            if ($user_partnerpreference->user_nakshatra != '') {
+                $fatchdata = $fatchdata->whereIn('user_horoscope.user_nakhyatra', $user_partnerpreference->user_nakshatra);
+                $nakshatra = implode(',', $user_partnerpreference->user_nakshatra);
+            } else {
+                $nakshatra = '""';
+            }
+
+            if ($user_partnerpreference->user_gotra != '') {
+                $fatchdata = $fatchdata->whereIn('user_horoscope.user_gotra', $user_partnerpreference->user_gotra);
+                $gotra = implode(',', $user_partnerpreference->user_gotra);
+            } else {
+                $gotra = '""';
+            }
+
             if ($user_partnerpreference->user_cast != '') {
-                $alldata = $alldata->whereIn('user_religion.user_caste', $user_partnerpreference->user_cast);
+                $fatchdata = $fatchdata->whereIn('user_religion.user_caste', $user_partnerpreference->user_cast);
                 $user_cast = implode(',', $user_partnerpreference->user_cast);
             } else {
-                $user_cast = [];
+                $user_cast = '""';
             }
-            $alldata = $alldata->get();
+            $user_min_height = $user_partnerpreference->user_min_height;
+            $user_max_height = $user_partnerpreference->user_max_height;
+            if ($user_min_height  != '' && $user_max_height != '') {
+                $fatchdata = $fatchdata->whereBetween('user_physical_details.user_height', [$user_min_height, $user_max_height]);
+            }
+            $user_max_anual_income = $user_partnerpreference->user_max_anual_income;
+            $user_min_anual_income = $user_partnerpreference->user_min_anual_income;
+            if ($user_max_anual_income  != '' && $user_min_anual_income != '') {
+                $fatchdata = $fatchdata->whereBetween('user_education_occupations' . 'user_anual_income', [$user_min_anual_income, $user_max_anual_income]);
+            }
+            $to_age = $user_partnerpreference->to_user_age;
+            $from_age =  $user_partnerpreference->from_user_age;
+            if ($to_age != '' && $from_age != '') {
+                $fatchdata = $fatchdata->whereBetween('user_info.user_age', [$from_age, $to_age]);
+            }
+            $fatchdata = $fatchdata
+                ->where('user_info.user_gender', $gender)
+                ->where('user_info.user_id', '!=', $user_id)
+                ->where('user_info.user_status', 'Approved')
+                ->where('user_info.deleted', 1)
+                ->where('user_info.status', 1)
+                ->where('user_info.marriage_status', 0)
+                ->where('user_info.online_status', 1)
+                ->get();
 
-
-
-
-
-            // Check if $alldata count is less than 5
-            if (count($alldata) < 5) {
-                // Merge $alldata1 and $alldata and return output
-                $alldata1 = DB::table('user_info')
+            if (count($fatchdata) < 5) {
+                $fatchdataone = DB::table('user_info')
                     ->select('*')
-                    ->leftJoin('user_religion', 'user_info.user_id', '=', 'user_religion.user_ID')
-                    ->leftJoin('user_locations', 'user_info.user_id', '=', 'user_locations.user_ID')
-                    ->leftJoin('user_family', 'user_info.user_id', '=', 'user_family.user_ID')
-                    ->leftJoin('user_physical_details', 'user_info.user_id', '=', 'user_physical_details.user_ID')
-                    ->leftJoin('user_about', 'user_info.user_id', '=', 'user_about.user_ID')
-                    ->leftJoin('user_diet_hobbies', 'user_info.user_id', '=', 'user_diet_hobbies.user_ID')
-                    ->leftJoin('user_education_occupations', 'user_info.user_id', '=', 'user_education_occupations.user_ID')
-                    ->leftJoin('auth_user', 'user_info.user_id', '=', 'auth_user.auth_ID')
-                    ->leftJoin('user_horoscope', 'user_info.user_id', '=', 'user_horoscope.user_id')
-                    ->where('user_info.user_gender', $gender)
-                    ->whereNotIn('user_info.user_id', $outputString)
-                    ->where('user_info.user_id', '<>', $user_id)
-                    ->where('user_info.online_status', 0)
-                    ->where('user_info.user_status', 'Approved')
-                    ->where('user_info.deleted', 1);
+                    ->join('user_religion', 'user_info.user_id', '=', 'user_religion.user_ID')
+                    ->join('user_locations', 'user_info.user_id', '=', 'user_locations.user_ID')
+                    ->join('user_family', 'user_info.user_id', '=', 'user_family.user_ID')
+                    ->join('user_physical_details', 'user_info.user_id', '=', 'user_physical_details.user_ID')
+                    ->join('user_about', 'user_info.user_id', '=', 'user_about.user_ID')
+                    ->join('user_diet_hobbies', 'user_info.user_id', '=', 'user_diet_hobbies.user_ID')
+                    ->join('user_education_occupations', 'user_info.user_id', '=', 'user_education_occupations.user_ID')
+                    ->join('auth_user', 'user_info.user_id', '=', 'auth_user.auth_ID')
+                    ->join('user_horoscope', 'user_info.user_id', '=', 'user_horoscope.user_id');
 
-                if ($user_partnerpreference->user_cast != '') {
-                    $alldata1 = $alldata1->whereIn('user_religion.user_caste', $user_partnerpreference->user_cast);
-                    $user_cast = implode(',', $user_partnerpreference->user_cast);
+                if ($user_activities != '') {
+                    if (count($user_activities) > 0) {
+                        $user_block_list = $user_activities[0]->user_block_list;
+                        $elements = explode(',', $user_block_list);
+
+                        $fatchdataone = $fatchdata->whereNotIn('user_info.user_id', $elements);
+                    } else {
+                        $outputString = '""';
+                    }
+                }
+
+                if ($user_partnerpreference->user_marital_status != '') {
+                    $fatchdataone = $fatchdataone->whereIn('user_info.user_marital_status', $user_partnerpreference->user_marital_status);
                 } else {
-                    $user_cast = '""';
+                    $user_marital_status = '""';
+                }
+
+                if ($user_partnerpreference->user_religion != '') {
+                    $user_religion = implode(',', $user_partnerpreference->user_religion);
+
+                    $fatchdataone = $fatchdataone->whereIn('user_religion.user_religion', $user_partnerpreference->user_religion);
+                } else {
+                    $user_religion = '""';
+                }
+
+                if ($user_partnerpreference->user_employed_In != '') {
+                    $fatchdataone = $fatchdataone->whereIn('user_education_occupations.user_employed_In', $user_partnerpreference->user_employed_In);
+                } else {
+                    $user_employed_In = '""';
+                }
+
+                if ($user_partnerpreference->user_occupation != '') {
+                    $fatchdataone = $fatchdataone->whereIn('user_education_occupations.user_occupation', $user_partnerpreference->user_occupation);
+                    $user_occupation = implode(',', $user_partnerpreference->user_occupation);
+                } else {
+                    $user_occupation = '""';
+                }
+
+                if ($user_partnerpreference->user_mother_toungh != '') {
+                    $fatchdataone = $fatchdataone->whereIn('user_info.user_mother_toungh', $user_partnerpreference->user_mother_toungh);
+                    $user_mother_toungh = implode(',', $user_partnerpreference->user_mother_toungh);
+                } else {
+                    $user_mother_toungh = '""';
                 }
 
 
 
-                $alldata1 = $alldata1->inRandomOrder()
+                if ($user_partnerpreference->user_country != '') {
+                    $fatchdataone = $fatchdataone->whereIn('user_locations.user_country', $user_partnerpreference->user_country);
+                    $user_country = implode(',', $user_partnerpreference->user_country);
+                } else {
+                    $user_country = '""';
+                }
+
+                if ($user_partnerpreference->user_city != '') {
+                    $fatchdataone = $fatchdataone->whereIn('user_locations.user_city', $user_partnerpreference->user_city);
+                    $user_city = implode(',', $user_partnerpreference->user_city);
+                } else {
+                    $user_city = '""';
+                }
+
+                if ($user_partnerpreference->user_state != '') {
+                    $fatchdataone = $fatchdataone->whereIn('user_locations.user_state', $user_partnerpreference->user_state);
+                    $user_state = implode(',', $user_partnerpreference->user_state);
+                } else {
+                    $user_state = '""';
+                }
+
+                if ($user_partnerpreference->user_zodiacs != '') {
+                    $fatchdataone = $fatchdataone->whereIn('user_horoscope.user_zodiacs', $user_partnerpreference->user_zodiacs);
+                    $zodiacs = implode(',', $user_partnerpreference->user_zodiacs);
+                } else {
+                    $zodiacs = '""';
+                }
+
+                if ($user_partnerpreference->user_nakshatra != '') {
+                    $fatchdataone = $fatchdataone->whereIn('user_horoscope.user_nakhyatra', $user_partnerpreference->user_nakshatra);
+                    $nakshatra = implode(',', $user_partnerpreference->user_nakshatra);
+                } else {
+                    $nakshatra = '""';
+                }
+
+                if ($user_partnerpreference->user_gotra != '') {
+                    $fatchdataone = $fatchdataone->whereIn('user_horoscope.user_gotra', $user_partnerpreference->user_gotra);
+                    $gotra = implode(',', $user_partnerpreference->user_gotra);
+                } else {
+                    $gotra = '""';
+                }
+
+                if ($user_partnerpreference->user_cast != '') {
+                    $fatchdataone = $fatchdataone->whereIn('user_religion.user_caste', $user_partnerpreference->user_cast);
+                    $user_cast = implode(',', $user_partnerpreference->user_cast);
+                } else {
+                    $user_cast = '""';
+                }
+                $user_min_height = $user_partnerpreference->user_min_height;
+                $user_max_height = $user_partnerpreference->user_max_height;
+                if ($user_min_height  != '' && $user_max_height != '') {
+                    $fatchdataone = $fatchdataone->whereBetween('user_physical_details.user_height', [$user_min_height, $user_max_height]);
+                }
+                $user_max_anual_income = $user_partnerpreference->user_max_anual_income;
+                $user_min_anual_income = $user_partnerpreference->user_min_anual_income;
+                if ($user_max_anual_income  != '' && $user_min_anual_income != '') {
+                    $fatchdataone = $fatchdataone->whereBetween('user_education_occupations' . 'user_anual_income', [$user_min_anual_income, $user_max_anual_income]);
+                }
+                $to_age = $user_partnerpreference->to_user_age;
+                $from_age =  $user_partnerpreference->from_user_age;
+                if ($to_age != '' && $from_age != '') {
+                    $fatchdataone = $fatchdataone->whereBetween('user_info.user_age', [$from_age, $to_age]);
+                }
+                $fatchdataone = $fatchdataone
+                    ->where('user_info.user_gender', $gender)
+                    ->where('user_info.user_id', '!=', $user_id)
+                    ->where('user_info.user_status', 'Approved')
+                    ->where('user_info.deleted', 1)
+                    ->where('user_info.status', 1)
+                    ->where('user_info.marriage_status', 0)
+                    ->inRandomOrder()
                     ->limit(10)
                     ->get();
                 $user_arr = array(
                     "status" => true,
                     "success" => true,
-                    "data" => array_merge($alldata1->toArray(), $alldata->toArray()), // Merging $alldata1 and $alldata
-                    "message" => (count($alldata) + count($alldata1)) . ' records Match'
+                    "data" => array_merge($fatchdata->toArray(), $fatchdataone->toArray()), // Merging $alldata1 and $alldata
+                    "message" => (count($fatchdata) + count($fatchdata)) . ' records Match'
+                );
+                return json_encode($user_arr);
+            } else {
+                $user_arr = array(
+                    "status" => true,
+                    "success" => true,
+                    "data" => $fatchdata,
+                    "message" => count($fatchdata) . ' records Match'
                 );
                 return json_encode($user_arr);
             }
 
-            $user_arr = array(
-                "status" => true,
-                "success" => true,
-                "data" => $alldata,
-                "message" => count($alldata) . ' records Match'
-            );
-            return json_encode($user_arr);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+            // $user_partnerpreference = DB::table('user_partnerpreference')->where('user_ID', $user_id)->get();
+            // $user_partnerpreference = json_decode($user_partnerpreference[0]->json_data);
+            // //dd($user_partnerpreference);
+            // $user = DB::table('user_info')->where('user_ID', $user_id)->get('user_gender');
+            // $gender = $user[0]->user_gender == "male" ? 'female' : 'male';
+            // $user_activities = DB::table('user_activities')->where('user_id', $user_id)->get(['user_block_list']);
+            // //dd($user_activities);
+            // if (count($user_activities) > 0) {
+            //     $user_block_list = $user_activities[0]->user_block_list;
+            //     $elements = explode(',', $user_block_list);
+            //     // Enclose each element in double quotes
+            //     $quotedElements = array_map(function ($element) {
+            //         return '"' . $element . '"';
+            //     }, $elements);
+
+            //     // Join the elements with commas
+            //     $outputString = $quotedElements;
+            //     //  implode(",", $quotedElements);
+            //    // dd($outputString);
+            // } else {
+            //     $outputString = [];
+            // }
+            // $alldata = DB::table('user_info')
+            //     ->select('*')
+            //     ->Join('user_religion', 'user_info.user_id', '=', 'user_religion.user_ID')
+            //     ->Join('user_locations', 'user_info.user_id', '=', 'user_locations.user_ID')
+            //     ->Join('user_family', 'user_info.user_id', '=', 'user_family.user_ID')
+            //     ->Join('user_physical_details', 'user_info.user_id', '=', 'user_physical_details.user_ID')
+            //     ->Join('user_about', 'user_info.user_id', '=', 'user_about.user_ID')
+            //     ->Join('user_diet_hobbies', 'user_info.user_id', '=', 'user_diet_hobbies.user_ID')
+            //     ->Join('user_education_occupations', 'user_info.user_id', '=', 'user_education_occupations.user_ID')
+            //     ->Join('auth_user', 'user_info.user_id', '=', 'auth_user.auth_ID')
+            //     ->Join('user_horoscope', 'user_info.user_id', '=', 'user_horoscope.user_id')
+            //     ->where('user_info.user_gender', $gender)
+            //     ->where('user_info.user_status', 'Approved')
+            //     ->whereNotIn('user_info.user_id', $outputString)
+            //     ->where('user_info.user_id', '<>', $user_id)
+            //     ->where('user_info.deleted', 1)
+            //     ->where('user_info.status', 1)
+            //     ->where('user_info.online_status', 1)
+            //     ->where('user_info.marriage_status', 0);
+            //     //dd($user_partnerpreference->user_cast);
+            // if ($user_partnerpreference->user_cast != '') {
+            //     $alldata = $alldata->whereIn('user_religion.user_caste', $user_partnerpreference->user_cast);
+            //     $user_cast = implode(',', $user_partnerpreference->user_cast);
+            // } else {
+            //     $user_cast = [];
+            // }
+            // $alldata = $alldata->get();
+
+
+
+
+
+            // // Check if $alldata count is less than 5
+            // if (count($alldata) < 5) {
+            //     // Merge $alldata1 and $alldata and return output
+            //     $alldata1 = DB::table('user_info')
+            //         ->select('*')
+            //         ->leftJoin('user_religion', 'user_info.user_id', '=', 'user_religion.user_ID')
+            //         ->leftJoin('user_locations', 'user_info.user_id', '=', 'user_locations.user_ID')
+            //         ->leftJoin('user_family', 'user_info.user_id', '=', 'user_family.user_ID')
+            //         ->leftJoin('user_physical_details', 'user_info.user_id', '=', 'user_physical_details.user_ID')
+            //         ->leftJoin('user_about', 'user_info.user_id', '=', 'user_about.user_ID')
+            //         ->leftJoin('user_diet_hobbies', 'user_info.user_id', '=', 'user_diet_hobbies.user_ID')
+            //         ->leftJoin('user_education_occupations', 'user_info.user_id', '=', 'user_education_occupations.user_ID')
+            //         ->leftJoin('auth_user', 'user_info.user_id', '=', 'auth_user.auth_ID')
+            //         ->leftJoin('user_horoscope', 'user_info.user_id', '=', 'user_horoscope.user_id')
+            //         ->where('user_info.user_gender', $gender)
+            //         ->whereNotIn('user_info.user_id', $outputString)
+            //         ->where('user_info.user_id', '<>', $user_id)
+            //         ->where('user_info.online_status', 0)
+            //         ->where('user_info.user_status', 'Approved')
+            //         ->where('user_info.deleted', 1);
+
+            //     if ($user_partnerpreference->user_cast != '') {
+            //         $alldata1 = $alldata1->whereIn('user_religion.user_caste', $user_partnerpreference->user_cast);
+            //         $user_cast = implode(',', $user_partnerpreference->user_cast);
+            //     } else {
+            //         $user_cast = '""';
+            //     }
+
+
+
+            //     $alldata1 = $alldata1->inRandomOrder()
+            //         ->limit(10)
+            //         ->get();
+            //     $user_arr = array(
+            //         "status" => true,
+            //         "success" => true,
+            //         "data" => array_merge($alldata1->toArray(), $alldata->toArray()), // Merging $alldata1 and $alldata
+            //         "message" => (count($alldata) + count($alldata1)) . ' records Match'
+            //     );
+            //     return json_encode($user_arr);
+            // }
+
+            // $user_arr = array(
+            //     "status" => true,
+            //     "success" => true,
+            //     "data" => $alldata,
+            //     "message" => count($alldata) . ' records Match'
+            // );
+            // return json_encode($user_arr);
         }
     }
-    public function byCastpremimusMatches()
+    public function byCastpremimusMatches() //done
     {
         $data = json_decode(file_get_contents("php://input"));
 
@@ -2492,7 +3325,7 @@ class filterController extends Controller
                 ->where('user_info.user_id', '!=', $user_id)
                 ->where('user_info.user_status', 'Approved')
                 ->where('user_info.deleted', 1)
-                ->where('user_info.user_membership_plan_type','<>',$membership_plan_type)
+                ->where('user_info.user_membership_plan_type', '<>', $membership_plan_type)
                 ->where('user_info.status', 1)
                 ->where('user_info.marriage_status', 0)
                 ->get();
@@ -2525,7 +3358,8 @@ class filterController extends Controller
         return json_encode($user_arr);
     }
 
-    public function byOtherCastmatchesforindivisual()
+
+    public function byOtherCastmatchesforindivisual() //done
     {
         $data = json_decode(file_get_contents("php://input"));
 
@@ -2548,7 +3382,7 @@ class filterController extends Controller
             $user = DB::table('user_info')->where('user_ID', $user_id)->get('user_gender');
             $gender = $user[0]->user_gender == "male" ? 'female' : 'male';
             $user_activities = DB::table('user_activities')->where('user_id', $user_id)->get('user_block_list');
-                //dd($user_activities);
+            //dd($user_activities);
 
 
             $fatchdata = DB::table('user_info')
@@ -2711,7 +3545,7 @@ class filterController extends Controller
         }
         return json_encode($user_arr);
     }
-    public function byOtherCastRecentlyJoinedMatches()
+    public function byOtherCastRecentlyJoinedMatches() //done
     {
         $data = json_decode(file_get_contents("php://input"));
         $user_id = isset($data->user_id) ? $data->user_id : '';
@@ -2723,69 +3557,305 @@ class filterController extends Controller
             );
         } else {
 
-            // try {
+
+
             $user_partnerpreference = DB::table('user_partnerpreference')->where('user_ID', $user_id)->get();
             $user_partnerpreference = json_decode($user_partnerpreference[0]->json_data);
+            //dd($user_partnerpreference);
+
+
+            // dd($user_partnerpreference->user_employed_In);
             $user = DB::table('user_info')->where('user_ID', $user_id)->get('user_gender');
             $gender = $user[0]->user_gender == "male" ? 'female' : 'male';
             $user_activities = DB::table('user_activities')->where('user_id', $user_id)->get('user_block_list');
-            if (count($user_activities) > 0) {
-                $user_block_list = $user_activities[0]->user_block_list;
-                $elements = explode(',', $user_block_list);
-                // Enclose each element in double quotes
-                $quotedElements = array_map(function ($element) {
-                    return '"' . $element . '"';
-                }, $elements);
-                // Join the elements with commas
-                $outputString = $elements;
-                //implode(",", $quotedElements);
+            //dd($user_activities);
+
+
+            $fatchdata = DB::table('user_info')
+                ->select('*')
+                ->join('user_religion', 'user_info.user_id', '=', 'user_religion.user_ID')
+                ->join('user_locations', 'user_info.user_id', '=', 'user_locations.user_ID')
+                ->join('user_family', 'user_info.user_id', '=', 'user_family.user_ID')
+                ->join('user_physical_details', 'user_info.user_id', '=', 'user_physical_details.user_ID')
+                ->join('user_about', 'user_info.user_id', '=', 'user_about.user_ID')
+                ->join('user_diet_hobbies', 'user_info.user_id', '=', 'user_diet_hobbies.user_ID')
+                ->join('user_education_occupations', 'user_info.user_id', '=', 'user_education_occupations.user_ID')
+                ->join('auth_user', 'user_info.user_id', '=', 'auth_user.auth_ID')
+                ->join('user_horoscope', 'user_info.user_id', '=', 'user_horoscope.user_id');
+
+            if ($user_activities != '') {
+                if (count($user_activities) > 0) {
+                    $user_block_list = $user_activities[0]->user_block_list;
+                    $elements = explode(',', $user_block_list);
+
+                    $fatchdata = $fatchdata->whereNotIn('user_info.user_id', $elements);
+                } else {
+                    $outputString = '""';
+                }
+            }
+
+            if ($user_partnerpreference->user_marital_status != '') {
+                $fatchdata = $fatchdata->whereIn('user_info.user_marital_status', $user_partnerpreference->user_marital_status);
             } else {
-                $outputString = [];
+                $user_marital_status = '""';
+            }
+
+            if ($user_partnerpreference->user_religion != '') {
+                $user_religion = implode(',', $user_partnerpreference->user_religion);
+
+                $fatchdata = $fatchdata->whereIn('user_religion.user_religion', $user_partnerpreference->user_religion);
+            } else {
+                $user_religion = '""';
+            }
+
+            if ($user_partnerpreference->user_employed_In != '') {
+                $fatchdata = $fatchdata->whereIn('user_education_occupations.user_employed_In', $user_partnerpreference->user_employed_In);
+            } else {
+                $user_employed_In = '""';
+            }
+
+            if ($user_partnerpreference->user_occupation != '') {
+                $fatchdata = $fatchdata->whereIn('user_education_occupations.user_occupation', $user_partnerpreference->user_occupation);
+                $user_occupation = implode(',', $user_partnerpreference->user_occupation);
+            } else {
+                $user_occupation = '""';
+            }
+
+            if ($user_partnerpreference->user_mother_toungh != '') {
+                $fatchdata = $fatchdata->whereIn('user_info.user_mother_toungh', $user_partnerpreference->user_mother_toungh);
+                $user_mother_toungh = implode(',', $user_partnerpreference->user_mother_toungh);
+            } else {
+                $user_mother_toungh = '""';
+            }
+
+
+
+            if ($user_partnerpreference->user_country != '') {
+                $fatchdata = $fatchdata->whereIn('user_locations.user_country', $user_partnerpreference->user_country);
+                $user_country = implode(',', $user_partnerpreference->user_country);
+            } else {
+                $user_country = '""';
+            }
+
+            if ($user_partnerpreference->user_city != '') {
+                $fatchdata = $fatchdata->whereIn('user_locations.user_city', $user_partnerpreference->user_city);
+                $user_city = implode(',', $user_partnerpreference->user_city);
+            } else {
+                $user_city = '""';
+            }
+
+            if ($user_partnerpreference->user_state != '') {
+                $fatchdata = $fatchdata->whereIn('user_locations.user_state', $user_partnerpreference->user_state);
+                $user_state = implode(',', $user_partnerpreference->user_state);
+            } else {
+                $user_state = '""';
+            }
+
+            if ($user_partnerpreference->user_zodiacs != '') {
+                $fatchdata = $fatchdata->whereIn('user_horoscope.user_zodiacs', $user_partnerpreference->user_zodiacs);
+                $zodiacs = implode(',', $user_partnerpreference->user_zodiacs);
+            } else {
+                $zodiacs = '""';
+            }
+
+            if ($user_partnerpreference->user_nakshatra != '') {
+                $fatchdata = $fatchdata->whereIn('user_horoscope.user_nakhyatra', $user_partnerpreference->user_nakshatra);
+                $nakshatra = implode(',', $user_partnerpreference->user_nakshatra);
+            } else {
+                $nakshatra = '""';
+            }
+
+            if ($user_partnerpreference->user_gotra != '') {
+                $fatchdata = $fatchdata->whereIn('user_horoscope.user_gotra', $user_partnerpreference->user_gotra);
+                $gotra = implode(',', $user_partnerpreference->user_gotra);
+            } else {
+                $gotra = '""';
+            }
+
+            if ($user_partnerpreference->user_cast != '') {
+                $fatchdata = $fatchdata->whereNotIn('user_religion.user_caste', $user_partnerpreference->user_cast);
+                $user_cast = implode(',', $user_partnerpreference->user_cast);
+            } else {
+                $user_cast = '""';
+            }
+            $user_min_height = $user_partnerpreference->user_min_height;
+            $user_max_height = $user_partnerpreference->user_max_height;
+            if ($user_min_height  != '' && $user_max_height != '') {
+                $fatchdata = $fatchdata->whereBetween('user_physical_details.user_height', [$user_min_height, $user_max_height]);
+            }
+            $user_max_anual_income = $user_partnerpreference->user_max_anual_income;
+            $user_min_anual_income = $user_partnerpreference->user_min_anual_income;
+            if ($user_max_anual_income  != '' && $user_min_anual_income != '') {
+                $fatchdata = $fatchdata->whereBetween('user_education_occupations' . 'user_anual_income', [$user_min_anual_income, $user_max_anual_income]);
+            }
+            $to_age = $user_partnerpreference->to_user_age;
+            $from_age =  $user_partnerpreference->from_user_age;
+            if ($to_age != '' && $from_age != '') {
+                $fatchdata = $fatchdata->whereBetween('user_info.user_age', [$from_age, $to_age]);
             }
             $user_creation_date = date('Y-m-d H:i:s', strtotime('-30 days'));
-
-
-
-            $alldata = DB::table('user_info')
-                ->select('*')
-                ->Join('user_religion', 'user_info.user_id', '=', 'user_religion.user_ID')
-                ->Join('user_locations', 'user_info.user_id', '=', 'user_locations.user_ID')
-                ->Join('user_family', 'user_info.user_id', '=', 'user_family.user_ID')
-                ->Join('user_physical_details', 'user_info.user_id', '=', 'user_physical_details.user_ID')
-                ->Join('user_about', 'user_info.user_id', '=', 'user_about.user_ID')
-                ->Join('user_diet_hobbies', 'user_info.user_id', '=', 'user_diet_hobbies.user_ID')
-                ->Join('user_education_occupations', 'user_info.user_id', '=', 'user_education_occupations.user_ID')
-                ->Join('auth_user', 'user_info.user_id', '=', 'auth_user.auth_ID')
-                ->Join('user_horoscope', 'user_info.user_id', '=', 'user_horoscope.user_id')
+            $fatchdata = $fatchdata
                 ->where('user_info.user_gender', $gender)
-                ->where('user_info.user_id', '<>', $user_id)
+                ->where('user_info.user_id', '!=', $user_id)
                 ->where('user_info.user_status', 'Approved')
-                ->whereNotIn('user_info.user_id', $outputString)
                 ->where('user_info.deleted', 1)
                 ->where('user_info.status', 1)
                 ->where('user_info.marriage_status', 0)
-                ->where('user_info.user_creation_date_time', '>=', $user_creation_date);
-
-
-            if ($user_partnerpreference->user_cast != '') {
-                $alldata = $alldata->whereNotIn('user_religion.user_caste', $user_partnerpreference->user_cast);
-                $user_cast = implode(',', $user_partnerpreference->user_cast);
-            } else {
-                $user_cast = '""';
-            }
-            $alldata = $alldata->get();
+                ->where('user_info.user_creation_date_time', '>=', $user_creation_date)
+                ->get();
+            //dd($fatchdata);
 
 
 
 
 
 
-            if (count($alldata) > 0) {
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+            // try {
+            // $user_partnerpreference = DB::table('user_partnerpreference')->where('user_ID', $user_id)->get();
+            // $user_partnerpreference = json_decode($user_partnerpreference[0]->json_data);
+            // $user = DB::table('user_info')->where('user_ID', $user_id)->get('user_gender');
+            // $gender = $user[0]->user_gender == "male" ? 'female' : 'male';
+            // $user_activities = DB::table('user_activities')->where('user_id', $user_id)->get('user_block_list');
+            // if (count($user_activities) > 0) {
+            //     $user_block_list = $user_activities[0]->user_block_list;
+            //     $elements = explode(',', $user_block_list);
+            //     // Enclose each element in double quotes
+            //     $quotedElements = array_map(function ($element) {
+            //         return '"' . $element . '"';
+            //     }, $elements);
+            //     // Join the elements with commas
+            //     $outputString = $elements;
+            //     //implode(",", $quotedElements);
+            // } else {
+            //     $outputString = [];
+            // }
+            //
+
+
+
+            // $alldata = DB::table('user_info')
+            //     ->select('*')
+            //     ->Join('user_religion', 'user_info.user_id', '=', 'user_religion.user_ID')
+            //     ->Join('user_locations', 'user_info.user_id', '=', 'user_locations.user_ID')
+            //     ->Join('user_family', 'user_info.user_id', '=', 'user_family.user_ID')
+            //     ->Join('user_physical_details', 'user_info.user_id', '=', 'user_physical_details.user_ID')
+            //     ->Join('user_about', 'user_info.user_id', '=', 'user_about.user_ID')
+            //     ->Join('user_diet_hobbies', 'user_info.user_id', '=', 'user_diet_hobbies.user_ID')
+            //     ->Join('user_education_occupations', 'user_info.user_id', '=', 'user_education_occupations.user_ID')
+            //     ->Join('auth_user', 'user_info.user_id', '=', 'auth_user.auth_ID')
+            //     ->Join('user_horoscope', 'user_info.user_id', '=', 'user_horoscope.user_id')
+            //     ->where('user_info.user_gender', $gender)
+            //     ->where('user_info.user_id', '<>', $user_id)
+            //     ->where('user_info.user_status', 'Approved')
+            //     ->whereNotIn('user_info.user_id', $outputString)
+            //     ->where('user_info.deleted', 1)
+            //     ->where('user_info.status', 1)
+            //     ->where('user_info.marriage_status', 0)
+            //
+
+
+            // if ($user_partnerpreference->user_cast != '') {
+            //     $alldata = $alldata->whereIn('user_religion.user_caste', $user_partnerpreference->user_cast);
+            //     $user_cast = implode(',', $user_partnerpreference->user_cast);
+            // } else {
+            //     $user_cast = '""';
+            // }
+            // $alldata = $alldata->get();
+
+
+
+
+
+
+            if (count($fatchdata) > 0) {
                 $user_arr = array(
                     "status" => true,
                     "success" => true,
-                    "data" => $alldata,
-                    "message" => count($alldata) . ' records Match'
+                    "data" => $fatchdata,
+                    "message" => count($fatchdata) . ' records Match'
                 );
             } else {
                 $user_arr = array(
@@ -2805,7 +3875,7 @@ class filterController extends Controller
         }
         return json_encode($user_arr);
     }
-    public function byOtherCastgetSpotlightdata()
+    public function byOtherCastgetSpotlightdata() //done
     {
         $data = json_decode(file_get_contents("php://input"));
         $user_id = isset($data->user_id) ? $data->user_id : '';
@@ -2817,57 +3887,299 @@ class filterController extends Controller
             );
         } else {
 
+
             // try {
             $user_partnerpreference = DB::table('user_partnerpreference')->where('user_ID', $user_id)->get();
             $user_partnerpreference = json_decode($user_partnerpreference[0]->json_data);
+            //dd($user_partnerpreference);
+
+
+            // dd($user_partnerpreference->user_employed_In);
             $user = DB::table('user_info')->where('user_ID', $user_id)->get('user_gender');
             $gender = $user[0]->user_gender == "male" ? 'female' : 'male';
             $user_activities = DB::table('user_activities')->where('user_id', $user_id)->get('user_block_list');
-            if (count($user_activities) > 0) {
-                $user_block_list = $user_activities[0]->user_block_list;
-                $elements = explode(',', $user_block_list);
-                // Enclose each element in double quotes
-                $quotedElements = array_map(function ($element) {
-                    return '"' . $element . '"';
-                }, $elements);
-                // Join the elements with commas
-                $outputString = $quotedElements;
-                //implode(",", $quotedElements);
-            } else {
-                $outputString = [];
-            }
-            $alldata = DB::table('user_info')
+            //dd($user_activities);
+
+
+            $fatchdata = DB::table('user_info')
                 ->select('*')
-                ->Join('user_religion', 'user_info.user_id', '=', 'user_religion.user_ID')
-                ->Join('user_locations', 'user_info.user_id', '=', 'user_locations.user_ID')
-                ->Join('user_family', 'user_info.user_id', '=', 'user_family.user_ID')
-                ->Join('user_physical_details', 'user_info.user_id', '=', 'user_physical_details.user_ID')
-                ->Join('user_about', 'user_info.user_id', '=', 'user_about.user_ID')
-                ->Join('user_diet_hobbies', 'user_info.user_id', '=', 'user_diet_hobbies.user_ID')
-                ->Join('user_education_occupations', 'user_info.user_id', '=', 'user_education_occupations.user_ID')
-                ->Join('auth_user', 'user_info.user_id', '=', 'auth_user.auth_ID')
-                ->Join('user_horoscope', 'user_info.user_id', '=', 'user_horoscope.user_id')
-                ->where('user_info.user_gender', $gender)
-                ->where('user_info.user_id', '<>', $user_id)
-                ->where('user_info.spotlight', 1)
-                ->whereNotIn('user_info.user_id', $outputString)
-                ->where('user_info.user_status', 'Approved')
-                ->where('user_info.deleted', 1);
+                ->join('user_religion', 'user_info.user_id', '=', 'user_religion.user_ID')
+                ->join('user_locations', 'user_info.user_id', '=', 'user_locations.user_ID')
+                ->join('user_family', 'user_info.user_id', '=', 'user_family.user_ID')
+                ->join('user_physical_details', 'user_info.user_id', '=', 'user_physical_details.user_ID')
+                ->join('user_about', 'user_info.user_id', '=', 'user_about.user_ID')
+                ->join('user_diet_hobbies', 'user_info.user_id', '=', 'user_diet_hobbies.user_ID')
+                ->join('user_education_occupations', 'user_info.user_id', '=', 'user_education_occupations.user_ID')
+                ->join('auth_user', 'user_info.user_id', '=', 'auth_user.auth_ID')
+                ->join('user_horoscope', 'user_info.user_id', '=', 'user_horoscope.user_id');
+
+            if ($user_activities != '') {
+                if (count($user_activities) > 0) {
+                    $user_block_list = $user_activities[0]->user_block_list;
+                    $elements = explode(',', $user_block_list);
+
+                    $fatchdata = $fatchdata->whereNotIn('user_info.user_id', $elements);
+                } else {
+                    $outputString = '""';
+                }
+            }
+
+            if ($user_partnerpreference->user_marital_status != '') {
+                $fatchdata = $fatchdata->whereIn('user_info.user_marital_status', $user_partnerpreference->user_marital_status);
+            } else {
+                $user_marital_status = '""';
+            }
+
+            if ($user_partnerpreference->user_religion != '') {
+                $user_religion = implode(',', $user_partnerpreference->user_religion);
+
+                $fatchdata = $fatchdata->whereIn('user_religion.user_religion', $user_partnerpreference->user_religion);
+            } else {
+                $user_religion = '""';
+            }
+
+            if ($user_partnerpreference->user_employed_In != '') {
+                $fatchdata = $fatchdata->whereIn('user_education_occupations.user_employed_In', $user_partnerpreference->user_employed_In);
+            } else {
+                $user_employed_In = '""';
+            }
+
+            if ($user_partnerpreference->user_occupation != '') {
+                $fatchdata = $fatchdata->whereIn('user_education_occupations.user_occupation', $user_partnerpreference->user_occupation);
+                $user_occupation = implode(',', $user_partnerpreference->user_occupation);
+            } else {
+                $user_occupation = '""';
+            }
+
+            if ($user_partnerpreference->user_mother_toungh != '') {
+                $fatchdata = $fatchdata->whereIn('user_info.user_mother_toungh', $user_partnerpreference->user_mother_toungh);
+                $user_mother_toungh = implode(',', $user_partnerpreference->user_mother_toungh);
+            } else {
+                $user_mother_toungh = '""';
+            }
+
+
+
+            if ($user_partnerpreference->user_country != '') {
+                $fatchdata = $fatchdata->whereIn('user_locations.user_country', $user_partnerpreference->user_country);
+                $user_country = implode(',', $user_partnerpreference->user_country);
+            } else {
+                $user_country = '""';
+            }
+
+            if ($user_partnerpreference->user_city != '') {
+                $fatchdata = $fatchdata->whereIn('user_locations.user_city', $user_partnerpreference->user_city);
+                $user_city = implode(',', $user_partnerpreference->user_city);
+            } else {
+                $user_city = '""';
+            }
+
+            if ($user_partnerpreference->user_state != '') {
+                $fatchdata = $fatchdata->whereIn('user_locations.user_state', $user_partnerpreference->user_state);
+                $user_state = implode(',', $user_partnerpreference->user_state);
+            } else {
+                $user_state = '""';
+            }
+
+            if ($user_partnerpreference->user_zodiacs != '') {
+                $fatchdata = $fatchdata->whereIn('user_horoscope.user_zodiacs', $user_partnerpreference->user_zodiacs);
+                $zodiacs = implode(',', $user_partnerpreference->user_zodiacs);
+            } else {
+                $zodiacs = '""';
+            }
+
+            if ($user_partnerpreference->user_nakshatra != '') {
+                $fatchdata = $fatchdata->whereIn('user_horoscope.user_nakhyatra', $user_partnerpreference->user_nakshatra);
+                $nakshatra = implode(',', $user_partnerpreference->user_nakshatra);
+            } else {
+                $nakshatra = '""';
+            }
+
+            if ($user_partnerpreference->user_gotra != '') {
+                $fatchdata = $fatchdata->whereIn('user_horoscope.user_gotra', $user_partnerpreference->user_gotra);
+                $gotra = implode(',', $user_partnerpreference->user_gotra);
+            } else {
+                $gotra = '""';
+            }
+
             if ($user_partnerpreference->user_cast != '') {
-                $alldata = $alldata->whereNotIn('user_religion.user_caste', $user_partnerpreference->user_cast);
+                $fatchdata = $fatchdata->whereNotIn('user_religion.user_caste', $user_partnerpreference->user_cast);
                 $user_cast = implode(',', $user_partnerpreference->user_cast);
             } else {
                 $user_cast = '""';
             }
-            $alldata = $alldata->get();
+            $user_min_height = $user_partnerpreference->user_min_height;
+            $user_max_height = $user_partnerpreference->user_max_height;
+            if ($user_min_height  != '' && $user_max_height != '') {
+                $fatchdata = $fatchdata->whereBetween('user_physical_details.user_height', [$user_min_height, $user_max_height]);
+            }
+            $user_max_anual_income = $user_partnerpreference->user_max_anual_income;
+            $user_min_anual_income = $user_partnerpreference->user_min_anual_income;
+            if ($user_max_anual_income  != '' && $user_min_anual_income != '') {
+                $fatchdata = $fatchdata->whereBetween('user_education_occupations' . 'user_anual_income', [$user_min_anual_income, $user_max_anual_income]);
+            }
+            $to_age = $user_partnerpreference->to_user_age;
+            $from_age =  $user_partnerpreference->from_user_age;
+            if ($to_age != '' && $from_age != '') {
+                $fatchdata = $fatchdata->whereBetween('user_info.user_age', [$from_age, $to_age]);
+            }
+            $fatchdata = $fatchdata
+                ->where('user_info.user_gender', $gender)
+                ->where('user_info.user_id', '!=', $user_id)
+                ->where('user_info.user_status', 'Approved')
+                ->where('user_info.deleted', 1)
+                ->where('user_info.status', 1)
+                ->where('user_info.marriage_status', 0)
+                ->where('user_info.spotlight', 1)
+                ->get();
 
 
-            if (count($alldata) > 0) {
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+            // // try {
+            // $user_partnerpreference = DB::table('user_partnerpreference')->where('user_ID', $user_id)->get();
+            // $user_partnerpreference = json_decode($user_partnerpreference[0]->json_data);
+            // $user = DB::table('user_info')->where('user_ID', $user_id)->get('user_gender');
+            // $gender = $user[0]->user_gender == "male" ? 'female' : 'male';
+            // $user_activities = DB::table('user_activities')->where('user_id', $user_id)->get('user_block_list');
+            // if (count($user_activities) > 0) {
+            //     $user_block_list = $user_activities[0]->user_block_list;
+            //     $elements = explode(',', $user_block_list);
+            //     // Enclose each element in double quotes
+            //     $quotedElements = array_map(function ($element) {
+            //         return '"' . $element . '"';
+            //     }, $elements);
+            //     // Join the elements with commas
+            //     $outputString = $quotedElements;
+            //     //implode(",", $quotedElements);
+            // } else {
+            //     $outputString = [];
+            // }
+            // $alldata = DB::table('user_info')
+            //     ->select('*')
+            //     ->Join('user_religion', 'user_info.user_id', '=', 'user_religion.user_ID')
+            //     ->Join('user_locations', 'user_info.user_id', '=', 'user_locations.user_ID')
+            //     ->Join('user_family', 'user_info.user_id', '=', 'user_family.user_ID')
+            //     ->Join('user_physical_details', 'user_info.user_id', '=', 'user_physical_details.user_ID')
+            //     ->Join('user_about', 'user_info.user_id', '=', 'user_about.user_ID')
+            //     ->Join('user_diet_hobbies', 'user_info.user_id', '=', 'user_diet_hobbies.user_ID')
+            //     ->Join('user_education_occupations', 'user_info.user_id', '=', 'user_education_occupations.user_ID')
+            //     ->Join('auth_user', 'user_info.user_id', '=', 'auth_user.auth_ID')
+            //     ->Join('user_horoscope', 'user_info.user_id', '=', 'user_horoscope.user_id')
+            //     ->where('user_info.user_gender', $gender)
+            //     ->where('user_info.user_id', '<>', $user_id)
+            //     ->where('user_info.spotlight', 1)
+            //     ->whereNotIn('user_info.user_id', $outputString)
+            //     ->where('user_info.user_status', 'Approved')
+            //     ->where('user_info.deleted', 1);
+            // if ($user_partnerpreference->user_cast != '') {
+            //     $alldata = $alldata->whereIn('user_religion.user_caste', $user_partnerpreference->user_cast);
+            //     $user_cast = implode(',', $user_partnerpreference->user_cast);
+            // } else {
+            //     $user_cast = '""';
+            // }
+            // $alldata = $alldata->get();
+
+
+            if (count($fatchdata) > 0) {
                 $user_arr = array(
                     "status" => true,
                     "success" => true,
-                    "data" => $alldata,
-                    "message" => count($alldata) . ' records Match'
+                    "data" => $fatchdata,
+                    "message" => count($fatchdata) . ' records Match'
                 );
             } else {
                 $user_arr = array(
@@ -2887,7 +4199,7 @@ class filterController extends Controller
         }
         return json_encode($user_arr);
     }
-    public function byOtherCastgetOnlinedata()
+    public function byOtherCastgetOnlinedata()//done
     {
         $data = json_decode(file_get_contents("php://input"));
         $user_id = isset($data->user_id) ? $data->user_id : '';
@@ -2898,112 +4210,304 @@ class filterController extends Controller
                 "message" => "Please enter required parameters",
             );
         } else {
+
+            // try {
             $user_partnerpreference = DB::table('user_partnerpreference')->where('user_ID', $user_id)->get();
             $user_partnerpreference = json_decode($user_partnerpreference[0]->json_data);
             //dd($user_partnerpreference);
+
+
+            // dd($user_partnerpreference->user_employed_In);
             $user = DB::table('user_info')->where('user_ID', $user_id)->get('user_gender');
             $gender = $user[0]->user_gender == "male" ? 'female' : 'male';
-            $user_activities = DB::table('user_activities')->where('user_id', $user_id)->get(['user_block_list']);
+            $user_activities = DB::table('user_activities')->where('user_id', $user_id)->get('user_block_list');
             //dd($user_activities);
-            if (count($user_activities) > 0) {
-                $user_block_list = $user_activities[0]->user_block_list;
-                $elements = explode(',', $user_block_list);
-                // Enclose each element in double quotes
-                $quotedElements = array_map(function ($element) {
-                    return '"' . $element . '"';
-                }, $elements);
 
-                // Join the elements with commas
-                $outputString = $quotedElements;
-                //  implode(",", $quotedElements);
-               // dd($outputString);
-            } else {
-                $outputString = [];
-            }
-            $alldata = DB::table('user_info')
+
+            $fatchdata = DB::table('user_info')
                 ->select('*')
-                ->Join('user_religion', 'user_info.user_id', '=', 'user_religion.user_ID')
-                ->Join('user_locations', 'user_info.user_id', '=', 'user_locations.user_ID')
-                ->Join('user_family', 'user_info.user_id', '=', 'user_family.user_ID')
-                ->Join('user_physical_details', 'user_info.user_id', '=', 'user_physical_details.user_ID')
-                ->Join('user_about', 'user_info.user_id', '=', 'user_about.user_ID')
-                ->Join('user_diet_hobbies', 'user_info.user_id', '=', 'user_diet_hobbies.user_ID')
-                ->Join('user_education_occupations', 'user_info.user_id', '=', 'user_education_occupations.user_ID')
-                ->Join('auth_user', 'user_info.user_id', '=', 'auth_user.auth_ID')
-                ->Join('user_horoscope', 'user_info.user_id', '=', 'user_horoscope.user_id')
-                ->where('user_info.user_gender', $gender)
-                ->where('user_info.user_status', 'Approved')
-                ->whereNotIn('user_info.user_id', $outputString)
-                ->where('user_info.user_id', '<>', $user_id)
-                ->where('user_info.deleted', 1)
-                ->where('user_info.status', 1)
-                ->where('user_info.online_status', 1)
-                ->where('user_info.marriage_status', 0);
-                //dd($user_partnerpreference->user_cast);
+                ->join('user_religion', 'user_info.user_id', '=', 'user_religion.user_ID')
+                ->join('user_locations', 'user_info.user_id', '=', 'user_locations.user_ID')
+                ->join('user_family', 'user_info.user_id', '=', 'user_family.user_ID')
+                ->join('user_physical_details', 'user_info.user_id', '=', 'user_physical_details.user_ID')
+                ->join('user_about', 'user_info.user_id', '=', 'user_about.user_ID')
+                ->join('user_diet_hobbies', 'user_info.user_id', '=', 'user_diet_hobbies.user_ID')
+                ->join('user_education_occupations', 'user_info.user_id', '=', 'user_education_occupations.user_ID')
+                ->join('auth_user', 'user_info.user_id', '=', 'auth_user.auth_ID')
+                ->join('user_horoscope', 'user_info.user_id', '=', 'user_horoscope.user_id');
+
+            if ($user_activities != '') {
+                if (count($user_activities) > 0) {
+                    $user_block_list = $user_activities[0]->user_block_list;
+                    $elements = explode(',', $user_block_list);
+
+                    $fatchdata = $fatchdata->whereNotIn('user_info.user_id', $elements);
+                } else {
+                    $outputString = '""';
+                }
+            }
+
+            if ($user_partnerpreference->user_marital_status != '') {
+                $fatchdata = $fatchdata->whereIn('user_info.user_marital_status', $user_partnerpreference->user_marital_status);
+            } else {
+                $user_marital_status = '""';
+            }
+
+            if ($user_partnerpreference->user_religion != '') {
+                $user_religion = implode(',', $user_partnerpreference->user_religion);
+
+                $fatchdata = $fatchdata->whereIn('user_religion.user_religion', $user_partnerpreference->user_religion);
+            } else {
+                $user_religion = '""';
+            }
+
+            if ($user_partnerpreference->user_employed_In != '') {
+                $fatchdata = $fatchdata->whereIn('user_education_occupations.user_employed_In', $user_partnerpreference->user_employed_In);
+            } else {
+                $user_employed_In = '""';
+            }
+
+            if ($user_partnerpreference->user_occupation != '') {
+                $fatchdata = $fatchdata->whereIn('user_education_occupations.user_occupation', $user_partnerpreference->user_occupation);
+                $user_occupation = implode(',', $user_partnerpreference->user_occupation);
+            } else {
+                $user_occupation = '""';
+            }
+
+            if ($user_partnerpreference->user_mother_toungh != '') {
+                $fatchdata = $fatchdata->whereIn('user_info.user_mother_toungh', $user_partnerpreference->user_mother_toungh);
+                $user_mother_toungh = implode(',', $user_partnerpreference->user_mother_toungh);
+            } else {
+                $user_mother_toungh = '""';
+            }
+
+
+
+            if ($user_partnerpreference->user_country != '') {
+                $fatchdata = $fatchdata->whereIn('user_locations.user_country', $user_partnerpreference->user_country);
+                $user_country = implode(',', $user_partnerpreference->user_country);
+            } else {
+                $user_country = '""';
+            }
+
+            if ($user_partnerpreference->user_city != '') {
+                $fatchdata = $fatchdata->whereIn('user_locations.user_city', $user_partnerpreference->user_city);
+                $user_city = implode(',', $user_partnerpreference->user_city);
+            } else {
+                $user_city = '""';
+            }
+
+            if ($user_partnerpreference->user_state != '') {
+                $fatchdata = $fatchdata->whereIn('user_locations.user_state', $user_partnerpreference->user_state);
+                $user_state = implode(',', $user_partnerpreference->user_state);
+            } else {
+                $user_state = '""';
+            }
+
+            if ($user_partnerpreference->user_zodiacs != '') {
+                $fatchdata = $fatchdata->whereIn('user_horoscope.user_zodiacs', $user_partnerpreference->user_zodiacs);
+                $zodiacs = implode(',', $user_partnerpreference->user_zodiacs);
+            } else {
+                $zodiacs = '""';
+            }
+
+            if ($user_partnerpreference->user_nakshatra != '') {
+                $fatchdata = $fatchdata->whereIn('user_horoscope.user_nakhyatra', $user_partnerpreference->user_nakshatra);
+                $nakshatra = implode(',', $user_partnerpreference->user_nakshatra);
+            } else {
+                $nakshatra = '""';
+            }
+
+            if ($user_partnerpreference->user_gotra != '') {
+                $fatchdata = $fatchdata->whereIn('user_horoscope.user_gotra', $user_partnerpreference->user_gotra);
+                $gotra = implode(',', $user_partnerpreference->user_gotra);
+            } else {
+                $gotra = '""';
+            }
+
             if ($user_partnerpreference->user_cast != '') {
-                $alldata = $alldata->whereNotIn('user_religion.user_caste', $user_partnerpreference->user_cast);
+                $fatchdata = $fatchdata->whereNotIn('user_religion.user_caste', $user_partnerpreference->user_cast);
                 $user_cast = implode(',', $user_partnerpreference->user_cast);
             } else {
-                $user_cast = [];
+                $user_cast = '""';
             }
-            $alldata = $alldata->get();
+            $user_min_height = $user_partnerpreference->user_min_height;
+            $user_max_height = $user_partnerpreference->user_max_height;
+            if ($user_min_height  != '' && $user_max_height != '') {
+                $fatchdata = $fatchdata->whereBetween('user_physical_details.user_height', [$user_min_height, $user_max_height]);
+            }
+            $user_max_anual_income = $user_partnerpreference->user_max_anual_income;
+            $user_min_anual_income = $user_partnerpreference->user_min_anual_income;
+            if ($user_max_anual_income  != '' && $user_min_anual_income != '') {
+                $fatchdata = $fatchdata->whereBetween('user_education_occupations' . 'user_anual_income', [$user_min_anual_income, $user_max_anual_income]);
+            }
+            $to_age = $user_partnerpreference->to_user_age;
+            $from_age =  $user_partnerpreference->from_user_age;
+            if ($to_age != '' && $from_age != '') {
+                $fatchdata = $fatchdata->whereBetween('user_info.user_age', [$from_age, $to_age]);
+            }
+            $fatchdata = $fatchdata
+                ->where('user_info.user_gender', $gender)
+                ->where('user_info.user_id', '!=', $user_id)
+                ->where('user_info.user_status', 'Approved')
+                ->where('user_info.deleted', 1)
+                ->where('user_info.status', 1)
+                ->where('user_info.marriage_status', 0)
+                ->where('user_info.online_status', 1)
+                ->get();
 
-
-
-
-
-            // Check if $alldata count is less than 5
-            if (count($alldata) < 5) {
-                // Merge $alldata1 and $alldata and return output
-                $alldata1 = DB::table('user_info')
+            if (count($fatchdata) < 5) {
+                $fatchdataone = DB::table('user_info')
                     ->select('*')
-                    ->leftJoin('user_religion', 'user_info.user_id', '=', 'user_religion.user_ID')
-                    ->leftJoin('user_locations', 'user_info.user_id', '=', 'user_locations.user_ID')
-                    ->leftJoin('user_family', 'user_info.user_id', '=', 'user_family.user_ID')
-                    ->leftJoin('user_physical_details', 'user_info.user_id', '=', 'user_physical_details.user_ID')
-                    ->leftJoin('user_about', 'user_info.user_id', '=', 'user_about.user_ID')
-                    ->leftJoin('user_diet_hobbies', 'user_info.user_id', '=', 'user_diet_hobbies.user_ID')
-                    ->leftJoin('user_education_occupations', 'user_info.user_id', '=', 'user_education_occupations.user_ID')
-                    ->leftJoin('auth_user', 'user_info.user_id', '=', 'auth_user.auth_ID')
-                    ->leftJoin('user_horoscope', 'user_info.user_id', '=', 'user_horoscope.user_id')
-                    ->where('user_info.user_gender', $gender)
-                    ->whereNotIn('user_info.user_id', $outputString)
-                    ->where('user_info.user_id', '<>', $user_id)
-                    ->where('user_info.online_status', 0)
-                    ->where('user_info.user_status', 'Approved')
-                    ->where('user_info.deleted', 1);
+                    ->join('user_religion', 'user_info.user_id', '=', 'user_religion.user_ID')
+                    ->join('user_locations', 'user_info.user_id', '=', 'user_locations.user_ID')
+                    ->join('user_family', 'user_info.user_id', '=', 'user_family.user_ID')
+                    ->join('user_physical_details', 'user_info.user_id', '=', 'user_physical_details.user_ID')
+                    ->join('user_about', 'user_info.user_id', '=', 'user_about.user_ID')
+                    ->join('user_diet_hobbies', 'user_info.user_id', '=', 'user_diet_hobbies.user_ID')
+                    ->join('user_education_occupations', 'user_info.user_id', '=', 'user_education_occupations.user_ID')
+                    ->join('auth_user', 'user_info.user_id', '=', 'auth_user.auth_ID')
+                    ->join('user_horoscope', 'user_info.user_id', '=', 'user_horoscope.user_id');
 
-                if ($user_partnerpreference->user_cast != '') {
-                    $alldata1 = $alldata1->whereNotIn('user_religion.user_caste', $user_partnerpreference->user_cast);
-                    $user_cast = implode(',', $user_partnerpreference->user_cast);
+                if ($user_activities != '') {
+                    if (count($user_activities) > 0) {
+                        $user_block_list = $user_activities[0]->user_block_list;
+                        $elements = explode(',', $user_block_list);
+
+                        $fatchdataone = $fatchdata->whereNotIn('user_info.user_id', $elements);
+                    } else {
+                        $outputString = '""';
+                    }
+                }
+
+                if ($user_partnerpreference->user_marital_status != '') {
+                    $fatchdataone = $fatchdataone->whereIn('user_info.user_marital_status', $user_partnerpreference->user_marital_status);
                 } else {
-                    $user_cast = '""';
+                    $user_marital_status = '""';
+                }
+
+                if ($user_partnerpreference->user_religion != '') {
+                    $user_religion = implode(',', $user_partnerpreference->user_religion);
+
+                    $fatchdataone = $fatchdataone->whereIn('user_religion.user_religion', $user_partnerpreference->user_religion);
+                } else {
+                    $user_religion = '""';
+                }
+
+                if ($user_partnerpreference->user_employed_In != '') {
+                    $fatchdataone = $fatchdataone->whereIn('user_education_occupations.user_employed_In', $user_partnerpreference->user_employed_In);
+                } else {
+                    $user_employed_In = '""';
+                }
+
+                if ($user_partnerpreference->user_occupation != '') {
+                    $fatchdataone = $fatchdataone->whereIn('user_education_occupations.user_occupation', $user_partnerpreference->user_occupation);
+                    $user_occupation = implode(',', $user_partnerpreference->user_occupation);
+                } else {
+                    $user_occupation = '""';
+                }
+
+                if ($user_partnerpreference->user_mother_toungh != '') {
+                    $fatchdataone = $fatchdataone->whereIn('user_info.user_mother_toungh', $user_partnerpreference->user_mother_toungh);
+                    $user_mother_toungh = implode(',', $user_partnerpreference->user_mother_toungh);
+                } else {
+                    $user_mother_toungh = '""';
                 }
 
 
 
-                $alldata1 = $alldata1->inRandomOrder()
+                if ($user_partnerpreference->user_country != '') {
+                    $fatchdataone = $fatchdataone->whereIn('user_locations.user_country', $user_partnerpreference->user_country);
+                    $user_country = implode(',', $user_partnerpreference->user_country);
+                } else {
+                    $user_country = '""';
+                }
+
+                if ($user_partnerpreference->user_city != '') {
+                    $fatchdataone = $fatchdataone->whereIn('user_locations.user_city', $user_partnerpreference->user_city);
+                    $user_city = implode(',', $user_partnerpreference->user_city);
+                } else {
+                    $user_city = '""';
+                }
+
+                if ($user_partnerpreference->user_state != '') {
+                    $fatchdataone = $fatchdataone->whereIn('user_locations.user_state', $user_partnerpreference->user_state);
+                    $user_state = implode(',', $user_partnerpreference->user_state);
+                } else {
+                    $user_state = '""';
+                }
+
+                if ($user_partnerpreference->user_zodiacs != '') {
+                    $fatchdataone = $fatchdataone->whereIn('user_horoscope.user_zodiacs', $user_partnerpreference->user_zodiacs);
+                    $zodiacs = implode(',', $user_partnerpreference->user_zodiacs);
+                } else {
+                    $zodiacs = '""';
+                }
+
+                if ($user_partnerpreference->user_nakshatra != '') {
+                    $fatchdataone = $fatchdataone->whereIn('user_horoscope.user_nakhyatra', $user_partnerpreference->user_nakshatra);
+                    $nakshatra = implode(',', $user_partnerpreference->user_nakshatra);
+                } else {
+                    $nakshatra = '""';
+                }
+
+                if ($user_partnerpreference->user_gotra != '') {
+                    $fatchdataone = $fatchdataone->whereIn('user_horoscope.user_gotra', $user_partnerpreference->user_gotra);
+                    $gotra = implode(',', $user_partnerpreference->user_gotra);
+                } else {
+                    $gotra = '""';
+                }
+
+                if ($user_partnerpreference->user_cast != '') {
+                    $fatchdataone = $fatchdataone->whereNotIn('user_religion.user_caste', $user_partnerpreference->user_cast);
+                    $user_cast = implode(',', $user_partnerpreference->user_cast);
+                } else {
+                    $user_cast = '""';
+                }
+                $user_min_height = $user_partnerpreference->user_min_height;
+                $user_max_height = $user_partnerpreference->user_max_height;
+                if ($user_min_height  != '' && $user_max_height != '') {
+                    $fatchdataone = $fatchdataone->whereBetween('user_physical_details.user_height', [$user_min_height, $user_max_height]);
+                }
+                $user_max_anual_income = $user_partnerpreference->user_max_anual_income;
+                $user_min_anual_income = $user_partnerpreference->user_min_anual_income;
+                if ($user_max_anual_income  != '' && $user_min_anual_income != '') {
+                    $fatchdataone = $fatchdataone->whereBetween('user_education_occupations' . 'user_anual_income', [$user_min_anual_income, $user_max_anual_income]);
+                }
+                $to_age = $user_partnerpreference->to_user_age;
+                $from_age =  $user_partnerpreference->from_user_age;
+                if ($to_age != '' && $from_age != '') {
+                    $fatchdataone = $fatchdataone->whereBetween('user_info.user_age', [$from_age, $to_age]);
+                }
+                $fatchdataone = $fatchdataone
+                    ->where('user_info.user_gender', $gender)
+                    ->where('user_info.user_id', '!=', $user_id)
+                    ->where('user_info.user_status', 'Approved')
+                    ->where('user_info.deleted', 1)
+                    ->where('user_info.status', 1)
+                    ->where('user_info.marriage_status', 0)
+                    ->inRandomOrder()
                     ->limit(10)
                     ->get();
                 $user_arr = array(
                     "status" => true,
                     "success" => true,
-                    "data" => array_merge($alldata1->toArray(), $alldata->toArray()), // Merging $alldata1 and $alldata
-                    "message" => (count($alldata) + count($alldata1)) . ' records Match'
+                    "data" => array_merge($fatchdata->toArray(), $fatchdataone->toArray()),
+                    "message" => (count($fatchdata) + count($fatchdata)) . ' records Match'
+                );
+                return json_encode($user_arr);
+            } else {
+                $user_arr = array(
+                    "status" => true,
+                    "success" => true,
+                    "data" => $fatchdata,
+                    "message" => count($fatchdata) . ' records Match'
                 );
                 return json_encode($user_arr);
             }
-
-            $user_arr = array(
-                "status" => true,
-                "success" => true,
-                "data" => $alldata,
-                "message" => count($alldata) . ' records Match'
-            );
-            return json_encode($user_arr);
         }
     }
-    public function byOtherCastpremimusMatches()
+    public function byOtherCastpremimusMatches() //done
     {
         $data = json_decode(file_get_contents("php://input"));
 
@@ -3159,7 +4663,7 @@ class filterController extends Controller
                 ->where('user_info.user_id', '!=', $user_id)
                 ->where('user_info.user_status', 'Approved')
                 ->where('user_info.deleted', 1)
-                ->where('user_info.user_membership_plan_type','<>',$membership_plan_type)
+                ->where('user_info.user_membership_plan_type', '<>', $membership_plan_type)
                 ->where('user_info.status', 1)
                 ->where('user_info.marriage_status', 0)
                 ->get();
@@ -3191,5 +4695,4 @@ class filterController extends Controller
         }
         return json_encode($user_arr);
     }
-
 }
