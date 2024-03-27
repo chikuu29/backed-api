@@ -1999,7 +1999,7 @@ class filterController extends Controller
             $user_max_anual_income = $user_partnerpreference->user_max_anual_income;
             $user_min_anual_income = $user_partnerpreference->user_min_anual_income;
             if ($user_max_anual_income  != '' && $user_min_anual_income != '') {
-                $fatchdata = $fatchdata->whereBetween('user_education_occupations' . 'user_anual_income', [$user_min_anual_income, $user_max_anual_income]);
+                $fatchdata = $fatchdata->whereBetween('user_education_occupations.user_anual_income', [$user_min_anual_income, $user_max_anual_income]);
             }
             $to_age = $user_partnerpreference->to_user_age;
             $from_age =  $user_partnerpreference->from_user_age;
@@ -2185,7 +2185,7 @@ class filterController extends Controller
             $user_max_anual_income = $user_partnerpreference->user_max_anual_income;
             $user_min_anual_income = $user_partnerpreference->user_min_anual_income;
             if ($user_max_anual_income  != '' && $user_min_anual_income != '') {
-                $fatchdata = $fatchdata->whereBetween('user_education_occupations' . 'user_anual_income', [$user_min_anual_income, $user_max_anual_income]);
+                $fatchdata = $fatchdata->whereBetween('user_education_occupations.user_anual_income', [$user_min_anual_income, $user_max_anual_income]);
             }
             $to_age = $user_partnerpreference->to_user_age;
             $from_age =  $user_partnerpreference->from_user_age;
@@ -2515,7 +2515,7 @@ class filterController extends Controller
             $user_max_anual_income = $user_partnerpreference->user_max_anual_income;
             $user_min_anual_income = $user_partnerpreference->user_min_anual_income;
             if ($user_max_anual_income  != '' && $user_min_anual_income != '') {
-                $fatchdata = $fatchdata->whereBetween('user_education_occupations' . 'user_anual_income', [$user_min_anual_income, $user_max_anual_income]);
+                $fatchdata = $fatchdata->whereBetween('user_education_occupations.user_anual_income', [$user_min_anual_income, $user_max_anual_income]);
             }
             $to_age = $user_partnerpreference->to_user_age;
             $from_age =  $user_partnerpreference->from_user_age;
@@ -2698,7 +2698,7 @@ class filterController extends Controller
         }
         return json_encode($user_arr);
     }
-    public function byCastgetOnlinedata()//done
+    public function byCastgetOnlinedata() //done
     {
         $data = json_decode(file_get_contents("php://input"));
         $user_id = isset($data->user_id) ? $data->user_id : '';
@@ -2711,9 +2711,10 @@ class filterController extends Controller
         } else {
 
             // try {
-            $user_partnerpreference = DB::table('user_partnerpreference')->where('user_ID', $user_id)->get();
-            $user_partnerpreference = json_decode($user_partnerpreference[0]->json_data);
-            //dd($user_partnerpreference);
+            $user_partnerpreference1 = DB::table('user_partnerpreference')->where('user_ID', $user_id)->get();
+            //return $user_partnerpreference;
+
+            $user_partnerpreference = json_decode($user_partnerpreference1[0]->json_data);
 
 
             // dd($user_partnerpreference->user_employed_In);
@@ -2838,7 +2839,7 @@ class filterController extends Controller
             $user_max_anual_income = $user_partnerpreference->user_max_anual_income;
             $user_min_anual_income = $user_partnerpreference->user_min_anual_income;
             if ($user_max_anual_income  != '' && $user_min_anual_income != '') {
-                $fatchdata = $fatchdata->whereBetween('user_education_occupations' . 'user_anual_income', [$user_min_anual_income, $user_max_anual_income]);
+                $fatchdata = $fatchdata->whereBetween('user_education_occupations.user_anual_income', [$user_min_anual_income, $user_max_anual_income]);
             }
             $to_age = $user_partnerpreference->to_user_age;
             $from_age =  $user_partnerpreference->from_user_age;
@@ -2854,7 +2855,7 @@ class filterController extends Controller
                 ->where('user_info.marriage_status', 0)
                 ->where('user_info.online_status', 1)
                 ->get();
-
+            //dd($fatchdata);
             if (count($fatchdata) < 5) {
                 $fatchdataone = DB::table('user_info')
                     ->select('*')
@@ -2971,7 +2972,7 @@ class filterController extends Controller
                 $user_max_anual_income = $user_partnerpreference->user_max_anual_income;
                 $user_min_anual_income = $user_partnerpreference->user_min_anual_income;
                 if ($user_max_anual_income  != '' && $user_min_anual_income != '') {
-                    $fatchdataone = $fatchdataone->whereBetween('user_education_occupations' . 'user_anual_income', [$user_min_anual_income, $user_max_anual_income]);
+                    $fatchdataone = $fatchdataone->whereBetween('user_education_occupations.user_anual_income', [$user_min_anual_income, $user_max_anual_income]);
                 }
                 $to_age = $user_partnerpreference->to_user_age;
                 $from_age =  $user_partnerpreference->from_user_age;
@@ -2989,7 +2990,7 @@ class filterController extends Controller
                     ->limit(10)
                     ->get();
 
-                    //dd($fatchdataone);
+                //dd($fatchdataone);
                 $user_arr = array(
                     "status" => true,
                     "success" => true,
@@ -3315,7 +3316,7 @@ class filterController extends Controller
             $user_max_anual_income = $user_partnerpreference->user_max_anual_income;
             $user_min_anual_income = $user_partnerpreference->user_min_anual_income;
             if ($user_max_anual_income  != '' && $user_min_anual_income != '') {
-                $fatchdata = $fatchdata->whereBetween('user_education_occupations' . 'user_anual_income', [$user_min_anual_income, $user_max_anual_income]);
+                $fatchdata = $fatchdata->whereBetween('user_education_occupations.user_anual_income', [$user_min_anual_income, $user_max_anual_income]);
             }
             $to_age = $user_partnerpreference->to_user_age;
             $from_age =  $user_partnerpreference->from_user_age;
@@ -3502,7 +3503,7 @@ class filterController extends Controller
             $user_max_anual_income = $user_partnerpreference->user_max_anual_income;
             $user_min_anual_income = $user_partnerpreference->user_min_anual_income;
             if ($user_max_anual_income  != '' && $user_min_anual_income != '') {
-                $fatchdata = $fatchdata->whereBetween('user_education_occupations' . 'user_anual_income', [$user_min_anual_income, $user_max_anual_income]);
+                $fatchdata = $fatchdata->whereBetween('user_education_occupations.user_anual_income', [$user_min_anual_income, $user_max_anual_income]);
             }
             $to_age = $user_partnerpreference->to_user_age;
             $from_age =  $user_partnerpreference->from_user_age;
@@ -3688,7 +3689,7 @@ class filterController extends Controller
             $user_max_anual_income = $user_partnerpreference->user_max_anual_income;
             $user_min_anual_income = $user_partnerpreference->user_min_anual_income;
             if ($user_max_anual_income  != '' && $user_min_anual_income != '') {
-                $fatchdata = $fatchdata->whereBetween('user_education_occupations' . 'user_anual_income', [$user_min_anual_income, $user_max_anual_income]);
+                $fatchdata = $fatchdata->whereBetween('user_education_occupations.user_anual_income', [$user_min_anual_income, $user_max_anual_income]);
             }
             $to_age = $user_partnerpreference->to_user_age;
             $from_age =  $user_partnerpreference->from_user_age;
@@ -4018,7 +4019,7 @@ class filterController extends Controller
             $user_max_anual_income = $user_partnerpreference->user_max_anual_income;
             $user_min_anual_income = $user_partnerpreference->user_min_anual_income;
             if ($user_max_anual_income  != '' && $user_min_anual_income != '') {
-                $fatchdata = $fatchdata->whereBetween('user_education_occupations' . 'user_anual_income', [$user_min_anual_income, $user_max_anual_income]);
+                $fatchdata = $fatchdata->whereBetween('user_education_occupations.user_anual_income', [$user_min_anual_income, $user_max_anual_income]);
             }
             $to_age = $user_partnerpreference->to_user_age;
             $from_age =  $user_partnerpreference->from_user_age;
@@ -4201,7 +4202,7 @@ class filterController extends Controller
         }
         return json_encode($user_arr);
     }
-    public function byOtherCastgetOnlinedata()//done
+    public function byOtherCastgetOnlinedata() //done
     {
         $data = json_decode(file_get_contents("php://input"));
         $user_id = isset($data->user_id) ? $data->user_id : '';
@@ -4242,7 +4243,7 @@ class filterController extends Controller
                 if (count($user_activities) > 0) {
                     $user_block_list = $user_activities[0]->user_block_list;
                     $elements = explode(',', $user_block_list);
-
+                    //dd($elements);
                     $fatchdata = $fatchdata->whereNotIn('user_info.user_id', $elements);
                 } else {
                     $outputString = '""';
@@ -4341,7 +4342,7 @@ class filterController extends Controller
             $user_max_anual_income = $user_partnerpreference->user_max_anual_income;
             $user_min_anual_income = $user_partnerpreference->user_min_anual_income;
             if ($user_max_anual_income  != '' && $user_min_anual_income != '') {
-                $fatchdata = $fatchdata->whereBetween('user_education_occupations' . 'user_anual_income', [$user_min_anual_income, $user_max_anual_income]);
+                $fatchdata = $fatchdata->whereBetween('user_education_occupations.user_anual_income', [$user_min_anual_income, $user_max_anual_income]);
             }
             $to_age = $user_partnerpreference->to_user_age;
             $from_age =  $user_partnerpreference->from_user_age;
@@ -4376,7 +4377,7 @@ class filterController extends Controller
                         $user_block_list = $user_activities[0]->user_block_list;
                         $elements = explode(',', $user_block_list);
 
-                        $fatchdataone = $fatchdata->whereNotIn('user_info.user_id', $elements);
+                        $fatchdataone = $fatchdataone->whereNotIn('user_info.user_id', $elements);
                     } else {
                         $outputString = '""';
                     }
@@ -4474,7 +4475,7 @@ class filterController extends Controller
                 $user_max_anual_income = $user_partnerpreference->user_max_anual_income;
                 $user_min_anual_income = $user_partnerpreference->user_min_anual_income;
                 if ($user_max_anual_income  != '' && $user_min_anual_income != '') {
-                    $fatchdataone = $fatchdataone->whereBetween('user_education_occupations' . 'user_anual_income', [$user_min_anual_income, $user_max_anual_income]);
+                    $fatchdataone = $fatchdataone->whereBetween('user_education_occupations.user_anual_income', [$user_min_anual_income, $user_max_anual_income]);
                 }
                 $to_age = $user_partnerpreference->to_user_age;
                 $from_age =  $user_partnerpreference->from_user_age;
@@ -4653,7 +4654,7 @@ class filterController extends Controller
             $user_max_anual_income = $user_partnerpreference->user_max_anual_income;
             $user_min_anual_income = $user_partnerpreference->user_min_anual_income;
             if ($user_max_anual_income  != '' && $user_min_anual_income != '') {
-                $fatchdata = $fatchdata->whereBetween('user_education_occupations' . 'user_anual_income', [$user_min_anual_income, $user_max_anual_income]);
+                $fatchdata = $fatchdata->whereBetween('user_education_occupations.user_anual_income', [$user_min_anual_income, $user_max_anual_income]);
             }
             $to_age = $user_partnerpreference->to_user_age;
             $from_age =  $user_partnerpreference->from_user_age;
