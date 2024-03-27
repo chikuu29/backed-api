@@ -90,19 +90,6 @@ $router->group(['middleware' => ['App\Http\Middleware\JwtMiddleware']], function
     $router->post("/getOnlinedata", "filterController@getOnlinedata");
     $router->post("/Perfect_Match", "filterController@perfactMatch");
     $router->post("/spotlight", "filterController@getSpotlightdata");
-
-    $router->post("/byCastpremimusMatches", "filterController@byCastpremimusMatches");
-    $router->post("/byCastgetOnlinedata", "filterController@byCastgetOnlinedata");
-    $router->post("/byCastgetSpotlightdata", "filterController@byCastgetSpotlightdata");
-    $router->post("/byCastRecentlyJoinedMatches", "filterController@byCastRecentlyJoinedMatches");
-    $router->post("/byCastmatchesforindivisual", "filterController@byCastmatchesforindivisual");
-
-
-    $router->post("/byOtherCastpremimusMatches", "filterController@byOtherCastpremimusMatches");
-    $router->post("/byOtherCastgetOnlinedata", "filterController@byOtherCastgetOnlinedata");
-    $router->post("/byOtherCastgetSpotlightdata", "filterController@byOtherCastgetSpotlightdata");
-    $router->post("/byOtherCastRecentlyJoinedMatches", "filterController@byOtherCastRecentlyJoinedMatches");
-    $router->post("/byOtherCastmatchesforindivisual", "filterController@byOtherCastmatchesforindivisual");
 });
 
 $router->get("/setting", "AppController@settings");
@@ -116,3 +103,16 @@ $router->post("/getAllData", "memberController@getAllData");
 $router->post("/aboutus", "addItemControler@aboutus");
 $router->post("/unsecuredFatchquary", "dynamic_Crud_controller@unsecuredFatchquary");
 $router->post("/feedback", "AppController@feedback");
+
+$router->post("/byCastpremimusMatches", "filterController@byCastpremimusMatches");
+$router->post("/byCastgetOnlinedata", "filterController@byCastgetOnlinedata");
+$router->post("/byCastgetSpotlightdata", "filterController@byCastgetSpotlightdata");
+$router->post("/byCastRecentlyJoinedMatches", "filterController@byCastRecentlyJoinedMatches");
+$router->post("/byCastmatchesforindivisual", "filterController@byCastmatchesforindivisual");
+
+
+$router->post("/byOtherCastpremimusMatches", "filterController@byOtherCastpremimusMatches");
+$router->post("/byOtherCastgetOnlinedata", "filterController@byOtherCastgetOnlinedata");
+$router->post("/byOtherCastgetSpotlightdata", "filterController@byOtherCastgetSpotlightdata");
+$router->post("/byOtherCastRecentlyJoinedMatches", "filterController@byOtherCastRecentlyJoinedMatches");
+$router->post("/byOtherCastmatchesforindivisual", "filterController@byOtherCastmatchesforindivisual");

@@ -2873,7 +2873,7 @@ class filterController extends Controller
                         $user_block_list = $user_activities[0]->user_block_list;
                         $elements = explode(',', $user_block_list);
 
-                        $fatchdataone = $fatchdata->whereNotIn('user_info.user_id', $elements);
+                        $fatchdataone = $fatchdataone->whereNotIn('user_info.user_id', $elements);
                     } else {
                         $outputString = '""';
                     }
@@ -2988,11 +2988,13 @@ class filterController extends Controller
                     ->inRandomOrder()
                     ->limit(10)
                     ->get();
+
+                    //dd($fatchdataone);
                 $user_arr = array(
                     "status" => true,
                     "success" => true,
-                    "data" => array_merge($fatchdata->toArray(), $fatchdataone->toArray()), // Merging $alldata1 and $alldata
-                    "message" => (count($fatchdata) + count($fatchdata)) . ' records Match'
+                    "data" => array_merge($fatchdata->toArray(), $fatchdataone->toArray()),
+                    "message" => (count($fatchdata) + count($fatchdataone)) . ' records Match'
                 );
                 return json_encode($user_arr);
             } else {
