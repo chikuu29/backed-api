@@ -2855,8 +2855,9 @@ class filterController extends Controller
                 ->where('user_info.marriage_status', 0)
                 ->where('user_info.online_status', 1)
                 ->get();
-            //dd($fatchdata);
+            dd($fatchdata);
             if (count($fatchdata) < 5) {
+                //dd('');
                 $fatchdataone = DB::table('user_info')
                     ->select('*')
                     ->join('user_religion', 'user_info.user_id', '=', 'user_religion.user_ID')
@@ -2992,7 +2993,7 @@ class filterController extends Controller
 
                 $alldataofuser = array_merge($fatchdata->toArray(), $fatchdataone->toArray());
                 foreach ($alldataofuser as $item) {
-                    $id = $item['user_id'];
+                    $id = $item->user_id;
                     if (!isset($uniqueArray[$id])) {
                         $uniqueArray[$id] = $item;
                     }
@@ -4501,7 +4502,7 @@ class filterController extends Controller
                 $uniqueArray = [];
                 $alldataofuser = array_merge($fatchdata->toArray(), $fatchdataone->toArray());
                 foreach ($alldataofuser as $item) {
-                    $id = $item['user_id'];
+                    $id = $item->user_id;
                     if (!isset($uniqueArray[$id])) {
                         $uniqueArray[$id] = $item;
                     }
