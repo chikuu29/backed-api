@@ -1881,7 +1881,7 @@ class filterController extends Controller
             $user = DB::table('user_info')->where('user_ID', $user_id)->get('user_gender');
             $gender = $user[0]->user_gender == "male" ? 'female' : 'male';
             $user_activities = DB::table('user_activities')->where('user_id', $user_id)->get('user_block_list');
-            //dd($user_activities);
+            // dd(count($user_activities));
 
 
             $fatchdata = DB::table('user_info')
@@ -1895,97 +1895,86 @@ class filterController extends Controller
                 ->join('user_education_occupations', 'user_info.user_id', '=', 'user_education_occupations.user_ID')
                 ->join('auth_user', 'user_info.user_id', '=', 'auth_user.auth_ID')
                 ->join('user_horoscope', 'user_info.user_id', '=', 'user_horoscope.user_id');
-
-            if ($user_activities != '') {
-                if (count($user_activities) > 0) {
-                    $user_block_list = $user_activities[0]->user_block_list;
-                    $elements = explode(',', $user_block_list);
-
-                    $fatchdata = $fatchdata->whereNotIn('user_info.user_id', $elements);
-                } else {
-                    $outputString = '""';
-                }
+            if ($user_activities != '' && count($user_activities) > 0 && $user_activities != null) {
+                $user_block_list = $user_activities[0]->user_block_list;
+                $elements = explode(',', $user_block_list);
+                $fatchdata = $fatchdata->whereNotIn('user_info.user_id', $elements);
             }
 
-            if ($user_partnerpreference->user_marital_status != '') {
+            // Validate each field in a similar manner
+            if ($user_partnerpreference->user_marital_status != '' && count($user_partnerpreference->user_marital_status) > 0 && $user_partnerpreference->user_marital_status != null) {
                 $fatchdata = $fatchdata->whereIn('user_info.user_marital_status', $user_partnerpreference->user_marital_status);
-            } else {
-                $user_marital_status = '""';
             }
 
-            if ($user_partnerpreference->user_religion != '') {
-                $user_religion = implode(',', $user_partnerpreference->user_religion);
-
+            if ($user_partnerpreference->user_religion != '' && count($user_partnerpreference->user_religion) > 0 && $user_partnerpreference->user_religion != null) {
                 $fatchdata = $fatchdata->whereIn('user_religion.user_religion', $user_partnerpreference->user_religion);
             } else {
                 $user_religion = '""';
             }
 
-            if ($user_partnerpreference->user_employed_In != '') {
+            if ($user_partnerpreference->user_employed_In != '' && count($user_partnerpreference->user_employed_In) > 0 && $user_partnerpreference->user_employed_In != null) {
                 $fatchdata = $fatchdata->whereIn('user_education_occupations.user_employed_In', $user_partnerpreference->user_employed_In);
             } else {
                 $user_employed_In = '""';
             }
 
-            if ($user_partnerpreference->user_occupation != '') {
+            if ($user_partnerpreference->user_occupation != '' && count($user_partnerpreference->user_occupation) > 0 && $user_partnerpreference->user_occupation != null) {
                 $fatchdata = $fatchdata->whereIn('user_education_occupations.user_occupation', $user_partnerpreference->user_occupation);
                 $user_occupation = implode(',', $user_partnerpreference->user_occupation);
             } else {
                 $user_occupation = '""';
             }
 
-            if ($user_partnerpreference->user_mother_toungh != '') {
+            if ($user_partnerpreference->user_mother_toungh != '' && count($user_partnerpreference->user_mother_toungh) > 0 && $user_partnerpreference->user_mother_toungh != null) {
                 $fatchdata = $fatchdata->whereIn('user_info.user_mother_toungh', $user_partnerpreference->user_mother_toungh);
                 $user_mother_toungh = implode(',', $user_partnerpreference->user_mother_toungh);
             } else {
                 $user_mother_toungh = '""';
             }
 
-
-
-            if ($user_partnerpreference->user_country != '') {
+            if ($user_partnerpreference->user_country != '' && count($user_partnerpreference->user_country) > 0 && $user_partnerpreference->user_country != null) {
                 $fatchdata = $fatchdata->whereIn('user_locations.user_country', $user_partnerpreference->user_country);
                 $user_country = implode(',', $user_partnerpreference->user_country);
             } else {
                 $user_country = '""';
             }
 
-            if ($user_partnerpreference->user_city != '') {
+            if ($user_partnerpreference->user_city != '' && count($user_partnerpreference->user_city) > 0 && $user_partnerpreference->user_city != null) {
                 $fatchdata = $fatchdata->whereIn('user_locations.user_city', $user_partnerpreference->user_city);
                 $user_city = implode(',', $user_partnerpreference->user_city);
             } else {
                 $user_city = '""';
             }
 
-            if ($user_partnerpreference->user_state != '') {
+            if ($user_partnerpreference->user_state != '' && count($user_partnerpreference->user_state) > 0 && $user_partnerpreference->user_state != null) {
                 $fatchdata = $fatchdata->whereIn('user_locations.user_state', $user_partnerpreference->user_state);
                 $user_state = implode(',', $user_partnerpreference->user_state);
             } else {
                 $user_state = '""';
             }
 
-            if ($user_partnerpreference->user_zodiacs != '') {
+            if ($user_partnerpreference->user_zodiacs != '' && count($user_partnerpreference->user_zodiacs) > 0 && $user_partnerpreference->user_zodiacs != null) {
                 $fatchdata = $fatchdata->whereIn('user_horoscope.user_zodiacs', $user_partnerpreference->user_zodiacs);
                 $zodiacs = implode(',', $user_partnerpreference->user_zodiacs);
             } else {
                 $zodiacs = '""';
             }
 
-            if ($user_partnerpreference->user_nakshatra != '') {
+            if ($user_partnerpreference->user_nakshatra != '' && count($user_partnerpreference->user_nakshatra) > 0 && $user_partnerpreference->user_nakshatra != null) {
                 $fatchdata = $fatchdata->whereIn('user_horoscope.user_nakhyatra', $user_partnerpreference->user_nakshatra);
                 $nakshatra = implode(',', $user_partnerpreference->user_nakshatra);
             } else {
                 $nakshatra = '""';
             }
 
-            if ($user_partnerpreference->user_gotra != '') {
+            if ($user_partnerpreference->user_gotra != '' && count($user_partnerpreference->user_gotra) > 0 && $user_partnerpreference->user_gotra != null) {
                 $fatchdata = $fatchdata->whereIn('user_horoscope.user_gotra', $user_partnerpreference->user_gotra);
                 $gotra = implode(',', $user_partnerpreference->user_gotra);
             } else {
                 $gotra = '""';
             }
 
-            if ($user_partnerpreference->user_cast != '') {
+            if ($user_partnerpreference->user_cast != '' && count($user_partnerpreference->user_cast) > 0 && $user_partnerpreference->user_cast != null) {
                 $fatchdata = $fatchdata->whereIn('user_religion.user_caste', $user_partnerpreference->user_cast);
                 $user_cast = implode(',', $user_partnerpreference->user_cast);
             } else {
@@ -2855,7 +2844,7 @@ class filterController extends Controller
                 ->where('user_info.marriage_status', 0)
                 ->where('user_info.online_status', 1)
                 ->get();
-            dd($fatchdata);
+            // dd($fatchdata);
             if (count($fatchdata) < 5) {
                 //dd('');
                 $fatchdataone = DB::table('user_info')
