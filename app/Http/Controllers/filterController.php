@@ -2990,12 +2990,18 @@ class filterController extends Controller
                     ->limit(10)
                     ->get();
 
-                //dd($fatchdataone);
+                $alldataofuser = array_merge($fatchdata->toArray(), $fatchdataone->toArray());
+                foreach ($alldataofuser as $item) {
+                    $id = $item['user_id'];
+                    if (!isset($uniqueArray[$id])) {
+                        $uniqueArray[$id] = $item;
+                    }
+                }
                 $user_arr = array(
                     "status" => true,
                     "success" => true,
-                    "data" => array_merge($fatchdata->toArray(), $fatchdataone->toArray()),
-                    "message" => (count($fatchdata) + count($fatchdataone)) . ' records Match'
+                    "data" => $alldataofuser,
+                    "message" => (count($alldataofuser)) . ' records Match'
                 );
                 return json_encode($user_arr);
             } else {
@@ -4492,11 +4498,19 @@ class filterController extends Controller
                     ->inRandomOrder()
                     ->limit(10)
                     ->get();
+                $uniqueArray = [];
+                $alldataofuser = array_merge($fatchdata->toArray(), $fatchdataone->toArray());
+                foreach ($alldataofuser as $item) {
+                    $id = $item['user_id'];
+                    if (!isset($uniqueArray[$id])) {
+                        $uniqueArray[$id] = $item;
+                    }
+                }
                 $user_arr = array(
                     "status" => true,
                     "success" => true,
-                    "data" => array_merge($fatchdata->toArray(), $fatchdataone->toArray()),
-                    "message" => (count($fatchdata) + count($fatchdata)) . ' records Match'
+                    "data" => $alldataofuser,
+                    "message" => (count($alldataofuser)) . ' records Match'
                 );
                 return json_encode($user_arr);
             } else {
