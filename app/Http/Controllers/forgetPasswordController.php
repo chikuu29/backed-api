@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 use Exception;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
+require_once __DIR__ . '../../../../config/constant.php';
+
+
 
 class forgetPasswordController extends Controller
 {
