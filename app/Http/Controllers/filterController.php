@@ -2850,16 +2850,16 @@ class filterController extends Controller
 
 
             $fatchdata = DB::table('user_info')
-            ->select('*')
-            ->leftJoin('user_religion', 'user_info.user_id', '=', 'user_religion.user_ID')
-            ->leftJoin('user_locations', 'user_info.user_id', '=', 'user_locations.user_ID')
-            ->leftJoin('user_family', 'user_info.user_id', '=', 'user_family.user_ID')
-            ->leftJoin('user_physical_details', 'user_info.user_id', '=', 'user_physical_details.user_ID')
-            ->leftJoin('user_about', 'user_info.user_id', '=', 'user_about.user_ID')
-            ->leftJoin('user_diet_hobbies', 'user_info.user_id', '=', 'user_diet_hobbies.user_ID')
-            ->leftJoin('user_education_occupations', 'user_info.user_id', '=', 'user_education_occupations.user_ID')
-            ->leftJoin('auth_user', 'user_info.user_id', '=', 'auth_user.auth_ID')
-            ->leftJoin('user_horoscope', 'user_info.user_id', '=', 'user_horoscope.user_id');
+                ->select('*')
+                ->leftJoin('user_religion', 'user_info.user_id', '=', 'user_religion.user_ID')
+                ->leftJoin('user_locations', 'user_info.user_id', '=', 'user_locations.user_ID')
+                ->leftJoin('user_family', 'user_info.user_id', '=', 'user_family.user_ID')
+                ->leftJoin('user_physical_details', 'user_info.user_id', '=', 'user_physical_details.user_ID')
+                ->leftJoin('user_about', 'user_info.user_id', '=', 'user_about.user_ID')
+                ->leftJoin('user_diet_hobbies', 'user_info.user_id', '=', 'user_diet_hobbies.user_ID')
+                ->leftJoin('user_education_occupations', 'user_info.user_id', '=', 'user_education_occupations.user_ID')
+                ->leftJoin('auth_user', 'user_info.user_id', '=', 'auth_user.auth_ID')
+                ->leftJoin('user_horoscope', 'user_info.user_id', '=', 'user_horoscope.user_id');
 
             if ($user_activities != '' && count($user_activities) > 0 && $user_activities != null) {
                 $user_block_list = $user_activities[0]->user_block_list;
@@ -3018,16 +3018,16 @@ class filterController extends Controller
 
 
             $fatchdata = DB::table('user_info')
-            ->select('*')
-            ->leftJoin('user_religion', 'user_info.user_id', '=', 'user_religion.user_ID')
-            ->leftJoin('user_locations', 'user_info.user_id', '=', 'user_locations.user_ID')
-            ->leftJoin('user_family', 'user_info.user_id', '=', 'user_family.user_ID')
-            ->leftJoin('user_physical_details', 'user_info.user_id', '=', 'user_physical_details.user_ID')
-            ->leftJoin('user_about', 'user_info.user_id', '=', 'user_about.user_ID')
-            ->leftJoin('user_diet_hobbies', 'user_info.user_id', '=', 'user_diet_hobbies.user_ID')
-            ->leftJoin('user_education_occupations', 'user_info.user_id', '=', 'user_education_occupations.user_ID')
-            ->leftJoin('auth_user', 'user_info.user_id', '=', 'auth_user.auth_ID')
-            ->leftJoin('user_horoscope', 'user_info.user_id', '=', 'user_horoscope.user_id');
+                ->select('*')
+                ->leftJoin('user_religion', 'user_info.user_id', '=', 'user_religion.user_ID')
+                ->leftJoin('user_locations', 'user_info.user_id', '=', 'user_locations.user_ID')
+                ->leftJoin('user_family', 'user_info.user_id', '=', 'user_family.user_ID')
+                ->leftJoin('user_physical_details', 'user_info.user_id', '=', 'user_physical_details.user_ID')
+                ->leftJoin('user_about', 'user_info.user_id', '=', 'user_about.user_ID')
+                ->leftJoin('user_diet_hobbies', 'user_info.user_id', '=', 'user_diet_hobbies.user_ID')
+                ->leftJoin('user_education_occupations', 'user_info.user_id', '=', 'user_education_occupations.user_ID')
+                ->leftJoin('auth_user', 'user_info.user_id', '=', 'auth_user.auth_ID')
+                ->leftJoin('user_horoscope', 'user_info.user_id', '=', 'user_horoscope.user_id');
 
             if ($user_activities != '' && count($user_activities) > 0 && $user_activities != null) {
                 $user_block_list = $user_activities[0]->user_block_list;
@@ -3338,16 +3338,16 @@ class filterController extends Controller
 
 
             $fatchdata = DB::table('user_info')
-            ->select('*')
-            ->leftJoin('user_religion', 'user_info.user_id', '=', 'user_religion.user_ID')
-            ->leftJoin('user_locations', 'user_info.user_id', '=', 'user_locations.user_ID')
-            ->leftJoin('user_family', 'user_info.user_id', '=', 'user_family.user_ID')
-            ->leftJoin('user_physical_details', 'user_info.user_id', '=', 'user_physical_details.user_ID')
-            ->leftJoin('user_about', 'user_info.user_id', '=', 'user_about.user_ID')
-            ->leftJoin('user_diet_hobbies', 'user_info.user_id', '=', 'user_diet_hobbies.user_ID')
-            ->leftJoin('user_education_occupations', 'user_info.user_id', '=', 'user_education_occupations.user_ID')
-            ->leftJoin('auth_user', 'user_info.user_id', '=', 'auth_user.auth_ID')
-            ->leftJoin('user_horoscope', 'user_info.user_id', '=', 'user_horoscope.user_id');
+                ->select('*')
+                ->leftJoin('user_religion', 'user_info.user_id', '=', 'user_religion.user_ID')
+                ->leftJoin('user_locations', 'user_info.user_id', '=', 'user_locations.user_ID')
+                ->leftJoin('user_family', 'user_info.user_id', '=', 'user_family.user_ID')
+                ->leftJoin('user_physical_details', 'user_info.user_id', '=', 'user_physical_details.user_ID')
+                ->leftJoin('user_about', 'user_info.user_id', '=', 'user_about.user_ID')
+                ->leftJoin('user_diet_hobbies', 'user_info.user_id', '=', 'user_diet_hobbies.user_ID')
+                ->leftJoin('user_education_occupations', 'user_info.user_id', '=', 'user_education_occupations.user_ID')
+                ->leftJoin('auth_user', 'user_info.user_id', '=', 'auth_user.auth_ID')
+                ->leftJoin('user_horoscope', 'user_info.user_id', '=', 'user_horoscope.user_id');
 
             if ($user_activities != '' && count($user_activities) > 0 && $user_activities != null) {
                 $user_block_list = $user_activities[0]->user_block_list;
@@ -3651,16 +3651,16 @@ class filterController extends Controller
 
 
             $fatchdata = DB::table('user_info')
-            ->select('*')
-            ->leftJoin('user_religion', 'user_info.user_id', '=', 'user_religion.user_ID')
-            ->leftJoin('user_locations', 'user_info.user_id', '=', 'user_locations.user_ID')
-            ->leftJoin('user_family', 'user_info.user_id', '=', 'user_family.user_ID')
-            ->leftJoin('user_physical_details', 'user_info.user_id', '=', 'user_physical_details.user_ID')
-            ->leftJoin('user_about', 'user_info.user_id', '=', 'user_about.user_ID')
-            ->leftJoin('user_diet_hobbies', 'user_info.user_id', '=', 'user_diet_hobbies.user_ID')
-            ->leftJoin('user_education_occupations', 'user_info.user_id', '=', 'user_education_occupations.user_ID')
-            ->leftJoin('auth_user', 'user_info.user_id', '=', 'auth_user.auth_ID')
-            ->leftJoin('user_horoscope', 'user_info.user_id', '=', 'user_horoscope.user_id');
+                ->select('*')
+                ->leftJoin('user_religion', 'user_info.user_id', '=', 'user_religion.user_ID')
+                ->leftJoin('user_locations', 'user_info.user_id', '=', 'user_locations.user_ID')
+                ->leftJoin('user_family', 'user_info.user_id', '=', 'user_family.user_ID')
+                ->leftJoin('user_physical_details', 'user_info.user_id', '=', 'user_physical_details.user_ID')
+                ->leftJoin('user_about', 'user_info.user_id', '=', 'user_about.user_ID')
+                ->leftJoin('user_diet_hobbies', 'user_info.user_id', '=', 'user_diet_hobbies.user_ID')
+                ->leftJoin('user_education_occupations', 'user_info.user_id', '=', 'user_education_occupations.user_ID')
+                ->leftJoin('auth_user', 'user_info.user_id', '=', 'auth_user.auth_ID')
+                ->leftJoin('user_horoscope', 'user_info.user_id', '=', 'user_horoscope.user_id');
 
             if ($user_activities != '' && count($user_activities) > 0 && $user_activities != null) {
                 $user_block_list = $user_activities[0]->user_block_list;
@@ -3962,16 +3962,16 @@ class filterController extends Controller
 
 
             $fatchdata = DB::table('user_info')
-            ->select('*')
-            ->leftJoin('user_religion', 'user_info.user_id', '=', 'user_religion.user_ID')
-            ->leftJoin('user_locations', 'user_info.user_id', '=', 'user_locations.user_ID')
-            ->leftJoin('user_family', 'user_info.user_id', '=', 'user_family.user_ID')
-            ->leftJoin('user_physical_details', 'user_info.user_id', '=', 'user_physical_details.user_ID')
-            ->leftJoin('user_about', 'user_info.user_id', '=', 'user_about.user_ID')
-            ->leftJoin('user_diet_hobbies', 'user_info.user_id', '=', 'user_diet_hobbies.user_ID')
-            ->leftJoin('user_education_occupations', 'user_info.user_id', '=', 'user_education_occupations.user_ID')
-            ->leftJoin('auth_user', 'user_info.user_id', '=', 'auth_user.auth_ID')
-            ->leftJoin('user_horoscope', 'user_info.user_id', '=', 'user_horoscope.user_id');
+                ->select('*')
+                ->leftJoin('user_religion', 'user_info.user_id', '=', 'user_religion.user_ID')
+                ->leftJoin('user_locations', 'user_info.user_id', '=', 'user_locations.user_ID')
+                ->leftJoin('user_family', 'user_info.user_id', '=', 'user_family.user_ID')
+                ->leftJoin('user_physical_details', 'user_info.user_id', '=', 'user_physical_details.user_ID')
+                ->leftJoin('user_about', 'user_info.user_id', '=', 'user_about.user_ID')
+                ->leftJoin('user_diet_hobbies', 'user_info.user_id', '=', 'user_diet_hobbies.user_ID')
+                ->leftJoin('user_education_occupations', 'user_info.user_id', '=', 'user_education_occupations.user_ID')
+                ->leftJoin('auth_user', 'user_info.user_id', '=', 'auth_user.auth_ID')
+                ->leftJoin('user_horoscope', 'user_info.user_id', '=', 'user_horoscope.user_id');
 
             if ($user_activities != '' && count($user_activities) > 0 && $user_activities != null) {
                 $user_block_list = $user_activities[0]->user_block_list;
