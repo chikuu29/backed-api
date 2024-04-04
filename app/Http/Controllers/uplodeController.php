@@ -137,7 +137,7 @@ class uplodeController extends Controller
         $image = explode(';base64,', $input['image']);
         $image_base64 = base64_decode($image[1]);
         $extention = explode('/', $image[0]);
-        $path = storage_path() . '/logo_image/';
+        $path = env('FILE_UPLOAD_PATH') . '/logo_image/';
         $uniqid = uniqid();
         $file = $path . $uniqid . '.' . $extention[1];
         if (file_put_contents($file, $image_base64)) {
@@ -170,7 +170,7 @@ class uplodeController extends Controller
         $image = explode(';base64,', $input['image']);
         $image_base64 = base64_decode($image[1]);
         $extention = explode('/', $image[0]);
-        $path = storage_path() . '/banner/';
+        $path = env('FILE_UPLOAD_PATH') . '/banner/';
         $uniqid = uniqid();
         $file = $path . $uniqid . '.' . $extention[1];
 
@@ -205,7 +205,7 @@ class uplodeController extends Controller
         $image = explode(';base64,', $input['image']);
         $image_base64 = base64_decode($image[1]);
         $extention = explode('/', $image[0]);
-        $path = storage_path() . '/watermark/';
+        $path = env('FILE_UPLOAD_PATH') . '/watermark/';
         $uniqid = uniqid();
         $file = $path . $uniqid . '.' . $extention[1];
 
@@ -241,7 +241,7 @@ class uplodeController extends Controller
         $image = explode(';base64,', $input['image']);
         $image_base64 = base64_decode($image[1]);
         $extention = explode('/', $image[0]);
-        $path = storage_path() . '/barcode/';
+        $path = env('FILE_UPLOAD_PATH') . '/barcode/';
         $uniqid = uniqid();
         $file = $path . $uniqid . '.' . $extention[1];
 
@@ -276,7 +276,7 @@ class uplodeController extends Controller
         $image = explode(';base64,', $input['image']);
         $image_base64 = base64_decode($image[1]);
         $extention = explode('/', $image[0]);
-        $path = storage_path() . '/logo_image/';
+        $path = env('FILE_UPLOAD_PATH') . '/logo_image/';
         $uniqid = uniqid();
         $file = $path . $uniqid . '.' . $extention[1];
         if (file_put_contents($file, $image_base64)) {
