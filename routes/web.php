@@ -103,6 +103,7 @@ $router->group(['middleware' => ['App\Http\Middleware\JwtMiddleware']], function
     $router->post("/byOtherCastgetSpotlightdata", "filterController@byOtherCastgetSpotlightdata");
     $router->post("/byOtherCastRecentlyJoinedMatches", "filterController@byOtherCastRecentlyJoinedMatches");
     $router->post("/byOtherCastmatchesforindivisual", "filterController@byOtherCastmatchesforindivisual");
+    $router->post("/deleteRequest","registerController@deleteRequest");
 });
 
 $router->get("/setting", "AppController@settings");
