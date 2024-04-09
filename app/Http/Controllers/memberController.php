@@ -334,7 +334,7 @@ class memberController extends Controller
                                     "message" => "Plan Upgraded ",
                                 );
                             } else {
-                                $arrayFromObject['plan_deatils'] = "Previous  expired. curent validity add.   Previous plan: " . $curentplan . ". Current plan: " . $palnType . ". curent plan Taken at: " . date("Y-m-d");
+                                $arrayFromObject['plan_deatils'] = "Previous not expired. curent validity add.   Previous plan: " . $curentplan . ". Current plan: " . $palnType . ". curent plan Taken at: " . date("Y-m-d");
                                 unset($arrayFromObject['id']);
                                 DB::table('left_plan')->insert($arrayFromObject);
                                 $final_photoviwe = $edited_plan_details->photoviwe + $plan->membership_plan_no_of_photo;
