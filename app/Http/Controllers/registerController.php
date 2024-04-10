@@ -65,7 +65,6 @@ class registerController extends Controller
 
                             DB::table($table)->where('user_ID', $id)->delete();
                         }
-
                     }
                     $user_arr = array(
                         "status" => true,
@@ -85,5 +84,19 @@ class registerController extends Controller
             }
         }
         return json_encode($user_arr);
+    }
+    public function coloumUpdated(Request $res)
+    {
+        $input = $res->all();
+        $olddata = $input['oldcast'] == '' || $input['oldcast'] == null  ? '' : $input['oldcast'];
+        $newdata = $input['newdata'] == '' || $input['newdata'] == null  ? '' : $input['newdata'];
+        $tablename = $input['tablename'] == '' || $input['tablename'] == null  ? '' : $input['tablename'];
+        $coulemnname = $input['coulemnname'] == '' || $input['coulemnname'] == null  ? '' : $input['coulemnname'];
+
+        DB::table($tablename)->where($coulemnname,$olddata)->update([
+            $coulemnname => $newdata
+        ]);
+
+
     }
 }
