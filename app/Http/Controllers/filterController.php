@@ -1976,6 +1976,10 @@ class filterController extends Controller
                 $gotra = '""';
             }
 
+
+
+
+
             if ($user_partnerpreference->user_complextion != '' && count($user_partnerpreference->user_complextion) > 0 && $user_partnerpreference->user_complextion != null) {
                 $fatchdata = $fatchdata->whereIn('user_physical_details.user_complextion', $user_partnerpreference->user_complextion);
                 //$gotra = implode(',', $user_partnerpreference->user_gotra);
@@ -2002,6 +2006,31 @@ class filterController extends Controller
             } else {
                 $gotra = '""';
             }
+
+
+            if ($user_partnerpreference->user_family_value != '' && count($user_partnerpreference->user_family_value) > 0 && $user_partnerpreference->user_family_value != null) {
+                $fatchdata = $fatchdata->whereIn('user_family.user_family_value', $user_partnerpreference->user_family_value);
+                //$gotra = implode(',', $user_partnerpreference->user_body_type);
+            } else {
+                $gotra = '""';
+            }
+
+            if ($user_partnerpreference-> user_family_status != '' && count($user_partnerpreference-> user_family_status) > 0 && $user_partnerpreference-> user_family_status != null) {
+                $fatchdata = $fatchdata->whereIn('user_family.user_family_status', $user_partnerpreference-> user_family_status);
+                //$gotra = implode(',', $user_partnerpreference->user_body_type);
+            } else {
+                $gotra = '""';
+            }
+            if ($user_partnerpreference->user_mangalik != '' && count($user_partnerpreference->user_mangalik) > 0 && $user_partnerpreference-> user_mangalik != null) {
+                $fatchdata = $fatchdata->whereIn('user_horoscope.user_mangalik', $user_partnerpreference->user_mangalik);
+                //$gotra = implode(',', $user_partnerpreference->user_body_type);
+            } else {
+                $gotra = '""';
+            }
+
+
+
+
 
 
 
@@ -2181,6 +2210,54 @@ class filterController extends Controller
                 $gotra = '""';
             }
 
+            if ($user_partnerpreference->user_complextion != '' && count($user_partnerpreference->user_complextion) > 0 && $user_partnerpreference->user_complextion != null) {
+                $fatchdata = $fatchdata->whereIn('user_physical_details.user_complextion', $user_partnerpreference->user_complextion);
+                //$gotra = implode(',', $user_partnerpreference->user_gotra);
+            } else {
+                $gotra = '""';
+            }
+
+            if ($user_partnerpreference->user_body_type != '' && count($user_partnerpreference->user_body_type) > 0 && $user_partnerpreference->user_body_type != null) {
+                $fatchdata = $fatchdata->whereIn('user_physical_details.user_body_type', $user_partnerpreference->user_body_type);
+                //$gotra = implode(',', $user_partnerpreference->user_body_type);
+            } else {
+                $gotra = '""';
+            }
+
+            if ($user_partnerpreference->user_highest_education != '' && count($user_partnerpreference->user_highest_education) > 0 && $user_partnerpreference->user_highest_education != null) {
+                $fatchdata = $fatchdata->whereIn('user_education_occupations.user_highest_education', $user_partnerpreference->user_highest_education);
+                //$gotra = implode(',', $user_partnerpreference->user_body_type);
+            } else {
+                $gotra = '""';
+            }
+            if ($user_partnerpreference->user_deg != '' && count($user_partnerpreference->user_deg) > 0 && $user_partnerpreference->user_deg != null) {
+                $fatchdata = $fatchdata->whereIn('user_education_occupations.user_deg', $user_partnerpreference->user_deg);
+                //$gotra = implode(',', $user_partnerpreference->user_body_type);
+            } else {
+                $gotra = '""';
+            }
+
+
+            if ($user_partnerpreference->user_family_value != '' && count($user_partnerpreference->user_family_value) > 0 && $user_partnerpreference->user_family_value != null) {
+                $fatchdata = $fatchdata->whereIn('user_family.user_family_value', $user_partnerpreference->user_family_value);
+                //$gotra = implode(',', $user_partnerpreference->user_body_type);
+            } else {
+                $gotra = '""';
+            }
+
+            if ($user_partnerpreference-> user_family_status != '' && count($user_partnerpreference-> user_family_status) > 0 && $user_partnerpreference-> user_family_status != null) {
+                $fatchdata = $fatchdata->whereIn('user_family.user_family_status', $user_partnerpreference-> user_family_status);
+                //$gotra = implode(',', $user_partnerpreference->user_body_type);
+            } else {
+                $gotra = '""';
+            }
+            if ($user_partnerpreference->user_mangalik != '' && count($user_partnerpreference->user_mangalik) > 0 && $user_partnerpreference-> user_mangalik != null) {
+                $fatchdata = $fatchdata->whereIn('user_horoscope.user_mangalik', $user_partnerpreference->user_mangalik);
+                //$gotra = implode(',', $user_partnerpreference->user_body_type);
+            } else {
+                $gotra = '""';
+            }
+
             if ($user_partnerpreference->user_cast != '' && count($user_partnerpreference->user_cast) > 0 && $user_partnerpreference->user_cast != null) {
                 $fatchdata = $fatchdata->whereIn('user_religion.user_caste', $user_partnerpreference->user_cast);
                 $user_cast = implode(',', $user_partnerpreference->user_cast);
@@ -2330,6 +2407,54 @@ class filterController extends Controller
                 $zodiacs = implode(',', $user_partnerpreference->user_zodiacs);
             } else {
                 $zodiacs = '""';
+            }
+
+            if ($user_partnerpreference->user_complextion != '' && count($user_partnerpreference->user_complextion) > 0 && $user_partnerpreference->user_complextion != null) {
+                $fatchdata = $fatchdata->whereIn('user_physical_details.user_complextion', $user_partnerpreference->user_complextion);
+                //$gotra = implode(',', $user_partnerpreference->user_gotra);
+            } else {
+                $gotra = '""';
+            }
+
+            if ($user_partnerpreference->user_body_type != '' && count($user_partnerpreference->user_body_type) > 0 && $user_partnerpreference->user_body_type != null) {
+                $fatchdata = $fatchdata->whereIn('user_physical_details.user_body_type', $user_partnerpreference->user_body_type);
+                //$gotra = implode(',', $user_partnerpreference->user_body_type);
+            } else {
+                $gotra = '""';
+            }
+
+            if ($user_partnerpreference->user_highest_education != '' && count($user_partnerpreference->user_highest_education) > 0 && $user_partnerpreference->user_highest_education != null) {
+                $fatchdata = $fatchdata->whereIn('user_education_occupations.user_highest_education', $user_partnerpreference->user_highest_education);
+                //$gotra = implode(',', $user_partnerpreference->user_body_type);
+            } else {
+                $gotra = '""';
+            }
+            if ($user_partnerpreference->user_deg != '' && count($user_partnerpreference->user_deg) > 0 && $user_partnerpreference->user_deg != null) {
+                $fatchdata = $fatchdata->whereIn('user_education_occupations.user_deg', $user_partnerpreference->user_deg);
+                //$gotra = implode(',', $user_partnerpreference->user_body_type);
+            } else {
+                $gotra = '""';
+            }
+
+
+            if ($user_partnerpreference->user_family_value != '' && count($user_partnerpreference->user_family_value) > 0 && $user_partnerpreference->user_family_value != null) {
+                $fatchdata = $fatchdata->whereIn('user_family.user_family_value', $user_partnerpreference->user_family_value);
+                //$gotra = implode(',', $user_partnerpreference->user_body_type);
+            } else {
+                $gotra = '""';
+            }
+
+            if ($user_partnerpreference-> user_family_status != '' && count($user_partnerpreference-> user_family_status) > 0 && $user_partnerpreference-> user_family_status != null) {
+                $fatchdata = $fatchdata->whereIn('user_family.user_family_status', $user_partnerpreference-> user_family_status);
+                //$gotra = implode(',', $user_partnerpreference->user_body_type);
+            } else {
+                $gotra = '""';
+            }
+            if ($user_partnerpreference->user_mangalik != '' && count($user_partnerpreference->user_mangalik) > 0 && $user_partnerpreference-> user_mangalik != null) {
+                $fatchdata = $fatchdata->whereIn('user_horoscope.user_mangalik', $user_partnerpreference->user_mangalik);
+                //$gotra = implode(',', $user_partnerpreference->user_body_type);
+            } else {
+                $gotra = '""';
             }
 
             if ($user_partnerpreference->user_nakshatra != '' && count($user_partnerpreference->user_nakshatra) > 0 && $user_partnerpreference->user_nakshatra != null) {
@@ -2506,6 +2631,55 @@ class filterController extends Controller
             if ($user_partnerpreference->user_gotra != '' && count($user_partnerpreference->user_gotra) > 0 && $user_partnerpreference->user_gotra != null) {
                 $fatchdata = $fatchdata->whereIn('user_horoscope.user_gotra', $user_partnerpreference->user_gotra);
                 $gotra = implode(',', $user_partnerpreference->user_gotra);
+            } else {
+                $gotra = '""';
+            }
+
+
+            if ($user_partnerpreference->user_complextion != '' && count($user_partnerpreference->user_complextion) > 0 && $user_partnerpreference->user_complextion != null) {
+                $fatchdata = $fatchdata->whereIn('user_physical_details.user_complextion', $user_partnerpreference->user_complextion);
+                //$gotra = implode(',', $user_partnerpreference->user_gotra);
+            } else {
+                $gotra = '""';
+            }
+
+            if ($user_partnerpreference->user_body_type != '' && count($user_partnerpreference->user_body_type) > 0 && $user_partnerpreference->user_body_type != null) {
+                $fatchdata = $fatchdata->whereIn('user_physical_details.user_body_type', $user_partnerpreference->user_body_type);
+                //$gotra = implode(',', $user_partnerpreference->user_body_type);
+            } else {
+                $gotra = '""';
+            }
+
+            if ($user_partnerpreference->user_highest_education != '' && count($user_partnerpreference->user_highest_education) > 0 && $user_partnerpreference->user_highest_education != null) {
+                $fatchdata = $fatchdata->whereIn('user_education_occupations.user_highest_education', $user_partnerpreference->user_highest_education);
+                //$gotra = implode(',', $user_partnerpreference->user_body_type);
+            } else {
+                $gotra = '""';
+            }
+            if ($user_partnerpreference->user_deg != '' && count($user_partnerpreference->user_deg) > 0 && $user_partnerpreference->user_deg != null) {
+                $fatchdata = $fatchdata->whereIn('user_education_occupations.user_deg', $user_partnerpreference->user_deg);
+                //$gotra = implode(',', $user_partnerpreference->user_body_type);
+            } else {
+                $gotra = '""';
+            }
+
+
+            if ($user_partnerpreference->user_family_value != '' && count($user_partnerpreference->user_family_value) > 0 && $user_partnerpreference->user_family_value != null) {
+                $fatchdata = $fatchdata->whereIn('user_family.user_family_value', $user_partnerpreference->user_family_value);
+                //$gotra = implode(',', $user_partnerpreference->user_body_type);
+            } else {
+                $gotra = '""';
+            }
+
+            if ($user_partnerpreference-> user_family_status != '' && count($user_partnerpreference-> user_family_status) > 0 && $user_partnerpreference-> user_family_status != null) {
+                $fatchdata = $fatchdata->whereIn('user_family.user_family_status', $user_partnerpreference-> user_family_status);
+                //$gotra = implode(',', $user_partnerpreference->user_body_type);
+            } else {
+                $gotra = '""';
+            }
+            if ($user_partnerpreference->user_mangalik != '' && count($user_partnerpreference->user_mangalik) > 0 && $user_partnerpreference-> user_mangalik != null) {
+                $fatchdata = $fatchdata->whereIn('user_horoscope.user_mangalik', $user_partnerpreference->user_mangalik);
+                //$gotra = implode(',', $user_partnerpreference->user_body_type);
             } else {
                 $gotra = '""';
             }
@@ -2812,6 +2986,54 @@ class filterController extends Controller
                 $gotra = '""';
             }
 
+            if ($user_partnerpreference->user_complextion != '' && count($user_partnerpreference->user_complextion) > 0 && $user_partnerpreference->user_complextion != null) {
+                $fatchdata = $fatchdata->whereIn('user_physical_details.user_complextion', $user_partnerpreference->user_complextion);
+                //$gotra = implode(',', $user_partnerpreference->user_gotra);
+            } else {
+                $gotra = '""';
+            }
+
+            if ($user_partnerpreference->user_body_type != '' && count($user_partnerpreference->user_body_type) > 0 && $user_partnerpreference->user_body_type != null) {
+                $fatchdata = $fatchdata->whereIn('user_physical_details.user_body_type', $user_partnerpreference->user_body_type);
+                //$gotra = implode(',', $user_partnerpreference->user_body_type);
+            } else {
+                $gotra = '""';
+            }
+
+            if ($user_partnerpreference->user_highest_education != '' && count($user_partnerpreference->user_highest_education) > 0 && $user_partnerpreference->user_highest_education != null) {
+                $fatchdata = $fatchdata->whereIn('user_education_occupations.user_highest_education', $user_partnerpreference->user_highest_education);
+                //$gotra = implode(',', $user_partnerpreference->user_body_type);
+            } else {
+                $gotra = '""';
+            }
+            if ($user_partnerpreference->user_deg != '' && count($user_partnerpreference->user_deg) > 0 && $user_partnerpreference->user_deg != null) {
+                $fatchdata = $fatchdata->whereIn('user_education_occupations.user_deg', $user_partnerpreference->user_deg);
+                //$gotra = implode(',', $user_partnerpreference->user_body_type);
+            } else {
+                $gotra = '""';
+            }
+
+
+            if ($user_partnerpreference->user_family_value != '' && count($user_partnerpreference->user_family_value) > 0 && $user_partnerpreference->user_family_value != null) {
+                $fatchdata = $fatchdata->whereIn('user_family.user_family_value', $user_partnerpreference->user_family_value);
+                //$gotra = implode(',', $user_partnerpreference->user_body_type);
+            } else {
+                $gotra = '""';
+            }
+
+            if ($user_partnerpreference-> user_family_status != '' && count($user_partnerpreference-> user_family_status) > 0 && $user_partnerpreference-> user_family_status != null) {
+                $fatchdata = $fatchdata->whereIn('user_family.user_family_status', $user_partnerpreference-> user_family_status);
+                //$gotra = implode(',', $user_partnerpreference->user_body_type);
+            } else {
+                $gotra = '""';
+            }
+            if ($user_partnerpreference->user_mangalik != '' && count($user_partnerpreference->user_mangalik) > 0 && $user_partnerpreference-> user_mangalik != null) {
+                $fatchdata = $fatchdata->whereIn('user_horoscope.user_mangalik', $user_partnerpreference->user_mangalik);
+                //$gotra = implode(',', $user_partnerpreference->user_body_type);
+            } else {
+                $gotra = '""';
+            }
+
             if ($user_partnerpreference->user_cast != '' && count($user_partnerpreference->user_cast) > 0 && $user_partnerpreference->user_cast != null) {
                 $fatchdata = $fatchdata->whereIn('user_religion.user_caste', $user_partnerpreference->user_cast);
                 $user_cast = implode(',', $user_partnerpreference->user_cast);
@@ -2974,6 +3196,54 @@ class filterController extends Controller
             if ($user_partnerpreference->user_gotra != '' && count($user_partnerpreference->user_gotra) > 0 && $user_partnerpreference->user_gotra != null) {
                 $fatchdata = $fatchdata->whereIn('user_horoscope.user_gotra', $user_partnerpreference->user_gotra);
                 $gotra = implode(',', $user_partnerpreference->user_gotra);
+            } else {
+                $gotra = '""';
+            }
+
+            if ($user_partnerpreference->user_complextion != '' && count($user_partnerpreference->user_complextion) > 0 && $user_partnerpreference->user_complextion != null) {
+                $fatchdata = $fatchdata->whereIn('user_physical_details.user_complextion', $user_partnerpreference->user_complextion);
+                //$gotra = implode(',', $user_partnerpreference->user_gotra);
+            } else {
+                $gotra = '""';
+            }
+
+            if ($user_partnerpreference->user_body_type != '' && count($user_partnerpreference->user_body_type) > 0 && $user_partnerpreference->user_body_type != null) {
+                $fatchdata = $fatchdata->whereIn('user_physical_details.user_body_type', $user_partnerpreference->user_body_type);
+                //$gotra = implode(',', $user_partnerpreference->user_body_type);
+            } else {
+                $gotra = '""';
+            }
+
+            if ($user_partnerpreference->user_highest_education != '' && count($user_partnerpreference->user_highest_education) > 0 && $user_partnerpreference->user_highest_education != null) {
+                $fatchdata = $fatchdata->whereIn('user_education_occupations.user_highest_education', $user_partnerpreference->user_highest_education);
+                //$gotra = implode(',', $user_partnerpreference->user_body_type);
+            } else {
+                $gotra = '""';
+            }
+            if ($user_partnerpreference->user_deg != '' && count($user_partnerpreference->user_deg) > 0 && $user_partnerpreference->user_deg != null) {
+                $fatchdata = $fatchdata->whereIn('user_education_occupations.user_deg', $user_partnerpreference->user_deg);
+                //$gotra = implode(',', $user_partnerpreference->user_body_type);
+            } else {
+                $gotra = '""';
+            }
+
+
+            if ($user_partnerpreference->user_family_value != '' && count($user_partnerpreference->user_family_value) > 0 && $user_partnerpreference->user_family_value != null) {
+                $fatchdata = $fatchdata->whereIn('user_family.user_family_value', $user_partnerpreference->user_family_value);
+                //$gotra = implode(',', $user_partnerpreference->user_body_type);
+            } else {
+                $gotra = '""';
+            }
+
+            if ($user_partnerpreference-> user_family_status != '' && count($user_partnerpreference-> user_family_status) > 0 && $user_partnerpreference-> user_family_status != null) {
+                $fatchdata = $fatchdata->whereIn('user_family.user_family_status', $user_partnerpreference-> user_family_status);
+                //$gotra = implode(',', $user_partnerpreference->user_body_type);
+            } else {
+                $gotra = '""';
+            }
+            if ($user_partnerpreference->user_mangalik != '' && count($user_partnerpreference->user_mangalik) > 0 && $user_partnerpreference-> user_mangalik != null) {
+                $fatchdata = $fatchdata->whereIn('user_horoscope.user_mangalik', $user_partnerpreference->user_mangalik);
+                //$gotra = implode(',', $user_partnerpreference->user_body_type);
             } else {
                 $gotra = '""';
             }
@@ -3146,6 +3416,55 @@ class filterController extends Controller
                 $gotra = '""';
             }
 
+
+            if ($user_partnerpreference->user_complextion != '' && count($user_partnerpreference->user_complextion) > 0 && $user_partnerpreference->user_complextion != null) {
+                $fatchdata = $fatchdata->whereIn('user_physical_details.user_complextion', $user_partnerpreference->user_complextion);
+                //$gotra = implode(',', $user_partnerpreference->user_gotra);
+            } else {
+                $gotra = '""';
+            }
+
+            if ($user_partnerpreference->user_body_type != '' && count($user_partnerpreference->user_body_type) > 0 && $user_partnerpreference->user_body_type != null) {
+                $fatchdata = $fatchdata->whereIn('user_physical_details.user_body_type', $user_partnerpreference->user_body_type);
+                //$gotra = implode(',', $user_partnerpreference->user_body_type);
+            } else {
+                $gotra = '""';
+            }
+
+            if ($user_partnerpreference->user_highest_education != '' && count($user_partnerpreference->user_highest_education) > 0 && $user_partnerpreference->user_highest_education != null) {
+                $fatchdata = $fatchdata->whereIn('user_education_occupations.user_highest_education', $user_partnerpreference->user_highest_education);
+                //$gotra = implode(',', $user_partnerpreference->user_body_type);
+            } else {
+                $gotra = '""';
+            }
+            if ($user_partnerpreference->user_deg != '' && count($user_partnerpreference->user_deg) > 0 && $user_partnerpreference->user_deg != null) {
+                $fatchdata = $fatchdata->whereIn('user_education_occupations.user_deg', $user_partnerpreference->user_deg);
+                //$gotra = implode(',', $user_partnerpreference->user_body_type);
+            } else {
+                $gotra = '""';
+            }
+
+
+            if ($user_partnerpreference->user_family_value != '' && count($user_partnerpreference->user_family_value) > 0 && $user_partnerpreference->user_family_value != null) {
+                $fatchdata = $fatchdata->whereIn('user_family.user_family_value', $user_partnerpreference->user_family_value);
+                //$gotra = implode(',', $user_partnerpreference->user_body_type);
+            } else {
+                $gotra = '""';
+            }
+
+            if ($user_partnerpreference-> user_family_status != '' && count($user_partnerpreference-> user_family_status) > 0 && $user_partnerpreference-> user_family_status != null) {
+                $fatchdata = $fatchdata->whereIn('user_family.user_family_status', $user_partnerpreference-> user_family_status);
+                //$gotra = implode(',', $user_partnerpreference->user_body_type);
+            } else {
+                $gotra = '""';
+            }
+            if ($user_partnerpreference->user_mangalik != '' && count($user_partnerpreference->user_mangalik) > 0 && $user_partnerpreference-> user_mangalik != null) {
+                $fatchdata = $fatchdata->whereIn('user_horoscope.user_mangalik', $user_partnerpreference->user_mangalik);
+                //$gotra = implode(',', $user_partnerpreference->user_body_type);
+            } else {
+                $gotra = '""';
+            }
+
             if ($user_partnerpreference->user_cast != '' && count($user_partnerpreference->user_cast) > 0 && $user_partnerpreference->user_cast != null) {
                 $fatchdata = $fatchdata->whereNotIn('user_religion.user_caste', $user_partnerpreference->user_cast);
                 $user_cast = implode(',', $user_partnerpreference->user_cast);
@@ -3178,151 +3497,6 @@ class filterController extends Controller
                 ->where('user_info.user_creation_date_time', '>=', $user_creation_date)
                 ->get();
             //dd($fatchdata);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-            // try {
-            // $user_partnerpreference = DB::table('user_partnerpreference')->where('user_ID', $user_id)->get();
-            // $user_partnerpreference = json_decode($user_partnerpreference[0]->json_data);
-            // $user = DB::table('user_info')->where('user_ID', $user_id)->get('user_gender');
-            // $gender = $user[0]->user_gender == "male" ? 'female' : 'male';
-            // $user_activities = DB::table('user_activities')->where('user_id', $user_id)->get('user_block_list');
-            // if (count($user_activities) > 0) {
-            //     $user_block_list = $user_activities[0]->user_block_list;
-            //     $elements = explode(',', $user_block_list);
-            //     // Enclose each element in double quotes
-            //     $quotedElements = array_map(function ($element) {
-            //         return '"' . $element . '"';
-            //     }, $elements);
-            //     // Join the elements with commas
-            //     $outputString = $elements;
-            //     //implode(",", $quotedElements);
-            // } else {
-            //     $outputString = [];
-            // }
-            //
-
-
-
-            // $alldata = DB::table('user_info')
-            //     ->select('*')
-            //     ->Join('user_religion', 'user_info.user_id', '=', 'user_religion.user_ID')
-            //     ->Join('user_locations', 'user_info.user_id', '=', 'user_locations.user_ID')
-            //     ->Join('user_family', 'user_info.user_id', '=', 'user_family.user_ID')
-            //     ->Join('user_physical_details', 'user_info.user_id', '=', 'user_physical_details.user_ID')
-            //     ->Join('user_about', 'user_info.user_id', '=', 'user_about.user_ID')
-            //     ->Join('user_diet_hobbies', 'user_info.user_id', '=', 'user_diet_hobbies.user_ID')
-            //     ->Join('user_education_occupations', 'user_info.user_id', '=', 'user_education_occupations.user_ID')
-            //     ->Join('auth_user', 'user_info.user_id', '=', 'auth_user.auth_ID')
-            //     ->Join('user_horoscope', 'user_info.user_id', '=', 'user_horoscope.user_id')
-            //     ->where('user_info.user_gender', $gender)
-            //     ->where('user_info.user_id', '<>', $user_id)
-            //     ->where('user_info.user_status', 'Approved')
-            //     ->whereNotIn('user_info.user_id', $outputString)
-            //     ->where('user_info.deleted', 1)
-            //     ->where('user_info.status', 1)
-            //     ->where('user_info.marriage_status', 0)
-            //
-
-
-            // if ($user_partnerpreference->user_cast != '') {
-            //     $alldata = $alldata->whereIn('user_religion.user_caste', $user_partnerpreference->user_cast);
-            //     $user_cast = implode(',', $user_partnerpreference->user_cast);
-            // } else {
-            //     $user_cast = '""';
-            // }
-            // $alldata = $alldata->get();
-
-
-
-
-
 
             if (count($fatchdata) > 0) {
                 $user_arr = array(
@@ -3466,6 +3640,54 @@ class filterController extends Controller
                 $gotra = '""';
             }
 
+            if ($user_partnerpreference->user_complextion != '' && count($user_partnerpreference->user_complextion) > 0 && $user_partnerpreference->user_complextion != null) {
+                $fatchdata = $fatchdata->whereIn('user_physical_details.user_complextion', $user_partnerpreference->user_complextion);
+                //$gotra = implode(',', $user_partnerpreference->user_gotra);
+            } else {
+                $gotra = '""';
+            }
+
+            if ($user_partnerpreference->user_body_type != '' && count($user_partnerpreference->user_body_type) > 0 && $user_partnerpreference->user_body_type != null) {
+                $fatchdata = $fatchdata->whereIn('user_physical_details.user_body_type', $user_partnerpreference->user_body_type);
+                //$gotra = implode(',', $user_partnerpreference->user_body_type);
+            } else {
+                $gotra = '""';
+            }
+
+            if ($user_partnerpreference->user_highest_education != '' && count($user_partnerpreference->user_highest_education) > 0 && $user_partnerpreference->user_highest_education != null) {
+                $fatchdata = $fatchdata->whereIn('user_education_occupations.user_highest_education', $user_partnerpreference->user_highest_education);
+                //$gotra = implode(',', $user_partnerpreference->user_body_type);
+            } else {
+                $gotra = '""';
+            }
+            if ($user_partnerpreference->user_deg != '' && count($user_partnerpreference->user_deg) > 0 && $user_partnerpreference->user_deg != null) {
+                $fatchdata = $fatchdata->whereIn('user_education_occupations.user_deg', $user_partnerpreference->user_deg);
+                //$gotra = implode(',', $user_partnerpreference->user_body_type);
+            } else {
+                $gotra = '""';
+            }
+
+
+            if ($user_partnerpreference->user_family_value != '' && count($user_partnerpreference->user_family_value) > 0 && $user_partnerpreference->user_family_value != null) {
+                $fatchdata = $fatchdata->whereIn('user_family.user_family_value', $user_partnerpreference->user_family_value);
+                //$gotra = implode(',', $user_partnerpreference->user_body_type);
+            } else {
+                $gotra = '""';
+            }
+
+            if ($user_partnerpreference-> user_family_status != '' && count($user_partnerpreference-> user_family_status) > 0 && $user_partnerpreference-> user_family_status != null) {
+                $fatchdata = $fatchdata->whereIn('user_family.user_family_status', $user_partnerpreference-> user_family_status);
+                //$gotra = implode(',', $user_partnerpreference->user_body_type);
+            } else {
+                $gotra = '""';
+            }
+            if ($user_partnerpreference->user_mangalik != '' && count($user_partnerpreference->user_mangalik) > 0 && $user_partnerpreference-> user_mangalik != null) {
+                $fatchdata = $fatchdata->whereIn('user_horoscope.user_mangalik', $user_partnerpreference->user_mangalik);
+                //$gotra = implode(',', $user_partnerpreference->user_body_type);
+            } else {
+                $gotra = '""';
+            }
+
             if ($user_partnerpreference->user_cast != '' && count($user_partnerpreference->user_cast) > 0 && $user_partnerpreference->user_cast != null) {
                 $fatchdata = $fatchdata->whereNotIn('user_religion.user_caste', $user_partnerpreference->user_cast);
                 $user_cast = implode(',', $user_partnerpreference->user_cast);
@@ -3496,148 +3718,6 @@ class filterController extends Controller
                 ->where('user_info.marriage_status', 0)
                 ->where('user_info.spotlight', 1)
                 ->get();
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-            // // try {
-            // $user_partnerpreference = DB::table('user_partnerpreference')->where('user_ID', $user_id)->get();
-            // $user_partnerpreference = json_decode($user_partnerpreference[0]->json_data);
-            // $user = DB::table('user_info')->where('user_ID', $user_id)->get('user_gender');
-            // $gender = $user[0]->user_gender == "male" ? 'female' : 'male';
-            // $user_activities = DB::table('user_activities')->where('user_id', $user_id)->get('user_block_list');
-            // if (count($user_activities) > 0) {
-            //     $user_block_list = $user_activities[0]->user_block_list;
-            //     $elements = explode(',', $user_block_list);
-            //     // Enclose each element in double quotes
-            //     $quotedElements = array_map(function ($element) {
-            //         return '"' . $element . '"';
-            //     }, $elements);
-            //     // Join the elements with commas
-            //     $outputString = $quotedElements;
-            //     //implode(",", $quotedElements);
-            // } else {
-            //     $outputString = [];
-            // }
-            // $alldata = DB::table('user_info')
-            //     ->select('*')
-            //     ->Join('user_religion', 'user_info.user_id', '=', 'user_religion.user_ID')
-            //     ->Join('user_locations', 'user_info.user_id', '=', 'user_locations.user_ID')
-            //     ->Join('user_family', 'user_info.user_id', '=', 'user_family.user_ID')
-            //     ->Join('user_physical_details', 'user_info.user_id', '=', 'user_physical_details.user_ID')
-            //     ->Join('user_about', 'user_info.user_id', '=', 'user_about.user_ID')
-            //     ->Join('user_diet_hobbies', 'user_info.user_id', '=', 'user_diet_hobbies.user_ID')
-            //     ->Join('user_education_occupations', 'user_info.user_id', '=', 'user_education_occupations.user_ID')
-            //     ->Join('auth_user', 'user_info.user_id', '=', 'auth_user.auth_ID')
-            //     ->Join('user_horoscope', 'user_info.user_id', '=', 'user_horoscope.user_id')
-            //     ->where('user_info.user_gender', $gender)
-            //     ->where('user_info.user_id', '<>', $user_id)
-            //     ->where('user_info.spotlight', 1)
-            //     ->whereNotIn('user_info.user_id', $outputString)
-            //     ->where('user_info.user_status', 'Approved')
-            //     ->where('user_info.deleted', 1);
-            // if ($user_partnerpreference->user_cast != '') {
-            //     $alldata = $alldata->whereIn('user_religion.user_caste', $user_partnerpreference->user_cast);
-            //     $user_cast = implode(',', $user_partnerpreference->user_cast);
-            // } else {
-            //     $user_cast = '""';
-            // }
-            // $alldata = $alldata->get();
-
-
             if (count($fatchdata) > 0) {
                 $user_arr = array(
                     "status" => true,
@@ -3775,6 +3855,55 @@ class filterController extends Controller
             if ($user_partnerpreference->user_gotra != '' && count($user_partnerpreference->user_gotra) > 0 && $user_partnerpreference->user_gotra != null) {
                 $fatchdata = $fatchdata->whereIn('user_horoscope.user_gotra', $user_partnerpreference->user_gotra);
                 $gotra = implode(',', $user_partnerpreference->user_gotra);
+            } else {
+                $gotra = '""';
+            }
+
+
+            if ($user_partnerpreference->user_complextion != '' && count($user_partnerpreference->user_complextion) > 0 && $user_partnerpreference->user_complextion != null) {
+                $fatchdata = $fatchdata->whereIn('user_physical_details.user_complextion', $user_partnerpreference->user_complextion);
+                //$gotra = implode(',', $user_partnerpreference->user_gotra);
+            } else {
+                $gotra = '""';
+            }
+
+            if ($user_partnerpreference->user_body_type != '' && count($user_partnerpreference->user_body_type) > 0 && $user_partnerpreference->user_body_type != null) {
+                $fatchdata = $fatchdata->whereIn('user_physical_details.user_body_type', $user_partnerpreference->user_body_type);
+                //$gotra = implode(',', $user_partnerpreference->user_body_type);
+            } else {
+                $gotra = '""';
+            }
+
+            if ($user_partnerpreference->user_highest_education != '' && count($user_partnerpreference->user_highest_education) > 0 && $user_partnerpreference->user_highest_education != null) {
+                $fatchdata = $fatchdata->whereIn('user_education_occupations.user_highest_education', $user_partnerpreference->user_highest_education);
+                //$gotra = implode(',', $user_partnerpreference->user_body_type);
+            } else {
+                $gotra = '""';
+            }
+            if ($user_partnerpreference->user_deg != '' && count($user_partnerpreference->user_deg) > 0 && $user_partnerpreference->user_deg != null) {
+                $fatchdata = $fatchdata->whereIn('user_education_occupations.user_deg', $user_partnerpreference->user_deg);
+                //$gotra = implode(',', $user_partnerpreference->user_body_type);
+            } else {
+                $gotra = '""';
+            }
+
+
+            if ($user_partnerpreference->user_family_value != '' && count($user_partnerpreference->user_family_value) > 0 && $user_partnerpreference->user_family_value != null) {
+                $fatchdata = $fatchdata->whereIn('user_family.user_family_value', $user_partnerpreference->user_family_value);
+                //$gotra = implode(',', $user_partnerpreference->user_body_type);
+            } else {
+                $gotra = '""';
+            }
+
+            if ($user_partnerpreference-> user_family_status != '' && count($user_partnerpreference-> user_family_status) > 0 && $user_partnerpreference-> user_family_status != null) {
+                $fatchdata = $fatchdata->whereIn('user_family.user_family_status', $user_partnerpreference-> user_family_status);
+                //$gotra = implode(',', $user_partnerpreference->user_body_type);
+            } else {
+                $gotra = '""';
+            }
+            if ($user_partnerpreference->user_mangalik != '' && count($user_partnerpreference->user_mangalik) > 0 && $user_partnerpreference-> user_mangalik != null) {
+                $fatchdata = $fatchdata->whereIn('user_horoscope.user_mangalik', $user_partnerpreference->user_mangalik);
+                //$gotra = implode(',', $user_partnerpreference->user_body_type);
             } else {
                 $gotra = '""';
             }
@@ -4086,6 +4215,54 @@ class filterController extends Controller
             if ($user_partnerpreference->user_gotra != '' && count($user_partnerpreference->user_gotra) > 0 && $user_partnerpreference->user_gotra != null) {
                 $fatchdata = $fatchdata->whereIn('user_horoscope.user_gotra', $user_partnerpreference->user_gotra);
                 $gotra = implode(',', $user_partnerpreference->user_gotra);
+            } else {
+                $gotra = '""';
+            }
+
+            if ($user_partnerpreference->user_complextion != '' && count($user_partnerpreference->user_complextion) > 0 && $user_partnerpreference->user_complextion != null) {
+                $fatchdata = $fatchdata->whereIn('user_physical_details.user_complextion', $user_partnerpreference->user_complextion);
+                //$gotra = implode(',', $user_partnerpreference->user_gotra);
+            } else {
+                $gotra = '""';
+            }
+
+            if ($user_partnerpreference->user_body_type != '' && count($user_partnerpreference->user_body_type) > 0 && $user_partnerpreference->user_body_type != null) {
+                $fatchdata = $fatchdata->whereIn('user_physical_details.user_body_type', $user_partnerpreference->user_body_type);
+                //$gotra = implode(',', $user_partnerpreference->user_body_type);
+            } else {
+                $gotra = '""';
+            }
+
+            if ($user_partnerpreference->user_highest_education != '' && count($user_partnerpreference->user_highest_education) > 0 && $user_partnerpreference->user_highest_education != null) {
+                $fatchdata = $fatchdata->whereIn('user_education_occupations.user_highest_education', $user_partnerpreference->user_highest_education);
+                //$gotra = implode(',', $user_partnerpreference->user_body_type);
+            } else {
+                $gotra = '""';
+            }
+            if ($user_partnerpreference->user_deg != '' && count($user_partnerpreference->user_deg) > 0 && $user_partnerpreference->user_deg != null) {
+                $fatchdata = $fatchdata->whereIn('user_education_occupations.user_deg', $user_partnerpreference->user_deg);
+                //$gotra = implode(',', $user_partnerpreference->user_body_type);
+            } else {
+                $gotra = '""';
+            }
+
+
+            if ($user_partnerpreference->user_family_value != '' && count($user_partnerpreference->user_family_value) > 0 && $user_partnerpreference->user_family_value != null) {
+                $fatchdata = $fatchdata->whereIn('user_family.user_family_value', $user_partnerpreference->user_family_value);
+                //$gotra = implode(',', $user_partnerpreference->user_body_type);
+            } else {
+                $gotra = '""';
+            }
+
+            if ($user_partnerpreference-> user_family_status != '' && count($user_partnerpreference-> user_family_status) > 0 && $user_partnerpreference-> user_family_status != null) {
+                $fatchdata = $fatchdata->whereIn('user_family.user_family_status', $user_partnerpreference-> user_family_status);
+                //$gotra = implode(',', $user_partnerpreference->user_body_type);
+            } else {
+                $gotra = '""';
+            }
+            if ($user_partnerpreference->user_mangalik != '' && count($user_partnerpreference->user_mangalik) > 0 && $user_partnerpreference-> user_mangalik != null) {
+                $fatchdata = $fatchdata->whereIn('user_horoscope.user_mangalik', $user_partnerpreference->user_mangalik);
+                //$gotra = implode(',', $user_partnerpreference->user_body_type);
             } else {
                 $gotra = '""';
             }
