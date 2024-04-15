@@ -1874,13 +1874,13 @@ class filterController extends Controller
             // try {
             $user_partnerpreference = DB::table('user_partnerpreference')->where('user_ID', $user_id)->get();
             $user_partnerpreference = json_decode($user_partnerpreference[0]->json_data);
-            //dd($user_partnerpreference);
+            //  dd($user_partnerpreference);
 
 
             // dd($user_partnerpreference->user_employed_In);
             $user = DB::table('user_info')->where('user_ID', $user_id)->get('user_gender');
             $gender = $user[0]->user_gender == "male" ? 'female' : 'male';
-            dd($gender);
+            //dd($gender);
             $user_activities = DB::table('user_activities')->where('user_id', $user_id)->get('user_block_list');
             // dd(count($user_activities));
 
@@ -1976,6 +1976,44 @@ class filterController extends Controller
                 $gotra = '""';
             }
 
+            if ($user_partnerpreference->user_complextion != '' && count($user_partnerpreference->user_complextion) > 0 && $user_partnerpreference->user_complextion != null) {
+                $fatchdata = $fatchdata->whereIn('user_physical_details.user_complextion', $user_partnerpreference->user_complextion);
+                //$gotra = implode(',', $user_partnerpreference->user_gotra);
+            } else {
+                $gotra = '""';
+            }
+
+            if ($user_partnerpreference->user_body_type != '' && count($user_partnerpreference->user_body_type) > 0 && $user_partnerpreference->user_body_type != null) {
+                $fatchdata = $fatchdata->whereIn('user_physical_details.user_body_type', $user_partnerpreference->user_body_type);
+                //$gotra = implode(',', $user_partnerpreference->user_body_type);
+            } else {
+                $gotra = '""';
+            }
+
+            if ($user_partnerpreference->user_highest_education != '' && count($user_partnerpreference->user_highest_education) > 0 && $user_partnerpreference->user_highest_education != null) {
+                $fatchdata = $fatchdata->whereIn('user_education_occupations.user_highest_education', $user_partnerpreference->user_highest_education);
+                //$gotra = implode(',', $user_partnerpreference->user_body_type);
+            } else {
+                $gotra = '""';
+            }
+            if ($user_partnerpreference->user_deg != '' && count($user_partnerpreference->user_deg) > 0 && $user_partnerpreference->user_deg != null) {
+                $fatchdata = $fatchdata->whereIn('user_education_occupations.user_deg', $user_partnerpreference->user_deg);
+                //$gotra = implode(',', $user_partnerpreference->user_body_type);
+            } else {
+                $gotra = '""';
+            }
+
+
+
+
+
+
+
+
+
+
+
+
             if ($user_partnerpreference->user_cast != '' && count($user_partnerpreference->user_cast) > 0 && $user_partnerpreference->user_cast != null) {
                 $fatchdata = $fatchdata->whereIn('user_religion.user_caste', $user_partnerpreference->user_cast);
                 $user_cast = implode(',', $user_partnerpreference->user_cast);
@@ -2004,7 +2042,7 @@ class filterController extends Controller
                 ->where('user_info.deleted', 1)
                 ->where('user_info.status', 1)
                 ->get();
-            // dd($fatchdata);
+           //  dd($fatchdata);
 
             $shuffledData = $fatchdata->shuffle();
             //shuffle($shuffledData);
