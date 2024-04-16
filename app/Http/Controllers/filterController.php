@@ -2021,8 +2021,8 @@ class filterController extends Controller
             } else {
                 $gotra = '""';
             }
-            if ($user_partnerpreference->user_mangalik != '' && count($user_partnerpreference->user_mangalik) > 0 && $user_partnerpreference-> user_mangalik != null) {
-                $fatchdata = $fatchdata->whereIn('user_horoscope.user_mangalik', $user_partnerpreference->user_mangalik);
+            if ($user_partnerpreference->user_mangalik != '' && $user_partnerpreference-> user_mangalik != null) {
+                $fatchdata = $fatchdata->where('user_horoscope.user_mangalik', $user_partnerpreference->user_mangalik);
                 //$gotra = implode(',', $user_partnerpreference->user_body_type);
             } else {
                 $gotra = '""';
@@ -2251,8 +2251,8 @@ class filterController extends Controller
             } else {
                 $gotra = '""';
             }
-            if ($user_partnerpreference->user_mangalik != '' && count($user_partnerpreference->user_mangalik) > 0 && $user_partnerpreference-> user_mangalik != null) {
-                $fatchdata = $fatchdata->whereIn('user_horoscope.user_mangalik', $user_partnerpreference->user_mangalik);
+            if ($user_partnerpreference->user_mangalik != '' && $user_partnerpreference-> user_mangalik != null) {
+                $fatchdata = $fatchdata->where('user_horoscope.user_mangalik', $user_partnerpreference->user_mangalik);
                 //$gotra = implode(',', $user_partnerpreference->user_body_type);
             } else {
                 $gotra = '""';
@@ -2450,8 +2450,8 @@ class filterController extends Controller
             } else {
                 $gotra = '""';
             }
-            if ($user_partnerpreference->user_mangalik != '' && count($user_partnerpreference->user_mangalik) > 0 && $user_partnerpreference-> user_mangalik != null) {
-                $fatchdata = $fatchdata->whereIn('user_horoscope.user_mangalik', $user_partnerpreference->user_mangalik);
+            if ($user_partnerpreference->user_mangalik != '' && $user_partnerpreference-> user_mangalik != null) {
+                $fatchdata = $fatchdata->where('user_horoscope.user_mangalik', $user_partnerpreference->user_mangalik);
                 //$gotra = implode(',', $user_partnerpreference->user_body_type);
             } else {
                 $gotra = '""';
@@ -2677,8 +2677,8 @@ class filterController extends Controller
             } else {
                 $gotra = '""';
             }
-            if ($user_partnerpreference->user_mangalik != '' && count($user_partnerpreference->user_mangalik) > 0 && $user_partnerpreference-> user_mangalik != null) {
-                $fatchdata = $fatchdata->whereIn('user_horoscope.user_mangalik', $user_partnerpreference->user_mangalik);
+            if ($user_partnerpreference->user_mangalik != '' && $user_partnerpreference-> user_mangalik != null) {
+                $fatchdata = $fatchdata->where('user_horoscope.user_mangalik', $user_partnerpreference->user_mangalik);
                 //$gotra = implode(',', $user_partnerpreference->user_body_type);
             } else {
                 $gotra = '""';
@@ -3027,8 +3027,8 @@ class filterController extends Controller
             } else {
                 $gotra = '""';
             }
-            if ($user_partnerpreference->user_mangalik != '' && count($user_partnerpreference->user_mangalik) > 0 && $user_partnerpreference-> user_mangalik != null) {
-                $fatchdata = $fatchdata->whereIn('user_horoscope.user_mangalik', $user_partnerpreference->user_mangalik);
+            if ($user_partnerpreference->user_mangalik != '' && $user_partnerpreference-> user_mangalik != null) {
+                $fatchdata = $fatchdata->where('user_horoscope.user_mangalik', $user_partnerpreference->user_mangalik);
                 //$gotra = implode(',', $user_partnerpreference->user_body_type);
             } else {
                 $gotra = '""';
@@ -3241,8 +3241,8 @@ class filterController extends Controller
             } else {
                 $gotra = '""';
             }
-            if ($user_partnerpreference->user_mangalik != '' && count($user_partnerpreference->user_mangalik) > 0 && $user_partnerpreference-> user_mangalik != null) {
-                $fatchdata = $fatchdata->whereIn('user_horoscope.user_mangalik', $user_partnerpreference->user_mangalik);
+            if ($user_partnerpreference->user_mangalik != '' && $user_partnerpreference-> user_mangalik != null) {
+                $fatchdata = $fatchdata->where('user_horoscope.user_mangalik', $user_partnerpreference->user_mangalik);
                 //$gotra = implode(',', $user_partnerpreference->user_body_type);
             } else {
                 $gotra = '""';
@@ -3458,8 +3458,8 @@ class filterController extends Controller
             } else {
                 $gotra = '""';
             }
-            if ($user_partnerpreference->user_mangalik != '' && count($user_partnerpreference->user_mangalik) > 0 && $user_partnerpreference-> user_mangalik != null) {
-                $fatchdata = $fatchdata->whereIn('user_horoscope.user_mangalik', $user_partnerpreference->user_mangalik);
+            if ($user_partnerpreference->user_mangalik != '' && $user_partnerpreference-> user_mangalik != null) {
+                $fatchdata = $fatchdata->where('user_horoscope.user_mangalik', $user_partnerpreference->user_mangalik);
                 //$gotra = implode(',', $user_partnerpreference->user_body_type);
             } else {
                 $gotra = '""';
@@ -3681,8 +3681,8 @@ class filterController extends Controller
             } else {
                 $gotra = '""';
             }
-            if ($user_partnerpreference->user_mangalik != '' && count($user_partnerpreference->user_mangalik) > 0 && $user_partnerpreference-> user_mangalik != null) {
-                $fatchdata = $fatchdata->whereIn('user_horoscope.user_mangalik', $user_partnerpreference->user_mangalik);
+            if ($user_partnerpreference->user_mangalik != '' && $user_partnerpreference-> user_mangalik != null) {
+                $fatchdata = $fatchdata->where('user_horoscope.user_mangalik', $user_partnerpreference->user_mangalik);
                 //$gotra = implode(',', $user_partnerpreference->user_body_type);
             } else {
                 $gotra = '""';
@@ -3901,8 +3901,8 @@ class filterController extends Controller
             } else {
                 $gotra = '""';
             }
-            if ($user_partnerpreference->user_mangalik != '' && count($user_partnerpreference->user_mangalik) > 0 && $user_partnerpreference-> user_mangalik != null) {
-                $fatchdata = $fatchdata->whereIn('user_horoscope.user_mangalik', $user_partnerpreference->user_mangalik);
+            if ($user_partnerpreference->user_mangalik != '' && $user_partnerpreference-> user_mangalik != null) {
+                $fatchdata = $fatchdata->where('user_horoscope.user_mangalik', $user_partnerpreference->user_mangalik);
                 //$gotra = implode(',', $user_partnerpreference->user_body_type);
             } else {
                 $gotra = '""';
@@ -4260,8 +4260,8 @@ class filterController extends Controller
             } else {
                 $gotra = '""';
             }
-            if ($user_partnerpreference->user_mangalik != '' && count($user_partnerpreference->user_mangalik) > 0 && $user_partnerpreference-> user_mangalik != null) {
-                $fatchdata = $fatchdata->whereIn('user_horoscope.user_mangalik', $user_partnerpreference->user_mangalik);
+            if ($user_partnerpreference->user_mangalik != '' && $user_partnerpreference-> user_mangalik != null) {
+                $fatchdata = $fatchdata->where('user_horoscope.user_mangalik', $user_partnerpreference->user_mangalik);
                 //$gotra = implode(',', $user_partnerpreference->user_body_type);
             } else {
                 $gotra = '""';

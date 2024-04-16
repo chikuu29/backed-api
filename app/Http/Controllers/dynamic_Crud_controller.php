@@ -7,6 +7,7 @@ use App\Helpers\CryptoHelper;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rules\Exists;
+use Illuminate\Support\Facades\Schema;
 
 use function PHPUnit\Framework\isEmpty;
 
@@ -287,7 +288,8 @@ class dynamic_Crud_controller extends Controller
                 "message" => 'You Provid Empty data',
             );
         } else {
-            $query = DB::table($table)->whereIn('Id', $whereConditions)->update(
+          $cl =  Schema::hasColumn($table, 'Id') ? 'Id' : 'id';
+            $query = DB::table($table)->whereIn($cl, $whereConditions)->update(
                 $data
             );
             if ($query > 0) {
@@ -354,6 +356,42 @@ class dynamic_Crud_controller extends Controller
             );
         }
 
+        return json_encode($user_arr);
+    }
+    public function makeActinForMultipuldeleteData(Request $request)
+    {
+        $requestedData = $request->all();
+
+        $whereConditions = isset($requestedData['whereConditions']) ? $requestedData['whereConditions'] : [];
+        // return gettype($whereConditions);
+        $table = isset($requestedData['table']) ? $requestedData['table'] : '';
+        $type = isset($requestedData['type']) ? $requestedData['type'] : '';
+        if (count($whereConditions) == 0 || $table == '') {
+            $user_arr = array(
+                "status" => false,
+                "success" => false,
+                "message" => 'You Provid Empty data',
+            );
+        } else {
+          $cl =  Schema::hasColumn($table, 'Id') ? 'Id' : 'id';
+          foreach($whereConditions as $del){
+            $query = DB::table($table)->where($cl,$del)->delete();
+          }
+
+            if ($query) {
+                $user_arr = array(
+                    "status" => true,
+                    "success" => true,
+                    "message" => 'Data ' . $type . ' Successfully!',
+                );
+            } else {
+                $user_arr = array(
+                    "status" => false,
+                    "success" => false,
+                    "message" => 'Data Not ' . $type . ' Successfully!',
+                );
+            }
+        }
         return json_encode($user_arr);
     }
 }

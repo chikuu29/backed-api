@@ -33,6 +33,7 @@ $router->group(['middleware' => ['App\Http\Middleware\JwtMiddleware']], function
     $router->post("/country", "addItemControler@country");
     $router->post("/state", "addItemControler@state");
     $router->post("/makeActinForMultipulData", "dynamic_Crud_controller@makeActinForMultipulData");
+    $router->post("/makeActinForMultipuldeleteData", "dynamic_Crud_controller@makeActinForMultipuldeleteData");
     $router->post("/insertData", "dynamic_Crud_controller@insertData");
     $router->post("/getprofile", "userController@fatchAllaDataByUserId");
     $router->post("/zodiacs", "addItemControler@zodiacs");
