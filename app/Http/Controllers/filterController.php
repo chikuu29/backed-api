@@ -22,7 +22,7 @@ class filterController extends Controller
 
             // try {
             $user = DB::table('user_info')->where('user_ID', $user_id)->get('user_gender');
-            $gender = $user[0]->user_gender == "male" ? 'female' : 'male';
+            $gender = $user[0]->user_gender == "Male" ? "Female" : "Male";
             $user_activities = DB::table('user_activities')->where('user_id', $user_id)->get('user_block_list');
             if (count($user_activities) > 0) {
                 $user_block_list = $user_activities[0]->user_block_list;
@@ -96,7 +96,7 @@ class filterController extends Controller
 
             // dd($user_partnerpreference->user_employed_In);
             $user = DB::table('user_info')->where('user_ID', $user_id)->get('user_gender');
-            $gender = $user[0]->user_gender == "male" ? 'female' : 'male';
+            $gender = $user[0]->user_gender == "Male" ? "Female" : "Male";
             $user_activities = DB::table('user_activities')->where('user_id', $user_id)->get('user_block_list');
 
 
@@ -515,7 +515,7 @@ class filterController extends Controller
             $user = DB::table('user_info')->where('user_ID', $user_id)->get('user_gender');
             $user_religiontable = DB::table('user_religion')->where('user_ID', $user_id)->first(['user_caste']);
             $user_religion = $user_religiontable->user_caste;
-            $gender = $user[0]->user_gender == "male" ? 'female' : 'male';
+            $gender = $user[0]->user_gender == "Male" ? "Female" : "Male";
             $user_activities = DB::table('user_activities')->where('user_id', $user_id)->get('user_block_list');
             if (count($user_activities) > 0) {
                 $user_block_list = $user_activities[0]->user_block_list;
@@ -738,7 +738,7 @@ class filterController extends Controller
             //dd($membership_plan_type);
             // dd($user_partnerpreference->user_employed_In);
             $user = DB::table('user_info')->where('user_ID', $user_id)->get('user_gender');
-            $gender = $user[0]->user_gender == "male" ? 'female' : 'male';
+            $gender = $user[0]->user_gender == "Male" ? "Female" : "Male";
             $user_activities = DB::table('user_activities')->where('user_id', $user_id)->get('user_block_list');
 
 
@@ -929,7 +929,7 @@ class filterController extends Controller
             $user_zodiacs = $user_partnerpreference->user_zodiacs;
 
             $user = DB::table('user_info')->where('user_ID', $user_id)->get('user_gender');
-            $gender = $user[0]->user_gender == "male" ? 'female' : 'male';
+            $gender = $user[0]->user_gender == "Male" ? "Female" : "Male";
             $user_activities = DB::table('user_activities')->where('user_id', $user_id)->get('user_block_list');
             if (count($user_activities) > 0) {
                 $user_block_list = $user_activities[0]->user_block_list;
@@ -1180,7 +1180,7 @@ class filterController extends Controller
                 $to_age = $user_partnerpreference->to_user_age;
                 $from_age =  $user_partnerpreference->from_user_age;
                 $user = DB::table('user_info')->where('user_ID', $user_id)->get('user_gender');
-                $gender = $user[0]->user_gender == "male" ? 'female' : 'male';
+                $gender = $user[0]->user_gender == "Male" ? "Female" : "Male";
                 $user_activities = DB::table('user_activities')->where('user_id', $user_id)->get('user_block_list');
                 if (count($user_activities) > 0) {
                     $user_block_list = $user_activities[0]->user_block_list;
@@ -1401,7 +1401,7 @@ class filterController extends Controller
 
             // try {
             $user = DB::table('user_info')->where('user_ID', $user_id)->get('user_gender');
-            $gender = $user[0]->user_gender == "male" ? 'female' : 'male';
+            $gender = $user[0]->user_gender == "Male" ? "Female" : "Male";
             $user_activities = DB::table('user_activities')->where('user_id', $user_id)->get('user_block_list');
             if (count($user_activities) > 0) {
                 $user_block_list = $user_activities[0]->user_block_list;
@@ -1465,7 +1465,7 @@ class filterController extends Controller
             );
         } else {
             $user = DB::table('user_info')->where('user_ID', $user_id)->get('user_gender');
-            $gender = $user[0]->user_gender == "male" ? 'female' : 'male';
+            $gender = $user[0]->user_gender == "Male" ? "Female" : "Male";
             $user_activities = DB::table('user_activities')->where('user_id', $user_id)->get('user_block_list');
             if (count($user_activities) > 0) {
                 $user_block_list = $user_activities[0]->user_block_list;
@@ -1571,7 +1571,7 @@ class filterController extends Controller
             $user_zodiacs = $user_partnerpreference->user_zodiacs;
 
             $user = DB::table('user_info')->where('user_ID', $user_id)->get('user_gender');
-            $gender = $user[0]->user_gender == "male" ? 'female' : 'male';
+            $gender = $user[0]->user_gender == "Male" ? "Female" : "Male";
             $user_activities = DB::table('user_activities')->where('user_id', $user_id)->get('user_block_list');
             if (count($user_activities) > 0) {
                 $user_block_list = $user_activities[0]->user_block_list;
@@ -1795,7 +1795,7 @@ class filterController extends Controller
 
             // try {
             $user = DB::table('user_info')->where('user_ID', $user_id)->get('user_gender');
-            $gender = $user[0]->user_gender == "male" ? 'female' : 'male';
+            $gender = $user[0]->user_gender == "Male" ? "Female" : "Male";
             $user_activities = DB::table('user_activities')->where('user_id', $user_id)->get('user_block_list');
             if (count($user_activities) > 0) {
                 $user_block_list = $user_activities[0]->user_block_list;
@@ -1879,7 +1879,7 @@ class filterController extends Controller
 
             // dd($user_partnerpreference->user_employed_In);
             $user = DB::table('user_info')->where('user_ID', $user_id)->get('user_gender');
-            $gender = $user[0]->user_gender == "male" ? 'female' : 'male';
+            $gender = $user[0]->user_gender == "Male" ? "Female" : "Male";
             //dd($gender);
             $user_activities = DB::table('user_activities')->where('user_id', $user_id)->get('user_block_list');
             // dd(count($user_activities));
@@ -2114,7 +2114,7 @@ class filterController extends Controller
 
             // dd($user_partnerpreference->user_employed_In);
             $user = DB::table('user_info')->where('user_ID', $user_id)->get('user_gender');
-            $gender = $user[0]->user_gender == "male" ? 'female' : 'male';
+            $gender = $user[0]->user_gender == "Male" ? "Female" : "Male";
             $user_activities = DB::table('user_activities')->where('user_id', $user_id)->get('user_block_list');
             //dd($user_activities);
 
@@ -2327,7 +2327,7 @@ class filterController extends Controller
 
             // dd($user_partnerpreference->user_employed_In);
             $user = DB::table('user_info')->where('user_ID', $user_id)->get('user_gender');
-            $gender = $user[0]->user_gender == "male" ? 'female' : 'male';
+            $gender = $user[0]->user_gender == "Male" ? "Female" : "Male";
             $user_activities = DB::table('user_activities')->where('user_id', $user_id)->get('user_block_list');
             //dd($user_activities);
 
@@ -2539,7 +2539,7 @@ class filterController extends Controller
 
             // dd($user_partnerpreference->user_employed_In);
             $user = DB::table('user_info')->where('user_ID', $user_id)->get('user_gender');
-            $gender = $user[0]->user_gender == "male" ? 'female' : 'male';
+            $gender = $user[0]->user_gender == "Male" ? "Female" : "Male";
             $user_activities = DB::table('user_activities')->where('user_id', $user_id)->get('user_block_list');
             //dd($user_activities);
 
@@ -2890,7 +2890,7 @@ class filterController extends Controller
             //dd($membership_plan_type);
             // dd($user_partnerpreference->user_employed_In);
             $user = DB::table('user_info')->where('user_ID', $user_id)->get('user_gender');
-            $gender = $user[0]->user_gender == "male" ? 'female' : 'male';
+            $gender = $user[0]->user_gender == "Male" ? "Female" : "Male";
             $user_activities = DB::table('user_activities')->where('user_id', $user_id)->get('user_block_list');
 
 
@@ -3104,7 +3104,7 @@ class filterController extends Controller
 
             // dd($user_partnerpreference->user_employed_In);
             $user = DB::table('user_info')->where('user_ID', $user_id)->get('user_gender');
-            $gender = $user[0]->user_gender == "male" ? 'female' : 'male';
+            $gender = $user[0]->user_gender == "Male" ? "Female" : "Male";
             $user_activities = DB::table('user_activities')->where('user_id', $user_id)->get('user_block_list');
             //dd($user_activities);
 
@@ -3320,7 +3320,7 @@ class filterController extends Controller
 
             // dd($user_partnerpreference->user_employed_In);
             $user = DB::table('user_info')->where('user_ID', $user_id)->get('user_gender');
-            $gender = $user[0]->user_gender == "male" ? 'female' : 'male';
+            $gender = $user[0]->user_gender == "Male" ? "Female" : "Male";
             $user_activities = DB::table('user_activities')->where('user_id', $user_id)->get('user_block_list');
             //dd($user_activities);
 
@@ -3544,7 +3544,7 @@ class filterController extends Controller
 
             // dd($user_partnerpreference->user_employed_In);
             $user = DB::table('user_info')->where('user_ID', $user_id)->get('user_gender');
-            $gender = $user[0]->user_gender == "male" ? 'female' : 'male';
+            $gender = $user[0]->user_gender == "Male" ? "Female" : "Male";
             $user_activities = DB::table('user_activities')->where('user_id', $user_id)->get('user_block_list');
             //dd($user_activities);
 
@@ -3763,7 +3763,7 @@ class filterController extends Controller
 
             // dd($user_partnerpreference->user_employed_In);
             $user = DB::table('user_info')->where('user_ID', $user_id)->get('user_gender');
-            $gender = $user[0]->user_gender == "male" ? 'female' : 'male';
+            $gender = $user[0]->user_gender == "Male" ? "Female" : "Male";
             $user_activities = DB::table('user_activities')->where('user_id', $user_id)->get('user_block_list');
             //dd($user_activities);
 
@@ -4123,7 +4123,7 @@ class filterController extends Controller
             //dd($membership_plan_type);
             // dd($user_partnerpreference->user_employed_In);
             $user = DB::table('user_info')->where('user_ID', $user_id)->get('user_gender');
-            $gender = $user[0]->user_gender == "male" ? 'female' : 'male';
+            $gender = $user[0]->user_gender == "Male" ? "Female" : "Male";
             $user_activities = DB::table('user_activities')->where('user_id', $user_id)->get('user_block_list');
 
 
