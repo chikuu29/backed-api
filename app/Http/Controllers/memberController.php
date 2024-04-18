@@ -66,7 +66,10 @@ class memberController extends Controller
         $data = json_decode(file_get_contents("php://input"));
         $id = !isset($data->id) || $data->id == null ? '' : $data->id;
         if ($id == '') {
-            $alldata = DB::table('membership_plan')->get();
+            $alldata = DB::table('membership_plan')
+            ->orderBy('membership_plan_amount')
+            ->where('membership_plan_default',0)
+            ->get();
             if (count($alldata) > 0) {
                 $user_arr = array(
                     "status" => true,
