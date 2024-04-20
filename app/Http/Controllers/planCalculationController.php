@@ -82,23 +82,27 @@ class planCalculationController extends Controller
         if ($edited_plan_details->horscope > 0) {
             $substractiondata = $edited_plan_details->horscope - 1;
             //dd($substractiondata);
+            DB::beginTransaction();
             $data = DB::table('edited_plan_details')->where('User_id', $userid)->update([
                 "horscope" => $substractiondata
             ]);
             if ($data) {
+                DB::commit();
                 $user_arr = array(
                     "status" => true,
                     "success" => true,
                     "message" => "Done"
                 );
             } else {
+                DB::rollBack();
                 $user_arr = array(
                     "status" => false,
                     "success" => false,
-                    "message" => "Not Done T issue"
+                    "message" => "Not Done database issue"
                 );
             }
         } else {
+           // DB::rollBack();
             $user_arr = array(
                 "status" => false,
                 "success" => false,
