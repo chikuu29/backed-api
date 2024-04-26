@@ -21,20 +21,36 @@ class memberController extends Controller
             );
         } else {
 
-            $addarray = array(
-                'membership_plan_id' => time() . rand(100, 999)
-            );
+            $addarray = array();
 
             // print_r($input);
             // return ;
-            //dd( $data );
+            // dd( $data );
             $finalarray = array_merge($data['value'], $addarray);
-            try {
-                $inputdata = DB::table('membership_plan')->insert($finalarray);
-                $type = DB::table('type')->where('name', $finalarray['membership_plan_type'])->update([
-                    "used" => 1
-                ]);
-                if ($inputdata > 0) {
+            //return $finalarray;
+            //try {['']
+                if ($finalarray['Id'] == '') {
+                    $addarray = array(
+                        'membership_plan_id' => time() . rand(100, 999)
+                    );
+                    $inputdata = DB::table('membership_plan')->insert($finalarray);
+                    $type = DB::table('type')->where('name', $finalarray['membership_plan_type'])->update([
+                        "used" => 1
+                    ]);
+                } else {
+                    $Id = $finalarray['Id'];
+                    //dd($Id);
+                    unset($finalarray['Id']);
+                    //dd($finalarray);
+                    $update = DB::table('membership_plan')->where('Id', $Id)->update($finalarray);
+                }
+                if ($update > 0) {
+                    $user_arr = array(
+                        "status" => true,
+                        "success" => true,
+                        "message" => "Data Updated Successfully !",
+                    );
+                } elseif ($inputdata > 0) {
                     $user_arr = array(
                         "status" => true,
                         "success" => true,
@@ -47,13 +63,13 @@ class memberController extends Controller
                         "message" => "Data Not Inserted !",
                     );
                 }
-            } catch (Exception $e) {
-                $user_arr = array(
-                    "status" => false,
-                    "success" => false,
-                    "message" => "Error" . $e,
-                );
-            }
+           // } catch (Exception $e) {
+                // $user_arr = array(
+                //     "status" => false,
+                //     "success" => false,
+                //     "message" => $e,
+                // );
+            //}
         }
         return json_encode($user_arr);
         // dd($finalarray);
@@ -67,9 +83,9 @@ class memberController extends Controller
         $id = !isset($data->id) || $data->id == null ? '' : $data->id;
         if ($id == '') {
             $alldata = DB::table('membership_plan')
-            ->orderBy('membership_plan_amount')
-            ->where('membership_plan_default',0)
-            ->get();
+                ->orderBy('membership_plan_amount')
+                ->where('membership_plan_default', 0)
+                ->get();
             if (count($alldata) > 0) {
                 $user_arr = array(
                     "status" => true,

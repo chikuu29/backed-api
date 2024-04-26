@@ -40,7 +40,7 @@ $router->group(['middleware' => ['App\Http\Middleware\JwtMiddleware']], function
     $router->post("/nakshatra", "addItemControler@nakshatra");
     $router->post("/upload", "userController@uploadImage");
     $router->post("/annual_income", "addItemControler@annual_income");
-    $router->post("/memberpaln", "memberController@memberpaln");
+    // $router->post("/memberpaln", "memberController@memberpaln");
     $router->post("/getAllData", "memberController@getAllData");
     $router->post("/city", "addItemControler@city");
     $router->post("/privacypolicy", "addItemControler@privacypolicy");
@@ -120,3 +120,4 @@ $router->post("/aboutus", "addItemControler@aboutus");
 $router->post("/unsecuredFatchquary", "dynamic_Crud_controller@unsecuredFatchquary");
 $router->post("/feedback", "AppController@feedback");
 $router->post("/byCastmatchesforindivisual", "filterController@byCastmatchesforindivisual");
+  $router->post("/memberpaln", "memberController@memberpaln");
