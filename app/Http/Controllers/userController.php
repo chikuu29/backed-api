@@ -22,6 +22,7 @@ class userController extends Controller
         $email = $data->email ?? '';
         $phone = $data->phone ?? '';
         $password = isset($data->password) ? md5($data->password) : '';
+        $passwordcreatedbyadmin = isset($data->password) ? $data->password : '';
         $gender = $data->gender ?? '';
         $url = $data->url ?? '';
         $userreligion = $data->user_religion ?? '';
@@ -57,13 +58,14 @@ class userController extends Controller
             if ($getAuthUserCount == 0) {
                 try {
                     DB::beginTransaction();
-                    DB::transaction(function () use ($userId, $age, $profiletype, $gender, $email, $fname, $lname, $dob, $password, $phone, $url, $usermothertoungh, $usermaritalstatus, $userreligion, $usercaste, $usersubcaste) {
+                    DB::transaction(function () use ($userId, $age, $profiletype, $gender, $email, $fname, $lname, $dob, $password, $phone, $url, $usermothertoungh, $usermaritalstatus, $userreligion, $usercaste, $usersubcaste,$passwordcreatedbyadmin) {
                         DB::table('auth_user')->insert([
                             'auth_ID' => $userId,
                             'auth_email' => $email,
                             'auth_password' => $password,
                             'auth_phone_no' => $phone,
                             'auth_name' => $fname . " " . $lname,
+                            'password_created_by_admin' =>$passwordcreatedbyadmin
                         ]);
 
                         DB::table('user_info')->insert([
