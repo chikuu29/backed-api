@@ -87,11 +87,11 @@ class AppController extends Controller
                     ->count();
                 $Shortlistedprofile = ($Shortlistedprofile < 10) ? "0$Shortlistedprofile" : $Shortlistedprofile;
 
-                $BlockedProfile =DB::table('user_activities')
-                ->where('user_id', $userid)
-                ->first(['user_block_list']);
-                $blcount = count(explode(',',$BlockedProfile->user_block_list));
-                $BlockedProfiledata =  $blcount < 10 ? "0$blcount" : $blcount ;
+                $BlockedProfile = DB::table('user_activities')
+                    ->where('user_id', $userid)
+                    ->first(['user_block_list']);
+                $blcount = count(explode(',', $BlockedProfile->user_block_list));
+                $BlockedProfiledata =  $blcount < 10 ? "0$blcount" : $blcount;
                 $LikeProfile = DB::table('user_like')
                     ->where('liked_by_profile_id', $userid)
                     ->count();
@@ -138,7 +138,7 @@ class AppController extends Controller
                 "success" => true,
                 "msg" => 'data inseted'
             ];
-        }else{
+        } else {
             $user_arr = [
                 "status" => false,
                 "success" => false,
@@ -146,5 +146,40 @@ class AppController extends Controller
             ];
         }
         return json_encode($user_arr);
+    }
+    public function dataBaseBackup()
+    {
+        // Database connection parameters
+        $host = env('DB_HOST');
+        $username = env('DB_USERNAME');
+        $password = env('DB_PASSWORD');
+        $database = env('DB_DATABASE');
+
+        // Backup file path
+        $backupFile = 'C:/backup.sql'; // Specify the full path to your desired location on the C drive
+
+        // Construct the mysqldump command
+        $command = "mysqldump --host=$host --user=$username --password=$password $database > $backupFile";
+
+        // Execute the command
+        exec($command, $output, $returnCode);
+
+        // Check if the backup was successful
+        if ($returnCode === 0) {
+            $response = [
+                'success' => true,
+                'message' => 'Backup successful.',
+                'file_path' => $backupFile
+            ];
+        } else {
+            $response = [
+                'success' => false,
+                'message' => 'Backup failed.'
+            ];
+        }
+
+        // Return JSON response
+       // header('Content-Type: application/json');
+        echo json_encode($response);
     }
 }

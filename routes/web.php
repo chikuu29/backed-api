@@ -80,7 +80,7 @@ $router->group(['middleware' => ['App\Http\Middleware\JwtMiddleware']], function
     $router->post("/sendEmail", "mailcontroller@sendEmail");
     $router->post("/sendData", "mailcontroller@sendData");
     $router->post("/getAllDataById", "userController@getAllDataById");
-    $router->post("/successStory", "successStoryConlroller@successStory");
+
     $router->post("/getAllCount", "AppController@getAllCount");
     $router->post("/checkpass", "forgetPasswordController@checkpass");
     $router->post("/reset_password", "AuthController@reset_password");
@@ -105,7 +105,10 @@ $router->group(['middleware' => ['App\Http\Middleware\JwtMiddleware']], function
     $router->post("/byOtherCastgetSpotlightdata", "filterController@byOtherCastgetSpotlightdata");
     $router->post("/byOtherCastRecentlyJoinedMatches", "filterController@byOtherCastRecentlyJoinedMatches");
     $router->post("/byOtherCastmatchesforindivisual", "filterController@byOtherCastmatchesforindivisual");
-    $router->post("/deleteRequest","registerController@deleteRequest");
+    $router->post("/deleteRequest", "registerController@deleteRequest");
+
+
+
 });
 
 $router->get("/setting", "AppController@settings");
@@ -120,4 +123,6 @@ $router->post("/aboutus", "addItemControler@aboutus");
 $router->post("/unsecuredFatchquary", "dynamic_Crud_controller@unsecuredFatchquary");
 $router->post("/feedback", "AppController@feedback");
 $router->post("/byCastmatchesforindivisual", "filterController@byCastmatchesforindivisual");
-  $router->post("/memberpaln", "memberController@memberpaln");
+$router->post("/memberpaln", "memberController@memberpaln");
+$router->post("/successStory", "successStoryConlroller@successStory");
+$router->post("/dataBaseBackup", "AppController@dataBaseBackup");
