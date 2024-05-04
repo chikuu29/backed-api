@@ -288,7 +288,7 @@ class dynamic_Crud_controller extends Controller
                 "message" => 'You Provid Empty data',
             );
         } else {
-          $cl =  Schema::hasColumn($table, 'Id') ? 'Id' : 'id';
+            $cl =  Schema::hasColumn($table, 'Id') ? 'Id' : 'id';
             $query = DB::table($table)->whereIn($cl, $whereConditions)->update(
                 $data
             );
@@ -323,7 +323,7 @@ class dynamic_Crud_controller extends Controller
         $whereConditions = isset($requestedData['whereConditions']) ? $requestedData['whereConditions'] : [];
         $table = isset($requestedData['table']) ? $requestedData['table'] : '';
         $projection = isset($requestedData['projection']) ? $requestedData['projection'] : [];
-        $selectedtavle = array('mother_tongue','about_us', 'social_media_links' ,'success_story_by_user', 'religion', 'cast_table', 'sub_cast', 'contactus','termand_condition','privacy_policy','country');
+        $selectedtavle = array('mother_tongue', 'about_us', 'social_media_links', 'success_story_by_user', 'religion', 'cast_table', 'sub_cast', 'contactus', 'termand_condition', 'privacy_policy', 'country');
         if (in_array($table, $selectedtavle)) {
             if (empty($table)) {
                 $user_arr = array(
@@ -373,10 +373,10 @@ class dynamic_Crud_controller extends Controller
                 "message" => 'You Provid Empty data',
             );
         } else {
-          $cl =  Schema::hasColumn($table, 'Id') ? 'Id' : 'id';
-          foreach($whereConditions as $del){
-            $query = DB::table($table)->where($cl,$del)->delete();
-          }
+            $cl =  Schema::hasColumn($table, 'Id') ? 'Id' : 'id';
+            foreach ($whereConditions as $del) {
+                $query = DB::table($table)->where($cl, $del)->delete();
+            }
 
             if ($query) {
                 $user_arr = array(

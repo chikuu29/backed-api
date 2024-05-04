@@ -126,3 +126,5 @@ $router->post("/byCastmatchesforindivisual", "filterController@byCastmatchesfori
 $router->post("/memberpaln", "memberController@memberpaln");
 $router->post("/successStory", "successStoryConlroller@successStory");
 $router->post("/dataBaseBackup", "AppController@dataBaseBackup");
+$router->post("/sendMailForChange", "mailcontroller@sendMailForChange");
+

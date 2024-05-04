@@ -6,12 +6,13 @@ use Illuminate\Http\Request;
 use App\Mail\MyMail;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\DB;
+require_once __DIR__ . '../../../../config/constant.php';
 
 class mailcontroller extends Controller
 {
     public function sendEmail()
     {
-		
+
          $fadata['name'] = 'gyana';
 
        Mail::send('name',$fadata,function($message) use ($fadata) {
@@ -19,14 +20,14 @@ class mailcontroller extends Controller
         $message->to('cchiku1999@gmail.com','gyana')->subject($fadata['name']);
        });
 
-			
+
         return response()->json(['message' => 'Email sent successfully']);
-      
+
     }
 	public function sendData(Request $res)
     {
-		$input =  $data = json_decode(file_get_contents("php://input"), true);
-		
+		$input =  json_decode(file_get_contents("php://input"), true);
+
 		//return $input['ids'];
 		$ids = (($input['ids'] == '') ? [] : $input['ids'] );
 		$sendid = (($input['sendid'] == null) ? '' : $input['sendid'] );
@@ -42,10 +43,10 @@ class mailcontroller extends Controller
             } else {
                 $ids = '""';
             }
-		
-	     $alluserusers = DB::select("select * from user_info as a left join user_education_occupations as b on a.user_id = b.user_ID left join                                user_locations as c on a.user_id = c.user_ID 
+
+	     $alluserusers = DB::select("select * from user_info as a left join user_education_occupations as b on a.user_id = b.user_ID left join                                user_locations as c on a.user_id = c.user_ID
                                 where a.Id  IN ($ids)");
-		
+
 		//$alluserusers = DB::table('user_info')->whereIn('Id',$ids)->get();
 		 $senddata = DB::table('user_info')->where('user_id',$sendid)->get();
 		 $icoin = DB::table('logo_table')->where('status',1)->get();
@@ -62,11 +63,46 @@ class mailcontroller extends Controller
         $message->from('info@choicemarriage.com','choicemarriage');
         $message->to($fadata['user_email'],$fadata['name'])->subject($fadata['Subject']);
        });
-		
+
 		//return $maildata;
 
-			
+
         return response()->json(['message' => 'Email sent successfully' , 'code' => 200]);
-      
+
+    }
+    public function sendMailForChange(){
+        $input =  json_decode(file_get_contents("php://input"), true);
+        $userid = ((empty($input['user_id'])) ? '' : $input['user_id'] );
+        $type = ((empty($input['type'])) ? '' : $input['type'] );
+        $olddata = ((empty($input['olddata'])) ? '' : $input['olddata'] );
+        $newdata = ((empty($input['newdata'])) ? '' : $input['newdata'] );
+        $filepath = ((empty($input['filepath'])) ? '' : $input['filepath'] );
+
+        $mailid = DB::table('user_info')->where('user_id',$userid)->first('user_email');
+        $logo =  DB::table('logo_table')->where('status',1)->first('image');
+        $socialmedialinks = DB::table('social_media_links')->first();
+        $fadata['fb'] = $socialmedialinks->facebook_link;
+        $fadata['in'] = $socialmedialinks->insta_id;
+        $fadata['x'] = $socialmedialinks->twitter_link;
+        $fadata['yt'] = $socialmedialinks->youtub_link;
+        $fadata['ld'] = $socialmedialinks->linkedin_link;
+        $fadata['image'] = $logo->image;
+        $fadata['userid'] = $userid;
+        $fadata['type'] = $type;
+        $fadata['olddata'] = $olddata;
+        $fadata['newdata'] = $newdata;
+        $fadata['mailid'] = $mailid->user_email;
+        $fadata['date'] = date("d M Y");
+        $fadata['Subject'] = $type .' '. 'Change Request';
+        $fadata['imageurl'] = $filepath.'storage/logo_image/'.$logo->image;
+        $fadata['baner'] = $filepath.'storage/update.jpg';
+        $fadata['foter'] = $filepath.'storage/bg.jpg';
+        //dd($fadata);
+        $maildata =   Mail::send('mail.updaterequest',$fadata,function($message) use ($fadata) {
+            $message->from('info@choicemarriage.com','choicemarriage');
+            $message->to($fadata['mailid'])->subject($fadata['Subject']);
+           });
+
+
     }
 }

@@ -33,6 +33,7 @@ class userController extends Controller
         $dob = $data->dob ?? '';
         $usermothertoungh = $data->user_mother_toungh ?? '';
         $usermaritalstatus = $data->user_marital_status ?? '';
+        $ccode = $data->ccode ?? '';
 
         $iddata = DB::table('prefix_id')->get('prefix_id_name');
         $id = $iddata[0]->prefix_id_name;
@@ -58,7 +59,7 @@ class userController extends Controller
             if ($getAuthUserCount == 0) {
                 try {
                     DB::beginTransaction();
-                    DB::transaction(function () use ($userId, $age, $profiletype, $gender, $email, $fname, $lname, $dob, $password, $phone, $url, $usermothertoungh, $usermaritalstatus, $userreligion, $usercaste, $usersubcaste,$passwordcreatedbyadmin) {
+                    DB::transaction(function () use ($userId, $age, $profiletype, $gender, $email, $fname, $lname, $dob, $password, $phone, $url, $usermothertoungh, $usermaritalstatus, $userreligion, $usercaste, $usersubcaste,$passwordcreatedbyadmin,$ccode) {
                         DB::table('auth_user')->insert([
                             'auth_ID' => $userId,
                             'auth_email' => $email,
@@ -72,6 +73,7 @@ class userController extends Controller
                             'user_id' => $userId,
                             'user_profileType' => $profiletype,
                             'user_phone_no' => $phone,
+                            'country_code' => $ccode,
                             'user_gender' => $gender,
                             'user_email' => $email,
                             'user_fname' => $fname,
