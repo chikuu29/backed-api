@@ -32,7 +32,6 @@
 
         .header img {
             max-width: 150px;
-            /* Adjust the size of the images */
             height: auto;
             border-radius: 10px;
         }
@@ -46,7 +45,6 @@
             font-size: 16px;
             line-height: 1.6;
             color: green;
-            /* Set text color to green */
         }
 
         .update-image-container {
@@ -62,7 +60,6 @@
 
         h3 {
             text-align: center;
-            /* Align the heading to the center */
         }
 
         .social-icons {
@@ -72,19 +69,17 @@
             background-size: cover;
             background-position: center;
             padding: 20px;
-            /* Add padding to ensure the icons are visible */
             border-radius: 10px;
-            /* Add border-radius to round the corners */
-            height: 83px; /* Set the height of the container */
+            height: 83px;
         }
 
         .social-icons a {
             display: inline-block;
             margin: 0 10px;
-            /* Add margin around the icons */
         }
 
         .social-icons i {
+            z-index: 10000;
             font-size: 30px;
             margin-right: 11px;
             margin-top: 25px;
@@ -113,6 +108,61 @@
 
         .login-btn button:hover {
             background-color: #0056b3;
+        }
+
+        /* Responsive Design */
+        @media only screen and (max-width: 768px) {
+            .container {
+                max-width: 90%;
+            }
+        }
+
+        @media only screen and (max-width: 480px) {
+            .header img {
+                max-width: 100px;
+            }
+
+            .mail-date {
+                font-size: 12px;
+            }
+
+            .content {
+                font-size: 14px;
+            }
+
+            .update-image-container {
+                margin-bottom: 10px;
+            }
+
+            .update-image {
+                border-radius: 5px;
+            }
+
+            .social-icons {
+                height: auto;
+            }
+
+            .social-icons i {
+                font-size: 24px;
+                margin-top: 15px;
+            }
+
+            .login-btn button {
+                padding: 8px 16px;
+                font-size: 14px;
+            }
+
+            .social-icons a {
+                display: inline-block;
+                margin: 0 10px;
+            }
+
+            .social-icons i {
+                font-size: 11px;
+                margin-right: 11px;
+                margin-top: 25px;
+                color: #007bff;
+            }
         }
     </style>
 </head>
