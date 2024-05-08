@@ -36,7 +36,7 @@ class AuthController extends Controller
                     $payload = [
                         'user_id' => $user,
                         'password' => $password,
-                        'role' => "admin",
+                        'role' => $logindata[0]->role,
                         'exp' => $expiration,
                         'loginFrom' => "ADMIN"
                     ];
@@ -46,6 +46,7 @@ class AuthController extends Controller
                     $user_arr = array(
                         "status" => true,
                         "success" => true,
+                        'role' => $logindata[0]->role,
                         "id" => $logindata[0]->UserId,
                         "name" => $logindata[0]->name,
                         "exp" => $expiration,
