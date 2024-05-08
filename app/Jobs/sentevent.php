@@ -1,0 +1,37 @@
+<?php
+
+namespace App\Jobs;
+
+use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Queue\InteractsWithQueue;
+use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\Mail;
+
+class sentevent implements ShouldQueue
+{
+    use InteractsWithQueue, Queueable, SerializesModels;
+
+    public $tries = 3; // Number of times to attempt the job
+    protected $emailData;
+
+    public function __construct($emailData)
+    {
+        $this->emailData = $emailData;
+    }
+
+    public function handle()
+    {
+        try {
+            // Attempt to send the email
+            Mail::send($this->emailData['view'], $this->emailData['data'], function ($message) {
+                $message->from('info@choicemarriage.com',"choicemarriage")
+                        ->to($this->emailData['to'],'USER')
+                        ->subject($this->emailData['subject']);
+            });
+        } catch (\Exception $e) {
+            // If sending fails, the job will be retried
+            throw new \Exception("Error sending email: " . $e->getMessage());
+        }
+    }
+}

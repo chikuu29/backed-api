@@ -106,9 +106,6 @@ $router->group(['middleware' => ['App\Http\Middleware\JwtMiddleware']], function
     $router->post("/byOtherCastRecentlyJoinedMatches", "filterController@byOtherCastRecentlyJoinedMatches");
     $router->post("/byOtherCastmatchesforindivisual", "filterController@byOtherCastmatchesforindivisual");
     $router->post("/deleteRequest", "registerController@deleteRequest");
-
-
-
 });
 
 $router->get("/setting", "AppController@settings");
@@ -127,4 +124,4 @@ $router->post("/memberpaln", "memberController@memberpaln");
 $router->post("/successStory", "successStoryConlroller@successStory");
 $router->post("/dataBaseBackup", "AppController@dataBaseBackup");
 $router->post("/sendMailForChange", "mailcontroller@sendMailForChange");
-
+$router->post("/sendCustmMail", "mailcontroller@sendCustmMail");
