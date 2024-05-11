@@ -125,3 +125,9 @@ $router->post("/successStory", "successStoryConlroller@successStory");
 $router->post("/dataBaseBackup", "AppController@dataBaseBackup");
 $router->post("/sendMailForChange", "mailcontroller@sendMailForChange");
 $router->post("/sendCustmMail", "mailcontroller@sendCustmMail");
+$router->post('/generate-pdf', 'PdfGenerateController@generatePDF');
+
+
+
+
+

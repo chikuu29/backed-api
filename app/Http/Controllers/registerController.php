@@ -30,8 +30,8 @@ class registerController extends Controller
                     $newUser = [
                         'user_name' => $user->user_full_name,
                         'user_mailid' => $user->user_email,
-                        'user_phone_number' => $user->user_phone_no,
-                        'user_whatsapp_number' => $user->user_whatsapp_no,
+                        'user_phone_number' => $user->country_code.' '.$user->user_phone_no,
+                        'user_whatsapp_number' =>$user->whats_app_c_code.' '.$user->user_whatsapp_no,
                         'states' => 1
                     ];
 
@@ -40,7 +40,6 @@ class registerController extends Controller
                     $tables = [
                         'user_info',
                         'auth_user',
-                        'user_delete_request',
                         'user_diet_hobbies',
                         'user_education_occupations',
                         'user_family',

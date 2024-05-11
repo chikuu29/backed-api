@@ -398,8 +398,8 @@ class AuthController extends Controller
 
                 if ($authData) {
                     // Update the password with the new MD5 hashed password
-                  
-                
+
+
                     if ($request->input('password') == $request->input('confrim_password')) {
 
                         // print_r($authData);

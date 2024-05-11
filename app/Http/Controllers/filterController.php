@@ -1874,7 +1874,7 @@ class filterController extends Controller
             // try {
             $user_partnerpreference = DB::table('user_partnerpreference')->where('user_ID', $user_id)->get();
             $user_partnerpreference = json_decode($user_partnerpreference[0]->json_data);
-            //  dd($user_partnerpreference);
+             // dd($user_partnerpreference);
 
 
             // dd($user_partnerpreference->user_employed_In);
@@ -1979,7 +1979,7 @@ class filterController extends Controller
 
 
 
-
+                //dd(property_exists($user_partnerpreference, 'user_complextion'));
             if ($user_partnerpreference->user_complextion != '' && count($user_partnerpreference->user_complextion) > 0 && $user_partnerpreference->user_complextion != null) {
                 $fatchdata = $fatchdata->whereIn('user_physical_details.user_complextion', $user_partnerpreference->user_complextion);
                 //$gotra = implode(',', $user_partnerpreference->user_gotra);

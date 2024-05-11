@@ -138,7 +138,6 @@ class uplodeController extends Controller
         $image_base64 = base64_decode($image[1]);
         $extention = explode('/', $image[0]);
         $path = env('FILE_UPLOAD_PATH') . '/logo_image/';
-        $uniqid = uniqid();
         $file = $path . $uniqid . '.' . $extention[1];
         if (file_put_contents($file, $image_base64)) {
             $data = DB::table('logo_table')->insert([
