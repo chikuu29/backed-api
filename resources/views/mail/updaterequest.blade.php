@@ -152,16 +152,20 @@
                 font-size: 14px;
             }
 
-            .social-icons a {
-                display: inline-block;
-                margin: 0 10px;
+            .social-icons {
+                display: flex;
+                justify-content: center;
+                align-items: center;
             }
 
-            .social-icons i {
-                font-size: 11px;
-                margin-right: 11px;
-                margin-top: 25px;
-                color: #007bff;
+            .social-icons a {
+                margin: 0 10px;
+                display: inline-block;
+                /* Adjust size as needed */
+                /* Adjust size as needed */
+            }
+            .imgh{
+                height: 31px;
             }
         }
     </style>
@@ -185,12 +189,11 @@
             <a href="https://choicemarriage.com/login"><button>Login</button></a>
         </div>
         <div class="social-icons">
-            <a href="{{ $fb }}"><i class="fab fa-facebook"></i></a>
-            <!-- <a href="#"><i class="fab fa-twitter"></i></a> -->
-            <a href="{{ $in }}"><i class="fab fa-instagram"></i></a>
-            <a href="{{ $ld }}"><i class="fab fa-linkedin"></i></a>
-            <a href="{{ $yt }}"><i class="fab fa-youtube"></i></a>
-            <a href="{{ $x }}"><i class="fas fa-times"></i></a>
+            <a href="{{ $fb }}"><img style=" height: 31px;" src="https://choicemarriage.com/storage/facebook.png" alt="Facebook"></a>
+            <a href="{{ $in }}"><img style=" height: 31px;" src="https://choicemarriage.com/storage/instagram.png" alt="Instagram"></a>
+            <a href="{{ $ld }}"><img style=" height: 31px;" src="https://choicemarriage.com/storage/linkedin.png" alt="LinkedIn"></a>
+            <a href="{{ $yt }}"><img style=" height: 31px;" src="https://choicemarriage.com/storage/youtube.png" alt="YouTube"></a>
+            <a href="{{ $x }}"><img style=" height: 31px;" src="https://choicemarriage.com/storage/x.png" alt="Close"></a>
         </div>
     </div>
 </body>
