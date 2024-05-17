@@ -50,16 +50,26 @@
         .footer-icons a:hover {
             color: #000000;
         }
+
+        p img {
+            height: 100px;
+            width: 200px;
+        }
     </style>
 </head>
 
 <body>
+    <?php
+    //echo ';;;';
+    //dd(html_entity_decode(htmlspecialchars($messagedata)))
+
+    ?>
     <div class="container">
         <img src="{{ $imageurl }}" alt="Your Logo" class="logo">
         <h1>{{ $Subject }}</h1>
         <p>Dear User,</p>
         <div>
-        <?php echo html_entity_decode(htmlspecialchars($messagedata)); ?>
+            <?php echo html_entity_decode(htmlspecialchars($messagedata)); ?>
         </div>
         <!-- Footer with icons -->
         <div class="footer-icons">

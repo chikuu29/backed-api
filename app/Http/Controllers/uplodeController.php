@@ -21,7 +21,7 @@ class uplodeController extends Controller
         $root = env('FILE_UPLOAD_PATH');
         $uniqid = uniqid();
         $storageFile = $root . '/' . 'idproof/' . $id . $uniqid . '.' . $extention[1];
-       //dd($storageFile);
+        //dd($storageFile);
         if (file_put_contents($storageFile, $image_base64)) {
             $useidupload = DB::table('use_id_upload')->where('user_ID', $id)->first();
             if ($useidupload) {
@@ -44,10 +44,9 @@ class uplodeController extends Controller
                     "message" => "File Uploaded Successfully",
                 ]);
             }
-        }else{
+        } else {
             return response()->json(['success' => false, 'message' => 'File could not be saved.'], 500);
         }
-
     }
     public function horoscopeUplode(Request $res)
     {
@@ -61,7 +60,7 @@ class uplodeController extends Controller
         $root = env('FILE_UPLOAD_PATH');
         $uniqid = uniqid();
         $storageFile = $root . '/' . 'horoscope/' . $id . $uniqid . '.' . $extention[1];
-       //dd($storageFile);
+        //dd($storageFile);
         if (file_put_contents($storageFile, $image_base64)) {
             $useidupload = DB::table('use_horoscope_upload')->where('user_ID', $id)->first();
             if ($useidupload) {
@@ -84,10 +83,9 @@ class uplodeController extends Controller
                     "message" => "File Uploaded Successfully",
                 ]);
             }
-        }else{
+        } else {
             return response()->json(['success' => false, 'message' => 'File could not be saved.'], 500);
         }
-
     }
     public function paymentSlipUplode(Request $res)
     {
@@ -101,7 +99,7 @@ class uplodeController extends Controller
         $root = env('FILE_UPLOAD_PATH');
         $uniqid = uniqid();
         $storageFile = $root . '/' . 'paymentslip/' . $id . $uniqid . '.' . $extention[1];
-       //dd($storageFile);
+        //dd($storageFile);
         if (file_put_contents($storageFile, $image_base64)) {
             $useidupload = DB::table('use_payment_slip_upload')->where('user_ID', $id)->first();
             if ($useidupload) {
@@ -124,10 +122,9 @@ class uplodeController extends Controller
                     "message" => "File Uploaded Successfully",
                 ]);
             }
-        }else{
+        } else {
             return response()->json(['success' => false, 'message' => 'File could not be saved.'], 500);
         }
-
     }
     public function logoUplode(Request $res)
     {
@@ -297,4 +294,33 @@ class uplodeController extends Controller
         }
         return json_encode($user_arr);
     }
+
+    // public function eventImageUplode(Request $res){
+    //     $input = $res->all();
+    //     $date = $input['date'];
+    //     $image = explode(';base64,', $input['image']);
+    //     $image_base64 = base64_decode($image[1]);
+    //     $extention = explode('/', $image[0]);
+    //     $path = env('FILE_UPLOAD_PATH') . '/event_img/';
+    //     $uniqid = uniqid();
+    //     $file = $path . $uniqid . '.' . $extention[1];
+    //     if (file_put_contents($file, $image_base64)) {
+    //         $data = DB::table('homepage_icon')->insert([
+    //             'image' => $uniqid . '.' . $extention[1],
+    //             'created_At' => $date
+    //         ]);
+    //         if ($data) {
+    //             $user_arr = array(
+    //                 "success" => true,
+    //                 "message" => "File Uploaded Successfully",
+    //             );
+    //         }
+    //     } else {
+    //         $user_arr = array(
+    //             "success" => false,
+    //             "message" => "Error",
+    //         );
+    //     }
+    //     return json_encode($user_arr);
+    // }
 }

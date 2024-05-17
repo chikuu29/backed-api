@@ -59,16 +59,15 @@ class userController extends Controller
             if ($getAuthUserCount == 0) {
                 try {
                     DB::beginTransaction();
-                    DB::transaction(function () use ($userId, $age, $profiletype, $gender, $email, $fname, $lname, $dob, $password, $phone, $url, $usermothertoungh, $usermaritalstatus, $userreligion, $usercaste, $usersubcaste,$passwordcreatedbyadmin,$ccode) {
+                    DB::transaction(function () use ($userId, $age, $profiletype, $gender, $email, $fname, $lname, $dob, $password, $phone, $url, $usermothertoungh, $usermaritalstatus, $userreligion, $usercaste, $usersubcaste, $passwordcreatedbyadmin, $ccode) {
                         DB::table('auth_user')->insert([
                             'auth_ID' => $userId,
                             'auth_email' => $email,
                             'auth_password' => $password,
                             'auth_phone_no' => $phone,
                             'auth_name' => $fname . " " . $lname,
-                            'password_created_by_admin' =>$passwordcreatedbyadmin
+                            'password_created_by_admin' => $passwordcreatedbyadmin
                         ]);
-
                         DB::table('user_info')->insert([
                             'user_id' => $userId,
                             'user_profileType' => $profiletype,
@@ -95,10 +94,6 @@ class userController extends Controller
                             'completed' => 1
                         ]);
                     });
-
-
-
-
                     $emailData = [
                         'view' => 'mail.registration', // The view for the email content
                         'data' => [
@@ -113,11 +108,7 @@ class userController extends Controller
                         'to' => $email, // Recipient email address
                         'to_name' => $fname, // Recipient name
                     ];
-
-
                     Queue::push(new SendEmailJob($emailData), '', 'emails');
-
-
                     $user_arr = [
                         "status" => true,
                         "success" => true,

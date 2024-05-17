@@ -36,6 +36,7 @@ class mailcontroller extends Controller
         //return $input['ids'];
         $ids = (($input['ids'] == '') ? [] : $input['ids']);
         $sendid = (($input['sendid'] == null) ? '' : $input['sendid']);
+        $filePath = (($input['filePath'] == null) ? '' : $input['filePath']);
         //return $sendid;
         if (count($input['ids']) > 0) {
             $elements = $input['ids'];
@@ -53,21 +54,34 @@ class mailcontroller extends Controller
                                 where a.Id  IN ($ids)");
 
         //$alluserusers = DB::table('user_info')->whereIn('Id',$ids)->get();
+        $socialmedialinks = DB::table('social_media_links')->first();
         $senddata = DB::table('user_info')->where('user_id', $sendid)->get();
         $icoin = DB::table('logo_table')->where('status', 1)->get();
         // return $icoin;
+        $fadata['fb'] = $socialmedialinks->facebook_link;
+        $fadata['in'] = $socialmedialinks->insta_id;
+        $fadata['x'] = $socialmedialinks->twitter_link;
+        $fadata['yt'] = $socialmedialinks->youtub_link;
+        $fadata['ld'] = $socialmedialinks->linkedin_link;
         $fadata['name'] = $senddata[0]->user_fname;
         $fadata['user_email'] = $senddata[0]->user_email;
         $fadata['Alluser'] =  $alluserusers;
         $fadata['Subject'] =  'Find Your Matches';
-        $fadata['imageurl'] = 'https://admin.choicemarriage.com/api/storage/';
+        $fadata['imageurl'] = $filePath . 'storage/logo_image/' . $icoin[0]->image;
         $fadata['logo'] = $icoin[0]->image;
-        //return $fadata['logo'];
+        $fadata['date'] = date("d M Y");
+        $fadata['baner'] = $filePath . 'storage/newm.jpg';
+        $fadata['foter'] = $filePath . 'storage/bg.jpg';
 
-        $maildata =   Mail::send('mail.sendmatchs', $fadata, function ($message) use ($fadata) {
-            $message->from('info@choicemarriage.com', 'choicemarriage');
-            $message->to($fadata['user_email'], $fadata['name'])->subject($fadata['Subject']);
-        });
+        //return $fadata['logo'];
+        try {
+            $maildata =   Mail::send('mail.sendmatchs', $fadata, function ($message) use ($fadata) {
+                $message->from('info@choicemarriage.com', 'choicemarriage');
+                $message->to($fadata['user_email'], $fadata['name'])->subject($fadata['Subject']);
+            });
+        } catch (Exception $e) {
+            return $e;
+        }
 
         //return $maildata;
 
@@ -117,19 +131,7 @@ class mailcontroller extends Controller
         $filepath = ((empty($input['filepath'])) ? '' : $input['filepath']);
         $logo =  DB::table('logo_table')->where('status', 1)->first('image');
         $socialmedialinks = DB::table('social_media_links')->first();
-        //$fadata['fb'] = $socialmedialinks->facebook_link;
-        //$fadata['in'] = $socialmedialinks->insta_id;
-       // $fadata['x'] = $socialmedialinks->twitter_link;
-        //$fadata['yt'] = $socialmedialinks->youtub_link;
-        //$fadata['ld'] = $socialmedialinks->linkedin_link;
-        //$fadata['Subject'] = $Subject;
-        //$fadata['messagedata'] = $messagedata;
-        //$fadata['imageurl'] = $filepath . 'storage/logo_image/' . $logo->image;
-
-
-       // dd(gettype($message));
         if (count($mailIds) > 0) {
-            //dd($mailIds);
             for ($i = 0; $i < count($mailIds); $i++) {
                 $fadata['mailid'] = $mailIds[$i];
                 $emailData = [
@@ -138,11 +140,11 @@ class mailcontroller extends Controller
                         'messagedata' => $messagedata,
                         'imageurl' => $filepath . 'storage/logo_image/' . $logo->image,
                         'Subject' => $Subject,
-                        'fb'=> $socialmedialinks->facebook_link,
-                        'in'=> $socialmedialinks->insta_id,
-                        'x'=> $socialmedialinks->twitter_link,
-                        'yt'=> $socialmedialinks->youtub_link,
-                        'ld'=>$socialmedialinks->linkedin_link
+                        'fb' => $socialmedialinks->facebook_link,
+                        'in' => $socialmedialinks->insta_id,
+                        'x' => $socialmedialinks->twitter_link,
+                        'yt' => $socialmedialinks->youtub_link,
+                        'ld' => $socialmedialinks->linkedin_link
                     ],
                     'subject' => 'Registration Successful',
                     'from' => 'info@choicemarriage.com', // Sender email address
@@ -152,20 +154,7 @@ class mailcontroller extends Controller
 
 
                 Queue::push(new sentevent($emailData), '', 'emails');
-
-
-
-               // echo $fadata['message'];
-                // try {
-                //     $maildata =   Mail::send('mail.custmail', $fadata, function ($message) use ($fadata) {
-                //         $message->from('info@choicemarriage.com', 'choicemarriage');
-                //         $message->to($fadata['mailid'])->subject($fadata['Subject']);
-                //     });
-                // } catch (Exception $e) {
-                //    return $e ;
-                // }
             }
-           // dd('');
         }
     }
 }
