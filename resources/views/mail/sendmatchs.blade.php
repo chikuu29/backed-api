@@ -166,7 +166,7 @@
         <!-- Match 1 -->
         <?php foreach ($Alluser as $data) { ?>
             <div class="match-card">
-                <img src="https://admin.choicemarriage.com/storage/<?php echo $data->user_profile_image ?>" alt="Match 1" class="profile-image">
+                <img src="https://choicemarriage.com/storage/<?php echo $data->user_profile_image ?>" alt="Match 1" class="profile-image">
                 <div class="match-details">
                     <h5 style="color: red;"><?php echo $data->user_id;  ?></h5>
                     <?php
