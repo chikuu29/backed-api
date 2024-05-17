@@ -77,9 +77,9 @@
         }
 
         .profile-image {
-            width: 100%;
-            max-width: 150px;
-            height: auto;
+            width: 150px;
+            height: 150px;
+            object-fit: cover;
             border-radius: 8px 8px 0 0;
         }
 
@@ -162,11 +162,11 @@
         <div class="update-image-container">
             <img src="{{ $baner }}" alt="Update Image" class="update-image">
         </div>
-        <p class="highlight-green large-tex">Hello <?php echo $name ?>,We've found some potential matches for you. Take a look!</p>
+        <p class="highlight-green large-text">Hello <?php echo $name ?>,We've found some potential matches for you. Take a look!</p>
         <!-- Match 1 -->
         <?php foreach ($Alluser as $data) { ?>
             <div class="match-card">
-                <img src="https://choicemarriage.com/storage/<?php echo $data->user_profile_image ?>" alt="Match 1" class="profile-image">
+                <img src="https://choicemarriage.com/storage/<?php echo $data->user_profile_image ?>" alt="Match 1" class="profile-image" width="150" height="150">
                 <div class="match-details">
                     <h5 style="color: red;"><?php echo $data->user_id;  ?></h5>
                     <?php
@@ -187,11 +187,11 @@
             <a href="https://choicemarriage.com/login" class="cta-button">Login</a>
         </div>
         <div class="social-icons">
-            <a href="{{ $fb }}"><img style=" height: 31px;" src="https://choicemarriage.com/storage/facebook.png" alt="Facebook"></a>
-            <a href="{{ $in }}"><img style=" height: 31px;" src="https://choicemarriage.com/storage/instagram.png" alt="Instagram"></a>
-            <a href="{{ $ld }}"><img style=" height: 31px;" src="https://choicemarriage.com/storage/linkedin.png" alt="LinkedIn"></a>
-            <a href="{{ $yt }}"><img style=" height: 31px;" src="https://choicemarriage.com/storage/youtube.png" alt="YouTube"></a>
-            <a href="{{ $x }}"><img style=" height: 31px;" src="https://choicemarriage.com/storage/x.png" alt="Close"></a>
+            <a href="{{ $fb }}"><img style="height: 31px;" src="https://choicemarriage.com/storage/facebook.png" alt="Facebook"></a>
+            <a href="{{ $in }}"><img style="height: 31px;" src="https://choicemarriage.com/storage/instagram.png" alt="Instagram"></a>
+            <a href="{{ $ld }}"><img style="height: 31px;" src="https://choicemarriage.com/storage/linkedin.png" alt="LinkedIn"></a>
+            <a href="{{ $yt }}"><img style="height: 31px;" src="https://choicemarriage.com/storage/youtube.png" alt="YouTube"></a>
+            <a href="{{ $x }}"><img style="height: 31px;" src="https://choicemarriage.com/storage/x.png" alt="Close"></a>
         </div>
     </div>
 </body>
