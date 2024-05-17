@@ -78,7 +78,7 @@
 
         .profile-image {
             width: 150px;
-            height: 150px;
+            height: auto;
             object-fit: cover;
             border-radius: 8px 8px 0 0;
         }
@@ -166,7 +166,7 @@
         <!-- Match 1 -->
         <?php foreach ($Alluser as $data) { ?>
             <div class="match-card">
-                <img src="https://choicemarriage.com/storage/<?php echo $data->user_profile_image ?>" alt="Match 1" class="profile-image" width="150" height="150">
+                <img src="https://choicemarriage.com/storage/<?php echo $data->user_profile_image ?>" alt="Match 1" class="profile-image" width="150" height="auto">
                 <div class="match-details">
                     <h5 style="color: red;"><?php echo $data->user_id;  ?></h5>
                     <?php
