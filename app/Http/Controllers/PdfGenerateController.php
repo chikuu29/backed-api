@@ -357,7 +357,9 @@ class PdfGenerateController extends Controller
         // Construct dynamic data array
         $dynamicData = [];
         foreach ($userIds as $id) {
+            print_r($userinfo);
             $info = $userinfo->firstWhere('user_id', $id);
+            print_r($info);
             $occupation = $user_education_occupations->firstWhere('user_id', $id);
             $location = $user_locations->firstWhere('user_id', $id);
             $detail = $user_physical_details->firstWhere('user_id', $id);
