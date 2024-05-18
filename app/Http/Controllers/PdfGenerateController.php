@@ -252,25 +252,48 @@ class PdfGenerateController extends Controller
             'phoneadmin' => $social_media_links->phone_no
         ]];
 
+
+
         // Render the Blade view to HTML with dynamic data
-        $html = view('pdf.demo', $dynamicData)->render();
+        $htmlContent = view('pdf.mergePdf', ['dynamicData' => $dynamicData])->render();
 
         // Create an instance of the Dompdf class
-        $dompdf = app(Dompdf::class);
+        $dompdf = new Dompdf();
 
         // Load HTML content
-        $dompdf->loadHtml($html);
+        $dompdf->loadHtml($htmlContent);
 
         // Set paper size and orientation
         $dompdf->setPaper('A4', 'portrait');
 
         // Render the HTML as PDF
         $dompdf->render();
-        $filedname = $userid . date('d-M-Y') . '.pdf';
+        $filename = 'user_report_' . date('d-M-Y') . '.pdf';
 
         // Output the generated PDF (inline or attachment)
         return response($dompdf->output(), 200)
             ->header('Content-Type', 'application/pdf')
-            ->header('Content-Disposition', 'attachment; filename="' . $filedname . '"');
+            ->header('Content-Disposition', 'attachment; filename="' . $filename . '"');
+
+        // Render the Blade view to HTML with dynamic data
+        // $html = view('pdf.demo', $dynamicData)->render();
+
+        // Create an instance of the Dompdf class
+        // $dompdf = app(Dompdf::class);
+
+        // Load HTML content
+        // $dompdf->loadHtml($html);
+
+        // Set paper size and orientation
+        // $dompdf->setPaper('A4', 'portrait');
+
+        // Render the HTML as PDF
+        // $dompdf->render();
+        // $filedname = $userid . date('d-M-Y') . '.pdf';
+
+        // // Output the generated PDF (inline or attachment)
+        // return response($dompdf->output(), 200)
+        //     ->header('Content-Type', 'application/pdf')
+        //     ->header('Content-Disposition', 'attachment; filename="' . $filedname . '"');
     }
 }
