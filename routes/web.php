@@ -128,6 +128,9 @@ $router->post("/sendCustmMail", "mailcontroller@sendCustmMail");
 $router->post('/generate-pdf', 'PdfGenerateController@generatePDF');
 $router->post("/byCastFreeMatches", "filterController@byCastFreeMatches");
 $router->post("/byOtherCastFreeMatches", "filterController@byOtherCastFreeMatches");
+$router->post("/expiredMail", "mailcontroller@expiredMail");
+
+
 
 
 
