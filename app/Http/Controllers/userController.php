@@ -94,13 +94,25 @@ class userController extends Controller
                             'completed' => 1
                         ]);
                     });
+                    $filepath = 'https://choicemarriage.com/';
+                    $logo =  DB::table('logo_table')->where('status', 1)->first('image');
+                    $socialmedialinks = DB::table('social_media_links')->first();
                     $emailData = [
                         'view' => 'mail.registration', // The view for the email content
                         'data' => [
+                            'imageurl' => $filepath . 'storage/logo_image/' . $logo->image,
                             'user_email' => $email,
                             'name' => $fname,
                             'url' => $url,
-                            'profile_id' => $userId
+                            'profile_id' => $userId,
+                            'fb' => $socialmedialinks->facebook_link,
+                            'in' => $socialmedialinks->insta_id,
+                            'x' => $socialmedialinks->twitter_link,
+                            'yt' => $socialmedialinks->youtub_link,
+                            'ld' => $socialmedialinks->linkedin_link,
+                            'foter' => $filepath . 'storage/bg.jpg',
+                            'baner' => $filepath . 'storage/cimg.jpg',
+                            'date'=>date("d M Y")
                         ],
                         'subject' => 'Registration Successful',
                         'from' => 'info@choicemarriage.com', // Sender email address
@@ -122,7 +134,7 @@ class userController extends Controller
                     $user_arr = [
                         "status" => false,
                         "success" => false,
-                        "message" => "An error occurred during registration: " . $e->getMessage(),
+                        "message" =>  $e->getMessage(),
                     ];
                 }
             } else {

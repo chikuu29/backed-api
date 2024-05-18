@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use App\Jobs\sentevent;
+use Illuminate\Support\Facades\Queue;
 
 class planCalculationController extends Controller
 {
@@ -102,7 +104,7 @@ class planCalculationController extends Controller
                 );
             }
         } else {
-           // DB::rollBack();
+            // DB::rollBack();
             $user_arr = array(
                 "status" => false,
                 "success" => false,
@@ -258,5 +260,46 @@ class planCalculationController extends Controller
         //     );
         // }
         return json_encode($user_arr);
+    }
+    public function sendExpireMesagewhenpakageexpire(Request $res)
+    {
+        $data = $res->all();
+        if ($data['match'] == 'cm') {
+            $plans = DB::table('user_plan_deatils')->where('active_status', 1)->get();
+            $filepath = 'https://choicemarriage.com/';
+            foreach ($plans as $plan) {
+                $expiryDate = strtotime($plan->plan_ending_date);
+                $currentDate = time();
+                if ($currentDate > $expiryDate) {
+                    $logo =  DB::table('logo_table')->where('status', 1)->first('image');
+                    $socialmedialinks = DB::table('social_media_links')->first();
+                    $userEmail = $plan->user_email;
+                    $fadata['mailid'] = $plan->user_email;
+                    $emailData = [
+                        'view' => 'mail.expired', // The view for the email content
+                        'data' => [
+                            'imageurl' => $filepath . 'storage/logo_image/' . $logo->image,
+                            'fb' => $socialmedialinks->facebook_link,
+                            'in' => $socialmedialinks->insta_id,
+                            'x' => $socialmedialinks->twitter_link,
+                            'yt' => $socialmedialinks->youtub_link,
+                            'ld' => $socialmedialinks->linkedin_link,
+                            'foter' => $filepath . 'storage/bg.jpg',
+                            'baner' => $filepath . 'storage/mimg.jpg',
+                            'membershipimg' => $filepath . 'storage/mdata.jpg'
+                        ],
+                        'subject' => 'Membership Expired',
+                        'from' => 'info@choicemarriage.com', // Sender email address
+                        'from_name' => 'choicemarriage', // Sender name
+                        'to' => $plan->user_email, // Recipient email address
+
+                    ];
+
+                    //dd($emailData);
+
+                    Queue::push(new sentevent($emailData), '', 'emails');
+                }
+            }
+        }
     }
 }

@@ -313,15 +313,15 @@ class PdfGenerateController extends Controller
         $input = $request->all();
         $userIds = isset($input['user_id']) ? $input['user_id'] : [];
         $filepath = isset($input['filepath']) ? $input['filepath'] : '';
-    
+
         // Fetch data from database
-        $userinfo = DB::table('user_info')->whereIn('user_id', $userIds)->get(['user_dob', 'user_phone_no', 'country_code', 'user_whatsapp_no', 'whats_app_c_code', 'user_profile_image']);
-        $user_education_occupations = DB::table('user_education_occupations')->whereIn('user_id', $userIds)->get(['user_highest_education', 'user_occupation', 'user_deg', 'user_anual_income', 'user_occupation_location']);
-        $user_locations = DB::table('user_locations')->whereIn('user_id', $userIds)->get(['user_city']);
-        $user_physical_details = DB::table('user_physical_details')->whereIn('user_id', $userIds)->get(['user_complextion', 'user_height']);
-        $user_horoscope = DB::table('user_horoscope')->whereIn('user_id', $userIds)->get(['user_zodiacs']);
+        $userinfo = DB::table('user_info')->whereIn('user_id', $userIds)->get(['user_id','user_dob', 'user_phone_no', 'country_code', 'user_whatsapp_no', 'whats_app_c_code', 'user_profile_image']);
+        $user_education_occupations = DB::table('user_education_occupations')->whereIn('user_ID', $userIds)->get(['user_ID','user_highest_education', 'user_occupation', 'user_deg', 'user_anual_income', 'user_occupation_location']);
+        $user_locations = DB::table('user_locations')->whereIn('user_ID', $userIds)->get(['user_ID','user_city']);
+        $user_physical_details = DB::table('user_physical_details')->whereIn('user_ID', $userIds)->get(['user_ID','user_complextion', 'user_height']);
+        $user_horoscope = DB::table('user_horoscope')->whereIn('user_id', $userIds)->get(['user_id','user_zodiacs']);
         $social_media_links = DB::table('social_media_links')->where('id', 1)->first(['phone_no']);
-    
+        //dd($user_physical_details);
         // Prepare combined data structure
         $data = [
             'userinfo' => $userinfo,
@@ -330,16 +330,16 @@ class PdfGenerateController extends Controller
             'user_physical_details' => $user_physical_details,
             'user_horoscope' => $user_horoscope,
         ];
-    
+
         // Initialize variables for image paths and base64 encoding
         $lodganesh64concert = '';
         $profilebase64EncodedImage = '';
         $base64EncodedImage = '';
-    
+
         // Handle image paths and base64 encoding
         $lodganeshimage = $filepath . 'storage/images.jpg';
         $lodganesh64concert = @base64_encode(file_get_contents($lodganeshimage));
-    
+
         // Handle profile image path and base64 encoding
         foreach ($userinfo as $info) {
             $profilrimgpath = $filepath . 'storage/' . ($info->user_profile_image ?? '');
@@ -349,35 +349,46 @@ class PdfGenerateController extends Controller
                 $profilebase64EncodedImage = base64_encode(file_get_contents($profilrimgpath));
             }
         }
-    
+
         // Handle image path and base64 encoding for logo
         $imagePath = $filepath . 'storage/logo.jpg';
         $base64EncodedImage = @base64_encode(file_get_contents($imagePath));
-    
+
         // Construct dynamic data array
         $dynamicData = [];
         foreach ($userIds as $id) {
             $info = $userinfo->firstWhere('user_id', $id);
-            $occupation = $user_education_occupations->firstWhere('user_id', $id);
-            $location = $user_locations->firstWhere('user_id', $id);
-            $detail = $user_physical_details->firstWhere('user_id', $id);
+            $occupation = $user_education_occupations->firstWhere('user_ID', $id);
+            $location = $user_locations->firstWhere('user_ID', $id);
+            $detail = $user_physical_details->firstWhere('user_ID', $id);
             $horoscope = $user_horoscope->firstWhere('user_id', $id);
-    
-            $formattedDate = isset($info->user_dob) ? date('d M Y', strtotime($info->user_dob)) : 'NA';
-            $maskedPhoneNumber = 'XXXXXXX' . substr($info->user_phone_no, -3);
-            $maskedwhatsapNumber = 'XXXXXXX' . substr($info->user_whatsapp_no, -3);
-    
-            if ($detail->user_height != 0 && $detail->user_height != '') {
-                $inches = $detail->user_height / 2.54;
-                $feet = floor($inches / 12);
-                $remainingInches = $inches % 12;
-                $fitincconverted = $feet . 'ft' . ' ' . $remainingInches . 'in';
-            } else {
+
+
+            if($info != null){
+                $formattedDate = isset($info->user_dob) ? date('d M Y', strtotime($info->user_dob)) : 'NA';
+                $maskedPhoneNumber = 'XXXXXXX' . substr($info->user_phone_no, -3);
+                $maskedwhatsapNumber = 'XXXXXXX' . substr($info->user_whatsapp_no, -3);
+            }else{
+                $formattedDate = 'NA';
+                $maskedPhoneNumber =  'NA';
+                $maskedwhatsapNumber = 'NA';
+            }
+            if($detail != null){
+                if ($detail->user_height != 0 || $detail->user_height != '' || $detail->user_height != null ) {
+                    $inches = $detail->user_height / 2.54;
+                    $feet = floor($inches / 12);
+                    $remainingInches = $inches % 12;
+                    $fitincconverted = $feet . 'ft' . ' ' . $remainingInches . 'in';
+                } else {
+                    $fitincconverted = 'NA';
+                }
+            }else{
                 $fitincconverted = 'NA';
             }
-    
+
+
             $finalincome = isset($occupation->user_anual_income) ? $occupation->user_anual_income * 1000000 : 'NA';
-    
+
             $dynamicData[] = [
                 'name' => 'John Doe', // Replace with actual user name if available
                 'age' => 30, // Replace with actual age if available
@@ -400,30 +411,30 @@ class PdfGenerateController extends Controller
                 'phoneadmin' => $social_media_links->phone_no ?? 'NA',
             ];
         }
-    
+
         // Render the Blade view to HTML with dynamic data
         $htmlContent = view('pdf.mergePdf', ['dynamicData' => $dynamicData])->render();
-    
+
         // Create an instance of the Dompdf class
         $dompdf = new Dompdf();
-    
+
         // Load HTML content
         $dompdf->loadHtml($htmlContent);
-    
+
         // Set paper size and orientation
         $dompdf->setPaper('A4', 'portrait');
-    
+
         // Render the HTML as PDF
         $dompdf->render();
         $filename = 'user_report_' . date('d-M-Y') . '.pdf';
-    
+
         // Output the generated PDF (inline or attachment)
         return response($dompdf->output(), 200)
             ->header('Content-Type', 'application/pdf')
             ->header('Content-Disposition', 'attachment; filename="' . $filename . '"');
     }
-    
-    
+
+
 
 
 
