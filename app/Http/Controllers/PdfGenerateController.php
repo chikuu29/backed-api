@@ -357,13 +357,7 @@ class PdfGenerateController extends Controller
         // Construct dynamic data array
         $dynamicData = [];
         foreach ($userIds as $id) {
-            print_r(gettype($userinfo));
-            print_r($userinfo);
-            // $info = $userinfo->firstWhere('user_id', $id);
-            // $info = array_filter($userinfo, function($data) use ($id) {
-            //     return $data->user_id == $id;
-            // });
-            print_r($info);
+            $info = $userinfo->firstWhere('user_id', $id);
             $occupation = $user_education_occupations->firstWhere('user_id', $id);
             $location = $user_locations->firstWhere('user_id', $id);
             $detail = $user_physical_details->firstWhere('user_id', $id);
@@ -428,6 +422,7 @@ class PdfGenerateController extends Controller
             ->header('Content-Type', 'application/pdf')
             ->header('Content-Disposition', 'attachment; filename="' . $filename . '"');
     }
+    
     
 
 
