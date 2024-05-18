@@ -126,7 +126,7 @@ $router->post("/dataBaseBackup", "AppController@dataBaseBackup");
 $router->post("/sendMailForChange", "mailcontroller@sendMailForChange");
 $router->post("/sendCustmMail", "mailcontroller@sendCustmMail");
 $router->post('/generate-pdf', 'PdfGenerateController@generatePDF');
-$router->post("/generatemergepdf", "AuthController@generateMergePDF");
+$router->post("/generatemergepdf", "PdfGenerateController@generateMergePDF");
 $router->post("/byCastFreeMatches", "filterController@byCastFreeMatches");
 $router->post("/byOtherCastFreeMatches", "filterController@byOtherCastFreeMatches");
 
