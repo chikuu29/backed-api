@@ -341,14 +341,9 @@ class PdfGenerateController extends Controller
         $lodganesh64concert = @base64_encode(file_get_contents($lodganeshimage));
 
         // Handle profile image path and base64 encoding
-        foreach ($userinfo as $info) {
-            $profilrimgpath = $filepath . 'storage/' . ($info->user_profile_image ?? '');
-            $profilebase64EncodedImage = @base64_encode(file_get_contents($profilrimgpath));
-            if (!$profilebase64EncodedImage) {
-                $profilrimgpath = $filepath . 'storage/no_profile_picture_found.jpg';
-                $profilebase64EncodedImage = base64_encode(file_get_contents($profilrimgpath));
-            }
-        }
+        // foreach ($userinfo as $info) {
+
+        // }
 
         // Handle image path and base64 encoding for logo
         $imagePath = $filepath . 'storage/logo.jpg';
@@ -389,6 +384,12 @@ class PdfGenerateController extends Controller
 
             $finalincome = isset($occupation->user_anual_income) ? $occupation->user_anual_income * 1000000 : 'NA';
 
+            $profilrimgpath = $filepath . 'storage/' . ($info->user_profile_image ?? '');
+            $profilebase64EncodedImage = @base64_encode(file_get_contents($profilrimgpath));
+            if (!$profilebase64EncodedImage) {
+                $profilrimgpath = $filepath . 'storage/no_profile_picture_found.jpg';
+                $profilebase64EncodedImage = base64_encode(file_get_contents($profilrimgpath));
+            }
             $dynamicData[] = [
                 'name' => 'John Doe', // Replace with actual user name if available
                 'age' => 30, // Replace with actual age if available
