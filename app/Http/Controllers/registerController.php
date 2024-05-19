@@ -13,6 +13,7 @@ class registerController extends Controller
     {
         $input = $res->all();
         $id = $input['id'] == '' || $input['id'] == null  ? '' : $input['id'];
+
         if ($id == '') {
             $user_arr = array(
                 "status" => false,
@@ -21,22 +22,33 @@ class registerController extends Controller
             );
         } else {
             // Start the database transaction
-            DB::beginTransaction();
+           // DB::beginTransaction();
+            // echo '<pre>';
+            // print_r($userinfo);
+            // return;
+           try {
 
-            try {
-                $userinfo = DB::table('user_info')->where('user_id', $id)->get(['user_whatsapp_no', 'user_full_name', 'user_email', 'user_phone_no']);
+                $userinfo = DB::table('user_info')->where('user_id', $id)->get(['user_whatsapp_no','country_code','whats_app_c_code' ,'user_full_name', 'user_email', 'user_phone_no']);
 
                 foreach ($userinfo as $user) {
                     $newUser = [
                         'user_name' => $user->user_full_name,
                         'user_mailid' => $user->user_email,
-                        'user_phone_number' => $user->country_code.' '.$user->user_phone_no,
-                        'user_whatsapp_number' =>$user->whats_app_c_code.' '.$user->user_whatsapp_no,
+                        'user_phone_number' => $user->country_code . ' ' . $user->user_phone_no,
+                        'user_whatsapp_number' => $user->whats_app_c_code . ' ' . $user->user_whatsapp_no,
                         'states' => 1
                     ];
-
+                    // echo '<pre>';
+                    // print_r($newUser);
+                    // return;
                     // Update user_delete_request table based on $id
-                    DB::table('user_delete_request')->where('user_id', $id)->update($newUser);
+
+                    DB::table('user_delete_request')->updateOrInsert(
+                        ['user_id' => $id], // Attributes to search for
+                        $newUser            // Attributes to update or insert
+                    );
+
+                    //DB::table('user_delete_request')->where('user_id', $id)->update($newUser);
                     $tables = [
                         'user_info',
                         'auth_user',
@@ -78,7 +90,7 @@ class registerController extends Controller
                 $user_arr = array(
                     "status" => false,
                     "success" => false,
-                    "message" => "DB Problem"
+                    "message" => $e
                 );
             }
         }
@@ -91,10 +103,8 @@ class registerController extends Controller
         $newdata = $input['newdata'] == '' || $input['newdata'] == null  ? '' : $input['newdata'];
         $tablename = $input['tablename'] == '' || $input['tablename'] == null  ? '' : $input['tablename'];
         $coulemnname = $input['coulemnname'] == '' || $input['coulemnname'] == null  ? '' : $input['coulemnname'];
-        DB::table($tablename)->where($coulemnname,$olddata)->update([
+        DB::table($tablename)->where($coulemnname, $olddata)->update([
             $coulemnname => $newdata
         ]);
-
-
     }
 }

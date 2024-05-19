@@ -130,6 +130,8 @@ $router->post("/generatemergepdf", "PdfGenerateController@generateMergePDF");
 $router->post("/byCastFreeMatches", "filterController@byCastFreeMatches");
 $router->post("/byOtherCastFreeMatches", "filterController@byOtherCastFreeMatches");
 $router->post("/expiredMail", "mailcontroller@expiredMail");
+$router->post("/freeMail", "mailcontroller@freeMail");
+
 $router->get("/sendExpireMesagewhenpakageexpire", "planCalculationController@sendExpireMesagewhenpakageexpire");
 
 

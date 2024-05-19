@@ -193,4 +193,40 @@ class mailcontroller extends Controller
             }
         }
     }
+    public function freeMail()
+    {
+        $input =  json_decode(file_get_contents("php://input"), true);
+        $mailIds = ((empty($input['mailIds'])) ? [] : $input['mailIds']);
+        $filepath = ((empty($input['filepath'])) ? '' : $input['filepath']);
+        $logo =  DB::table('logo_table')->where('status', 1)->first('image');
+        $socialmedialinks = DB::table('social_media_links')->first();
+        if (count($mailIds) > 0) {
+            for ($i = 0; $i < count($mailIds); $i++) {
+                $fadata['mailid'] = $mailIds[$i];
+                $emailData = [
+                    'view' => 'mail.free', // The view for the email content
+                    'data' => [
+                        'imageurl' => $filepath . 'storage/logo_image/' . $logo->image,
+                        'fb' => $socialmedialinks->facebook_link,
+                        'in' => $socialmedialinks->insta_id,
+                        'x' => $socialmedialinks->twitter_link,
+                        'yt' => $socialmedialinks->youtub_link,
+                        'ld' => $socialmedialinks->linkedin_link,
+                        'foter' => $filepath . 'storage/bg.jpg',
+                        'baner' => $filepath . 'storage/mimg.jpg',
+                        'membershipimg' => $filepath . 'storage/mdata.jpg'
+                    ],
+                    'subject' => 'Free Membership',
+                    'from' => 'info@choicemarriage.com', // Sender email address
+                    'from_name' => 'choicemarriage', // Sender name
+                    'to' => $mailIds[$i], // Recipient email address
+
+                ];
+
+                //dd($emailData);
+
+                Queue::push(new sentevent($emailData), '', 'emails');
+            }
+        }
+    }
 }
