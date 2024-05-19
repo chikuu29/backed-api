@@ -26,50 +26,61 @@ class AuthController extends Controller
             $user = $data->userId;
             $password = $data->password;
             $logindata = DB::table('admin')->where('UserId', $user)->get();
-            if (count($logindata) > 0) {
-                if ($password == $logindata[0]->Password) {
-                    // Define the expiration time for the token (e.g., 1 hour from now)
-                    // $expiration = Carbon::now()->addHours(24)->timestamp;
-                    $expiration = Carbon::now()->addHours(12)->timestamp;
-                    // If credentials are valid, generate JWT
-                    $key = env('JWT_SECRET');  // Secret key from .env or configuration
-                    $payload = [
-                        'user_id' => $user,
-                        'password' => $password,
-                        'role' => $logindata[0]->role,
-                        'exp' => $expiration,
-                        'loginFrom' => "ADMIN"
-                    ];
-                    $algorithm = 'HS256';
-                    $jwt = JWT::encode($payload, $key, $algorithm);
-                    // return response()->json(['token' => $jwt]);
-                    $user_arr = array(
-                        "status" => true,
-                        "success" => true,
-                        'role' => $logindata[0]->role,
-                        "id" => $logindata[0]->UserId,
-                        "name" => $logindata[0]->name,
-                        "exp" => $expiration,
-                        "token" => $jwt,
-                        "message" => "Login Successfully !",
-                    );
+            //  dd();
+            if ($logindata[0]->published == 1) {
+                if (count($logindata) > 0) {
+                    if ($password == $logindata[0]->Password) {
+                        // Define the expiration time for the token (e.g., 1 hour from now)
+                        // $expiration = Carbon::now()->addHours(24)->timestamp;
+                        $expiration = Carbon::now()->addHours(12)->timestamp;
+                        // If credentials are valid, generate JWT
+                        $key = env('JWT_SECRET');  // Secret key from .env or configuration
+                        $payload = [
+                            'user_id' => $user,
+                            'password' => $password,
+                            'role' => $logindata[0]->role,
+                            'exp' => $expiration,
+                            'loginFrom' => "ADMIN"
+                        ];
+                        $algorithm = 'HS256';
+                        $jwt = JWT::encode($payload, $key, $algorithm);
+                        // return response()->json(['token' => $jwt]);
+                        $user_arr = array(
+                            "status" => true,
+                            "success" => true,
+                            'role' => $logindata[0]->role,
+                            "id" => $logindata[0]->UserId,
+                            "name" => $logindata[0]->name,
+                            "exp" => $expiration,
+                            "token" => $jwt,
+                            "message" => "Login Successfully !",
+                        );
+                    } else {
+                        $user_arr = array(
+                            "status" => false,
+                            "success" => false,
+                            "id" => '',
+                            "name" => '',
+                            "message" => "Password not match !",
+                        );
+                    }
                 } else {
+
                     $user_arr = array(
                         "status" => false,
                         "success" => false,
                         "id" => '',
                         "name" => '',
-                        "message" => "Password not match !",
+                        "message" => "User Id not match !",
                     );
                 }
-            } else {
-
+            }else{
                 $user_arr = array(
                     "status" => false,
                     "success" => false,
                     "id" => '',
                     "name" => '',
-                    "message" => "User Id not match !",
+                    "message" => "Contact to Super Admin",
                 );
             }
         } catch (\Exception $e) {
@@ -413,7 +424,7 @@ class AuthController extends Controller
                             ->where('email', $decodedToken->email)
                             ->update(['isTokenActive' => false]);
 
-                        return response()->json(['success' => true, 'message' => 'Password updated successfully'],200);
+                        return response()->json(['success' => true, 'message' => 'Password updated successfully'], 200);
                     } else {
                         return response()->json(['success' => false, 'message' => 'Enter Password Mismatch'], 404);
                     }
@@ -428,7 +439,7 @@ class AuthController extends Controller
             return response()->json(array(
                 "status" => false,
                 "success" => false,
-                "error"=>$e,
+                "error" => $e,
                 "message" => "Unauthorize Access!",
             ), 401);
         }

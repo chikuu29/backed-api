@@ -12,7 +12,7 @@ class loginController extends Controller
     {
 
         $data = json_decode(file_get_contents("php://input"));
-
+        dd($data);
         $user = $data->userId;
         $password = $data->password;
 
@@ -20,6 +20,7 @@ class loginController extends Controller
 
 
             $logindata = DB::table('admin')->where('UserId', $user)->get();
+            dd($logindata);
             if (count($logindata) > 0) {
                 if ($password == $logindata[0]->Password) {
 
