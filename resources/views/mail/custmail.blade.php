@@ -31,8 +31,8 @@
 
         .logo {
             display: block;
-            margin: 0 auto;
-            width: 150px;
+            width: 100%;
+            height: 175px;
         }
 
         .footer-icons {
@@ -55,29 +55,74 @@
             height: 100px;
             width: 200px;
         }
+
+        .social-icons {
+            text-align: center;
+            margin-top: 20px;
+            background-image: url({{ $foter }});
+            background-size: cover;
+            background-position: center;
+            padding: 20px;
+            border-radius: 10px;
+            height: 83px;
+        }
+
+        .social-icons a {
+            display: inline-block;
+            margin: 0 10px;
+        }
+
+        /* Responsive styles */
+        @media only screen and (max-width: 600px) {
+            body {
+                padding: 10px;
+            }
+
+            .container {
+                padding: 15px;
+            }
+
+            .logo {
+                max-width: 150px;
+            }
+
+            p img {
+                height: auto;
+                width: 100%;
+                max-width: 200px;
+            }
+
+            .social-icons {
+                height: auto;
+                padding: 15px;
+            }
+
+            .social-icons img {
+                height: 24px;
+
+            }
+        }
     </style>
 </head>
 
 <body>
-    <?php
-    //echo ';;;';
-    //dd(html_entity_decode(htmlspecialchars($messagedata)))
-
-    ?>
     <div class="container">
-        <img src="{{ $imageurl }}" alt="Your Logo" class="logo">
+        <div>
+            <img src="{{ $imageurl }}" alt="Your Logo" class="logo">
+        </div>
+
         <h1>{{ $Subject }}</h1>
-        <p>Dear User,</p>
+        <p>Dear, {{ $name }}</p>
         <div>
             <?php echo html_entity_decode(htmlspecialchars($messagedata)); ?>
         </div>
-        <!-- Footer with icons -->
-        <div class="footer-icons">
-            <a href="{{$fb}}"><i class="fab fa-facebook" style="font-size: 30px;"></i></a>
-            <a href="{{$in}}"><i class="fab fa-instagram" style="font-size: 30px;"></i></a>
-            <a href="{{$ld}}"><i class="fab fa-linkedin" style="font-size: 30px;"></i></a>
-            <a href="{{$yt}}"><i class="fab fa-youtube" style="font-size: 30px;"></i></a>
-            <a href="{{$x}}"><i class="fas fa-times" style="font-size: 30px;"></i></a>
+        <img src="{{ $imagepath }}" alt="event" style="<?php echo $imagepath == '200'? 'display: none;': 'display: block;' ?>">
+        <div class="social-icons">
+            <a href="{{ $fb }}"><img style=" height: 31px;" src="https://choicemarriage.com/storage/facebook.png" alt="Facebook"></a>
+            <a href="{{ $in }}"><img style=" height: 31px;" src="https://choicemarriage.com/storage/instagram.png" alt="Instagram"></a>
+            <a href="{{ $ld }}"><img style=" height: 31px;" src="https://choicemarriage.com/storage/linkedin.png" alt="LinkedIn"></a>
+            <a href="{{ $yt }}"><img style=" height: 31px;" src="https://choicemarriage.com/storage/youtube.png" alt="YouTube"></a>
+            <a href="{{ $x }}"><img style=" height: 31px;" src="https://choicemarriage.com/storage/x.png" alt="Close"></a>
         </div>
     </div>
 </body>

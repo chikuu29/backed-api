@@ -129,30 +129,32 @@ class mailcontroller extends Controller
         $mailIds = ((empty($input['mailIds'])) ? [] : $input['mailIds']);
         $messagedata = ((empty($input['message'])) ? '' : $input['message']);
         $filepath = ((empty($input['filepath'])) ? '' : $input['filepath']);
-        $logo =  DB::table('logo_table')->where('status', 1)->first('image');
+        $imgpath = ((empty($input['imgpath'])) ? '' : $input['imgpath']);
         $socialmedialinks = DB::table('social_media_links')->first();
         if (count($mailIds) > 0) {
             for ($i = 0; $i < count($mailIds); $i++) {
                 $fadata['mailid'] = $mailIds[$i];
+                $userinfo = DB::table('user_info')->where('user_email',$mailIds[$i])->first(['user_fname']);
                 $emailData = [
                     'view' => 'mail.custmail', // The view for the email content
                     'data' => [
                         'messagedata' => $messagedata,
-                        'imageurl' => $filepath . 'storage/logo_image/' . $logo->image,
+                        'imageurl' => $filepath . 'storage/cimgl.png',
                         'Subject' => $Subject,
+                        'imagepath' => $imgpath,
+                        'name' => $userinfo->user_fname,
                         'fb' => $socialmedialinks->facebook_link,
                         'in' => $socialmedialinks->insta_id,
                         'x' => $socialmedialinks->twitter_link,
                         'yt' => $socialmedialinks->youtub_link,
-                        'ld' => $socialmedialinks->linkedin_link
+                        'ld' => $socialmedialinks->linkedin_link,
+                        'foter' => $filepath . 'storage/bg.jpg',
                     ],
                     'subject' => 'Registration Successful',
                     'from' => 'info@choicemarriage.com', // Sender email address
                     'from_name' => 'choicemarriage', // Sender name
                     'to' => $mailIds[$i], // Recipient email address
                 ];
-
-
                 Queue::push(new sentevent($emailData), '', 'emails');
             }
         }

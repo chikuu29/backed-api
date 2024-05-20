@@ -131,6 +131,7 @@ $router->post("/byCastFreeMatches", "filterController@byCastFreeMatches");
 $router->post("/byOtherCastFreeMatches", "filterController@byOtherCastFreeMatches");
 $router->post("/expiredMail", "mailcontroller@expiredMail");
 $router->post("/freeMail", "mailcontroller@freeMail");
+$router->post("/eventImageUplode", "uplodeController@eventImageUplode");
 
 $router->get("/sendExpireMesagewhenpakageexpire", "planCalculationController@sendExpireMesagewhenpakageexpire");
 $router->get("/SendMatchaes", "planCalculationController@SendMatchaes");
