@@ -82,9 +82,7 @@
                 padding: 15px;
             }
 
-            .logo {
-                max-width: 150px;
-            }
+
 
             p img {
                 height: auto;
