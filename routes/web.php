@@ -134,6 +134,8 @@ $router->post("/freeMail", "mailcontroller@freeMail");
 
 $router->get("/sendExpireMesagewhenpakageexpire", "planCalculationController@sendExpireMesagewhenpakageexpire");
 $router->get("/SendMatchaes", "planCalculationController@SendMatchaes");
+$router->post("/suspended", "AuthController@suspended");
+
 
 
 

@@ -74,7 +74,7 @@ class AuthController extends Controller
                         "message" => "User Id not match !",
                     );
                 }
-            }else{
+            } else {
                 $user_arr = array(
                     "status" => false,
                     "success" => false,
@@ -459,6 +459,39 @@ class AuthController extends Controller
         // } else {
         //     return response()->json(['error' => 'Token not provided'], 401);
         // }
+    }
+
+    public function suspended(Request $res)
+    {
+        $input = $res->all();
+        $id = isset($input['id']) ? $input['id'] : '';
+        if ($id == '') {
+            $user_arr = array(
+                "status" => false,
+                "success" => false,
+                "data" => [],
+                "message" => "Please enter required parametes",
+            );
+        } else {
+            $data = DB::table('user_info')->orWhere('user_id', $id)->orWhere('user_email', $id)->orWhere('user_phone_no', $id)->first(['deleted', 'status','user_id']);
+            if ($data != null) {
+                $user_arr = array(
+                    "status" => true,
+                    "success" => true,
+                    "data" => $data,
+                    "message" => "Please enter required parametes",
+                );
+            } else {
+                $user_arr = array(
+                    "status" => false,
+                    "success" => false,
+                    "data" => [],
+                    "message" => "Please enter required parametes",
+                );
+            }
+        }
+
+        return json_encode($user_arr);
     }
 }
 
