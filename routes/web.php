@@ -97,9 +97,11 @@ $router->group(['middleware' => ['App\Http\Middleware\JwtMiddleware']], function
     $router->post("/byCastgetOnlinedata", "filterController@byCastgetOnlinedata");
     $router->post("/byCastgetSpotlightdata", "filterController@byCastgetSpotlightdata");
     $router->post("/byCastRecentlyJoinedMatches", "filterController@byCastRecentlyJoinedMatches");
+    $router->post("/byCastFreeMatches", "filterController@byCastFreeMatches");
 
 
 
+    $router->post("/byOtherCastFreeMatches", "filterController@byOtherCastFreeMatches");
     $router->post("/byOtherCastpremimusMatches", "filterController@byOtherCastpremimusMatches");
     $router->post("/byOtherCastgetOnlinedata", "filterController@byOtherCastgetOnlinedata");
     $router->post("/byOtherCastgetSpotlightdata", "filterController@byOtherCastgetSpotlightdata");
@@ -127,15 +129,16 @@ $router->post("/sendMailForChange", "mailcontroller@sendMailForChange");
 $router->post("/sendCustmMail", "mailcontroller@sendCustmMail");
 $router->post('/generate-pdf', 'PdfGenerateController@generatePDF');
 $router->post("/generatemergepdf", "PdfGenerateController@generateMergePDF");
-$router->post("/byCastFreeMatches", "filterController@byCastFreeMatches");
-$router->post("/byOtherCastFreeMatches", "filterController@byOtherCastFreeMatches");
 $router->post("/expiredMail", "mailcontroller@expiredMail");
 $router->post("/freeMail", "mailcontroller@freeMail");
 $router->post("/eventImageUplode", "uplodeController@eventImageUplode");
 
+$router->post("/feedbackAdminEntry", "AppController@feedbackAdminEntry");
+
 $router->get("/sendExpireMesagewhenpakageexpire", "planCalculationController@sendExpireMesagewhenpakageexpire");
 $router->get("/SendMatchaes", "planCalculationController@SendMatchaes");
 $router->post("/suspended", "AuthController@suspended");
+
 
 
 

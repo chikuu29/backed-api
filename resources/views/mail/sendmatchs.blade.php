@@ -176,7 +176,7 @@
                     <p><span style="color: red;">Age:</span> <span style="color: green;"><?php echo $diff; ?></span></p>
                     <p><span style="color: red;">Location:</span> <span style="color: green;"><?php echo $data->user_Permanent_state . ',' . $data->user_Permanent_city; ?></span></p>
                     <p><span style="color: red;">Occupation:</span> <span style="color: green;"><?php echo $data->user_employed_In; ?></span> </p>
-                    <a href="https://choicemarriage.com/member-profile/<?php echo $data->user_id ?>" class="cta-button">View Profile</a>
+                    <a href="https://choicemarriage.com/v1/member-profile/<?php echo $data->user_id ?>" class="cta-button">View Profile</a>
                 </div>
             </div>
         <?php } ?>

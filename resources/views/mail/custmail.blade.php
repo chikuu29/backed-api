@@ -33,6 +33,7 @@
             display: block;
             width: 100%;
             height: 175px;
+            object-fit: contain;
         }
 
         .footer-icons {
@@ -54,6 +55,7 @@
         p img {
             height: 100px;
             width: 200px;
+            object-fit: contain;
         }
 
         .social-icons {
@@ -72,6 +74,10 @@
             margin: 0 10px;
         }
 
+        .social-icons img {
+            height: 31px;
+        }
+
         /* Responsive styles */
         @media only screen and (max-width: 600px) {
             body {
@@ -81,8 +87,6 @@
             .container {
                 padding: 15px;
             }
-
-
 
             p img {
                 height: auto;
@@ -97,7 +101,11 @@
 
             .social-icons img {
                 height: 24px;
+            }
 
+            .logo {
+                height: auto;
+                max-height: 175px;
             }
         }
     </style>
@@ -116,11 +124,11 @@
         </div>
         <img src="{{ $imagepath }}" alt="event" style="<?php echo $imagepath == '200'? 'display: none;': 'display: block;' ?>">
         <div class="social-icons">
-            <a href="{{ $fb }}"><img style=" height: 31px;" src="https://choicemarriage.com/storage/facebook.png" alt="Facebook"></a>
-            <a href="{{ $in }}"><img style=" height: 31px;" src="https://choicemarriage.com/storage/instagram.png" alt="Instagram"></a>
-            <a href="{{ $ld }}"><img style=" height: 31px;" src="https://choicemarriage.com/storage/linkedin.png" alt="LinkedIn"></a>
-            <a href="{{ $yt }}"><img style=" height: 31px;" src="https://choicemarriage.com/storage/youtube.png" alt="YouTube"></a>
-            <a href="{{ $x }}"><img style=" height: 31px;" src="https://choicemarriage.com/storage/x.png" alt="Close"></a>
+            <a href="{{ $fb }}"><img src="https://choicemarriage.com/storage/facebook.png" alt="Facebook"></a>
+            <a href="{{ $in }}"><img src="https://choicemarriage.com/storage/instagram.png" alt="Instagram"></a>
+            <a href="{{ $ld }}"><img src="https://choicemarriage.com/storage/linkedin.png" alt="LinkedIn"></a>
+            <a href="{{ $yt }}"><img src="https://choicemarriage.com/storage/youtube.png" alt="YouTube"></a>
+            <a href="{{ $x }}"><img src="https://choicemarriage.com/storage/x.png" alt="Close"></a>
         </div>
     </div>
 </body>

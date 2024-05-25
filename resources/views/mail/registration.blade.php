@@ -89,6 +89,43 @@
         .social-icons img {
             height: 31px;
         }
+
+        /* Responsive Design */
+        @media only screen and (max-width: 768px) {
+            .container {
+                max-width: 90%;
+            }
+        }
+
+        @media only screen and (max-width: 480px) {
+            .header img {
+                max-width: 100px;
+            }
+
+            .mail-date {
+                font-size: 12px;
+            }
+
+            .update-image {
+                border-radius: 5px;
+            }
+
+            .social-icons {
+                height: auto;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+            }
+
+            .social-icons a {
+                margin: 0 10px;
+                display: inline-block;
+            }
+
+            .social-icons img {
+                height: 24px;
+            }
+        }
     </style>
 </head>
 
@@ -102,12 +139,12 @@
             <img src="{{ $baner }}" alt="Update Image" class="update-image">
         </div>
         <h1>Registration Successful</h1>
-        <p style=" color: #4cb96b">Hello <?php echo $name ?>,</p>
+        <p style="color: #4cb96b;">Hello <?php echo $name ?>,</p>
 
-        <p style=" color: #4cb96b">
+        <p style="color: #4cb96b;">
             Congratulations on successfully completing your registration on ChoiceMarriage.com! You've taken the first step towards finding your perfect match, and we couldn't be happier to have you with us. Here's to new beginnings, exciting connections, and the journey ahead. Feel free to explore, engage, and reach out if you need any assistance. Wishing you every success in your quest for love and companionship! To find your perfect match, click the login button.
         </p>
-        <p style=" color: #4cb96b">Best Regards, <br>ChoiceMarriage Team</p>
+        <p style="color: #4cb96b;">Best Regards,<br>ChoiceMarriage Team</p>
 
         <p style="text-align: center;">
             <a href="<?php echo $url ?>" class="cta-button">Log In Now</a>

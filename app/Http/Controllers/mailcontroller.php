@@ -150,7 +150,7 @@ class mailcontroller extends Controller
                         'ld' => $socialmedialinks->linkedin_link,
                         'foter' => $filepath . 'storage/bg.jpg',
                     ],
-                    'subject' => 'Registration Successful',
+                    'subject' => $Subject,
                     'from' => 'info@choicemarriage.com', // Sender email address
                     'from_name' => 'choicemarriage', // Sender name
                     'to' => $mailIds[$i], // Recipient email address

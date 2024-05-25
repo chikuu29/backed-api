@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>membership expired</title>
+    <title>Free Membership</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -160,14 +160,11 @@
             .social-icons a {
                 margin: 0 10px;
                 display: inline-block;
-                /* Adjust size as needed */
-                /* Adjust size as needed */
             }
 
             .imgh {
                 height: 31px;
             }
-
         }
     </style>
 </head>
@@ -181,12 +178,12 @@
         <div class="update-image-container">
             <img src="{{ $baner }}" alt="Update Image" class="update-image">
         </div>
-        <p style="color: green;">Your account is currently running with a free membership. As a result, you have not been able to fully utilize our website's services. Please upgrade your account and contact your life partner.</p>
+        <p class="content">Your account is currently running with a free membership. As a result, you have not been able to fully utilize our website's services. Please upgrade your account and contact your life partner.</p>
 
-        <p style="color: green;">Best Regards,<br><span style="color: green;"> Choicemarriage Team</span></p>
+        <p class="content">Best Regards,<br>Choicemarriage Team</p>
 
         <div class="update-image-container">
-            <img src="{{ $membershipimg }}" alt="Update Image" class="update-image">
+            <img src="{{ $membershipimg }}" alt="Membership Image" class="update-image">
         </div>
 
         <p style="text-align: center;">
@@ -196,13 +193,12 @@
         <br>
 
         <div class="social-icons">
-            <a href="{{ $fb }}"><img style=" height: 31px;" src="https://choicemarriage.com/storage/facebook.png" alt="Facebook"></a>
-            <a href="{{ $in }}"><img style=" height: 31px;" src="https://choicemarriage.com/storage/instagram.png" alt="Instagram"></a>
-            <a href="{{ $ld }}"><img style=" height: 31px;" src="https://choicemarriage.com/storage/linkedin.png" alt="LinkedIn"></a>
-            <a href="{{ $yt }}"><img style=" height: 31px;" src="https://choicemarriage.com/storage/youtube.png" alt="YouTube"></a>
-            <a href="{{ $x }}"><img style=" height: 31px;" src="https://choicemarriage.com/storage/x.png" alt="Close"></a>
+            <a href="{{ $fb }}"><img class="imgh" src="https://choicemarriage.com/storage/facebook.png" alt="Facebook"></a>
+            <a href="{{ $in }}"><img class="imgh" src="https://choicemarriage.com/storage/instagram.png" alt="Instagram"></a>
+            <a href="{{ $ld }}"><img class="imgh" src="https://choicemarriage.com/storage/linkedin.png" alt="LinkedIn"></a>
+            <a href="{{ $yt }}"><img class="imgh" src="https://choicemarriage.com/storage/youtube.png" alt="YouTube"></a>
+            <a href="{{ $x }}"><img class="imgh" src="https://choicemarriage.com/storage/x.png" alt="Close"></a>
         </div>
-
     </div>
 </body>
 

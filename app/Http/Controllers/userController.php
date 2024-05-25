@@ -112,7 +112,7 @@ class userController extends Controller
                             'ld' => $socialmedialinks->linkedin_link,
                             'foter' => $filepath . 'storage/bg.jpg',
                             'baner' => $filepath . 'storage/cimg.jpg',
-                            'date'=>date("d M Y")
+                            'date' => date("d M Y")
                         ],
                         'subject' => 'Registration Successful',
                         'from' => 'info@choicemarriage.com', // Sender email address

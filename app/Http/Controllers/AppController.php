@@ -6,6 +6,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Exception;
+use App\Jobs\SendEmailJob;
+use Illuminate\Support\Facades\Queue;
 
 
 class AppController extends Controller
@@ -130,8 +132,37 @@ class AppController extends Controller
             'Email' => $sanitizedInput['Email'],
             'Contac_No' => $sanitizedInput['Contac_No'],
             'Subject' => $sanitizedInput['Subject'],
-            'Feedback' => $sanitizedInput['Feedback']
+            'Feedback' => $sanitizedInput['Feedback'],
+            'ticket_no' => $sanitizedInput['ticket_no'],
+            'created_At' => $sanitizedInput['created_At']
         ]);
+        $filepath = 'https://choicemarriage.com/';
+        $logo =  DB::table('logo_table')->where('status', 1)->first('image');
+        $socialmedialinks = DB::table('social_media_links')->first();
+        $emailData = [
+            'view' => 'mail.feedback', // The view for the email content
+            'data' => [
+                'imageurl' => $filepath . 'storage/logo_image/' . $logo->image,
+                'user_email' => $sanitizedInput['Email'],
+                'name' => $sanitizedInput['Name'],
+                'profile_id' => $sanitizedInput['ticket_no'],
+                'fb' => $socialmedialinks->facebook_link,
+                'in' => $socialmedialinks->insta_id,
+                'x' => $socialmedialinks->twitter_link,
+                'yt' => $socialmedialinks->youtub_link,
+                'ld' => $socialmedialinks->linkedin_link,
+                'foter' => $filepath . 'storage/bg.jpg',
+                'baner' => $filepath . 'storage/cimg.jpg',
+                'date' => date("d M Y"),
+                'subject' => 'Feedback',
+            ],
+            'subject' => 'Feedback',
+            'from' => 'info@choicemarriage.com', // Sender email address
+            'from_name' => 'choicemarriage', // Sender name
+            'to' => $sanitizedInput['Email'], // Recipient email address
+            'to_name' => $sanitizedInput['Name'], // Recipient name
+        ];
+        Queue::push(new SendEmailJob($emailData), '', 'emails');
         if ($insert) {
             $user_arr = [
                 "status" => true,
@@ -179,7 +210,61 @@ class AppController extends Controller
         }
 
         // Return JSON response
-       // header('Content-Type: application/json');
+        // header('Content-Type: application/json');
         echo json_encode($response);
+    }
+    public function feedbackAdminEntry(Request $request)
+    {
+        // Retrieve all input data from the request and sanitize it
+        $sanitizedInput = array_map('htmlspecialchars', $request->all());
+        // return $sanitizedInput;
+        // Insert the sanitized data into the 'enquir_feedback' table
+        $insert =  DB::table('enquir_feedback')->where('id', $sanitizedInput['id'])->update([
+            'admin_message' => $sanitizedInput['admin_message'],
+            'status' => 1
+        ]);
+        $updatedRecord = DB::table('enquir_feedback')->where('id', $sanitizedInput['id'])->first();
+        $filepath = 'https://choicemarriage.com/';
+        $logo =  DB::table('logo_table')->where('status', 1)->first('image');
+        $socialmedialinks = DB::table('social_media_links')->first();
+        $emailData = [
+            'view' => 'mail.feedbackfromadmin', // The view for the email content
+            'data' => [
+                'imageurl' => $filepath . 'storage/logo_image/' . $logo->image,
+                'user_email' => $updatedRecord->Email,
+                'name' => $updatedRecord->Name,
+                'feedback' => $updatedRecord->admin_message,
+                'profile_id' => $updatedRecord->ticket_no,
+                'fb' => $socialmedialinks->facebook_link,
+                'in' => $socialmedialinks->insta_id,
+                'x' => $socialmedialinks->twitter_link,
+                'yt' => $socialmedialinks->youtub_link,
+                'ld' => $socialmedialinks->linkedin_link,
+                'foter' => $filepath . 'storage/bg.jpg',
+                'baner' => $filepath . 'storage/cimg.jpg',
+                'date' => date("d M Y"),
+                'subject' => 'Feedback',
+            ],
+            'subject' => 'Feedback',
+            'from' => 'info@choicemarriage.com', // Sender email address
+            'from_name' => 'choicemarriage', // Sender name
+            'to' => $updatedRecord->Email, // Recipient email address
+            'to_name' =>  $updatedRecord->Name, // Recipient name
+        ];
+        Queue::push(new SendEmailJob($emailData), '', 'emails');
+        if ($insert) {
+            $user_arr = [
+                "status" => true,
+                "success" => true,
+                "msg" => 'data inseted'
+            ];
+        } else {
+            $user_arr = [
+                "status" => false,
+                "success" => false,
+                "msg" => 'error'
+            ];
+        }
+        return json_encode($user_arr);
     }
 }
