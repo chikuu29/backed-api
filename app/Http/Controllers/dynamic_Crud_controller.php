@@ -30,6 +30,8 @@ class dynamic_Crud_controller extends Controller
             $encrypted = $request->getContent();
             $requestedData = CryptoHelper::cryptoJsAesDecrypt($encrypted);
             $whereConditions = isset($requestedData['whereConditions']) ? $requestedData['whereConditions'] : [];
+            $whereNotConditions = isset($requestedData['whereNotConditions']) ? $requestedData['whereNotConditions'] : [];
+            
             $table = isset($requestedData['table']) ? $requestedData['table'] : '';
             $projection = isset($requestedData['projection']) ? $requestedData['projection'] : [];
             $offset = isset($requestedData['offset']) ? $requestedData['offset'] : 0;
@@ -48,7 +50,7 @@ class dynamic_Crud_controller extends Controller
 
                 // Get the total count of rows
 
-                if (count($whereConditions) == 0) {
+                if (count($whereConditions) == 0 || count($whereNotConditions) == 0) {
                     if (empty($order_by)) {
 
 
@@ -63,12 +65,16 @@ class dynamic_Crud_controller extends Controller
                     }
                 } else {
                     if (empty($order_by)) {
-                        $fatchdata = DB::table($table)->where($whereConditions)->skip($offset)
-                            ->take($limit)->get($projection);
+                        $fatchdata = DB::table($table)
+                        ->where($whereConditions)
+                        ->whereNot($whereNotConditions)
+                        ->skip($offset)
+                        ->take($limit)->get($projection);
                     } else {
                         $fatchdata = DB::table($table)
                             ->orderBy($order_by, 'desc')
                             ->where($whereConditions)
+                            ->whereNot($whereNotConditions)
                             ->skip($offset)
                             ->take($limit)->get($projection);
                     }
