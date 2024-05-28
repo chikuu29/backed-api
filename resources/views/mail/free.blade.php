@@ -187,7 +187,7 @@
         </div>
 
         <p style="text-align: center;">
-            <a href="#" class="cta-button" style="display: inline-block; padding: 12px 24px; font-size: 18px; font-weight: bold; color: #fff; background-color: #007bff; border: 2px solid #007bff; border-radius: 5px; text-decoration: none; transition: background-color 0.3s ease;">UPGRADE NOW</a>
+            <a href="https://choicemarriage.com/subscription/plan" class="cta-button" style="display: inline-block; padding: 12px 24px; font-size: 18px; font-weight: bold; color: #fff; background-color: #007bff; border: 2px solid #007bff; border-radius: 5px; text-decoration: none; transition: background-color 0.3s ease;">UPGRADE NOW</a>
         </p>
 
         <br>

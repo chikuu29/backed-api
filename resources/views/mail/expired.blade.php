@@ -188,7 +188,7 @@
         </div>
 
         <p style="text-align: center;">
-            <a href="#" class="cta-button">UPGRADE NOW</a>
+            <a href="https://choicemarriage.com/subscription/plan" class="cta-button">UPGRADE NOW</a>
         </p>
 
         <div class="social-icons" style="background-image: url({{$foter}});">
