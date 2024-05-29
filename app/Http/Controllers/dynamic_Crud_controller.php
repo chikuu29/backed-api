@@ -31,7 +31,7 @@ class dynamic_Crud_controller extends Controller
             $requestedData = CryptoHelper::cryptoJsAesDecrypt($encrypted);
             $whereConditions = isset($requestedData['whereConditions']) ? $requestedData['whereConditions'] : [];
             $whereNotConditions = isset($requestedData['whereNotConditions']) ? $requestedData['whereNotConditions'] : [];
-            
+
             $table = isset($requestedData['table']) ? $requestedData['table'] : '';
             $projection = isset($requestedData['projection']) ? $requestedData['projection'] : [];
             $offset = isset($requestedData['offset']) ? $requestedData['offset'] : 0;
@@ -50,10 +50,8 @@ class dynamic_Crud_controller extends Controller
 
                 // Get the total count of rows
 
-                if (count($whereConditions) == 0 || count($whereNotConditions) == 0) {
+                if (count($whereConditions) == 0 && count($whereNotConditions) == 0) {
                     if (empty($order_by)) {
-
-
                         $fatchdata = DB::table($table)->skip($offset)
                             ->take($limit)->get($projection);
                     } else {
