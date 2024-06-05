@@ -374,90 +374,65 @@ class userController extends Controller
 
     public function uploadImage(Request $request)
     {
-        $input = $request->all();
 
-        $date = $input['data'];
-        $id = $input['user_Id'];
-        $image = explode(';base64,', $input['data']);
-        $image_base64 = base64_decode($image[1]);
-        $extention = explode('/', $image[0]);
-        $root = env('FILE_UPLOAD_PATH');
-        $uniqid = uniqid();
-        $storageFile = $root . '/'  . $id . $uniqid . '.' . $extention[1];
-        //dd($storageFile);
-        if (file_put_contents($storageFile, $image_base64)) {
-                DB::table('user_profile_images')->insert([
-                    "user_ID" => $id,
-                    "user_profile_images" => $id . $uniqid . '.' . $extention[1],
-                    "user_feature_images" => $id . $uniqid . '.' . $extention[1],
-                    "status" => "pending",
-                    "completed" => 1
+        $alldata = $request->all();
+        $targetDir = env('FILE_UPLOAD_PATH');
+
+        if (!file_exists($targetDir)) {
+            mkdir($targetDir, 0777, true);
+        }
+        //return $request->hasFile('file');
+        if ($request->hasFile('file')) {
+
+            $maxFileSize = 5 * 1024 * 1024; // 5 MB in bytes
+            $uploadedFileSize = $request->file('file')->getSize();
+
+            if ($uploadedFileSize > $maxFileSize) {
+                return response()->json([
+                    "success" => false,
+                    "message" => "File size exceeds the maximum allowed limit of 5 MB"
                 ]);
+            }
+            $profile_id = $alldata['q'];
+
+            $temp = $_FILES['file']['tmp_name'];
+
+            $fileReadyToMove = md5(uniqid($profile_id . '_' . time(), true)) . '.' . $_FILES['file']['name'];
+
+            $generatedFileName = str_replace($_FILES['file']['name'], 'jpg', $fileReadyToMove);
+            move_uploaded_file($temp, $targetDir . '/' . $generatedFileName);
+
+
+            $profile_image_table = DB::table('user_profile_images')->insert([
+                'completed' => 1,
+                'user_ID' => $profile_id,
+                'user_feature_images' => $generatedFileName,
+                'user_profile_images' => $generatedFileName
+            ]);
+
+            if ($profile_image_table) {
                 return response()->json([
                     "success" => true,
                     "message" => "File Uploaded Successfully",
+                    "data" => [
+                        'completed' => 1,
+                        'user_ID' => $profile_id,
+                        'user_feature_images' => $generatedFileName,
+                        'user_profile_images' => $generatedFileName
+                    ]
                 ]);
+            } else {
+                return response()->json([
+                    "success" => false,
+                    "message" => "Unable to Store Data"
+                ]);
+            }
         } else {
-            return response()->json(['success' => false, 'message' => 'File could not be saved.'], 500);
+            return response()->json([
+                "success" => false,
+                "message" => "No file uploaded"
+            ]);
         }
-        // $alldata = $request->all();
-        // $targetDir = env('FILE_UPLOAD_PATH');
-
-        // if (!file_exists($targetDir)) {
-        //     mkdir($targetDir, 0777, true);
-        // }
-        // //return $request->hasFile('file');
-        // if ($request->hasFile('file')) {
-
-        //     $maxFileSize = 5 * 1024 * 1024; // 5 MB in bytes
-        //     $uploadedFileSize = $request->file('file')->getSize();
-
-        //     if ($uploadedFileSize > $maxFileSize) {
-        //         return response()->json([
-        //             "success" => false,
-        //             "message" => "File size exceeds the maximum allowed limit of 5 MB"
-        //         ]);
-        //     }
-        //     $profile_id = $alldata['q'];
-
-        //     $temp = $_FILES['file']['tmp_name'];
-
-        //     $fileReadyToMove = md5(uniqid($profile_id . '_' . time(), true)) . '.' . $_FILES['file']['name'];
-
-        //     $generatedFileName = str_replace($_FILES['file']['name'], 'jpg', $fileReadyToMove);
-        //     move_uploaded_file($temp, $targetDir . '/' . $generatedFileName);
-
-
-        //     $profile_image_table = DB::table('user_profile_images')->insert([
-        //         'completed' => 1,
-        //         'user_ID' => $profile_id,
-        //         'user_feature_images' => $generatedFileName,
-        //         'user_profile_images' => $generatedFileName
-        //     ]);
-
-        //     if ($profile_image_table) {
-        //         return response()->json([
-        //             "success" => true,
-        //             "message" => "File Uploaded Successfully",
-        //             "data" => [
-        //                 'completed' => 1,
-        //                 'user_ID' => $profile_id,
-        //                 'user_feature_images' => $generatedFileName,
-        //                 'user_profile_images' => $generatedFileName
-        //             ]
-        //         ]);
-        //     } else {
-        //         return response()->json([
-        //             "success" => false,
-        //             "message" => "Unable to Store Data"
-        //         ]);
-        //     }
-        // } else {
-        //     return response()->json([
-        //         "success" => false,
-        //         "message" => "No file uploaded"
-        //     ]);
-        // }
     }
 
     public function userActivation(Request $res)
@@ -593,5 +568,34 @@ class userController extends Controller
             );
         }
         return json_encode($user_arr);
+    }
+    public function uplodeimageadmin(Request $request)
+    {
+        $input = $request->all();
+
+        $date = $input['data'];
+        $id = $input['user_Id'];
+        $image = explode(';base64,', $input['data']);
+        $image_base64 = base64_decode($image[1]);
+        $extention = explode('/', $image[0]);
+        $root = env('FILE_UPLOAD_PATH');
+        $uniqid = uniqid();
+        $storageFile = $root . '/'  . $id . $uniqid . '.' . $extention[1];
+        //dd($storageFile);
+        if (file_put_contents($storageFile, $image_base64)) {
+            DB::table('user_profile_images')->insert([
+                "user_ID" => $id,
+                "user_profile_images" => $id . $uniqid . '.' . $extention[1],
+                "user_feature_images" => $id . $uniqid . '.' . $extention[1],
+                "status" => "pending",
+                "completed" => 1
+            ]);
+            return response()->json([
+                "success" => true,
+                "message" => "File Uploaded Successfully",
+            ]);
+        } else {
+            return response()->json(['success' => false, 'message' => 'File could not be saved.'], 500);
+        }
     }
 }

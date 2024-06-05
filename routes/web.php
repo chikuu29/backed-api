@@ -39,6 +39,7 @@ $router->group(['middleware' => ['App\Http\Middleware\JwtMiddleware']], function
     $router->post("/zodiacs", "addItemControler@zodiacs");
     $router->post("/nakshatra", "addItemControler@nakshatra");
     $router->post("/upload", "userController@uploadImage");
+    $router->post("/uplodeimageadmin", "userController@uplodeimageadmin");
     $router->post("/annual_income", "addItemControler@annual_income");
     // $router->post("/memberpaln", "memberController@memberpaln");
     $router->post("/getAllData", "memberController@getAllData");
@@ -138,6 +139,7 @@ $router->post("/feedbackAdminEntry", "AppController@feedbackAdminEntry");
 $router->get("/sendExpireMesagewhenpakageexpire", "planCalculationController@sendExpireMesagewhenpakageexpire");
 $router->get("/SendMatchaes", "planCalculationController@SendMatchaes");
 $router->post("/suspended", "AuthController@suspended");
+
 
 
 
