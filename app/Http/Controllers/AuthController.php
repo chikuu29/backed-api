@@ -55,6 +55,14 @@ class AuthController extends Controller
                             "token" => $jwt,
                             "message" => "Login Successfully !",
                         );
+                         setcookie('authToken', $jwt, [
+                        'expires' => $expiration, // 1 day expiration
+                        'path' => '/',
+                        // 'domain' => '', // Set to your domain
+                        'secure' => true, // Must be true for SameSite=None
+                        'httponly' => true,
+                        'samesite' => 'None'
+                    ]);
                     } else {
                         $user_arr = array(
                             "status" => false,
@@ -157,6 +165,16 @@ class AuthController extends Controller
                         "token" => $jwt,
                         "message" => "Login Successfully !",
                     );
+                    // setcookie('authToken', $jwt, $expiration, "/", "", false, true); // 1 day expiration, httpOnly
+                     // Set the token as a cookie with SameSite=None and Secure attributes
+                    setcookie('authToken', $jwt, [
+                        'expires' => $expiration, // 1 day expiration
+                        'path' => '/',
+                        // 'domain' => '', // Set to your domain
+                        'secure' => true, // Must be true for SameSite=None
+                        'httponly' => true,
+                        'samesite' => 'None'
+                    ]);
                     return response()->json($user_arr);
                 } else {
 

@@ -13,11 +13,11 @@ class JwtMiddleware
     {
         // $authHeader = $request->header('Authorization');
         $authorizationHeader = $request->header('Authorization');
-        if ($authorizationHeader) {
-            // list($bearer, $token) = explode(' ', $authHeader, 2);
-            // echo $token;
+        $cookieValue = $request->cookie('authToken');
+        if ($authorizationHeader || $cookieValue) {
+            
             try {
-                $token = $request->bearerToken(); // Get the JWT from the Authorization header
+                $token =$authorizationHeader? $request->bearerToken():$cookieValue; // Get the JWT from the Authorization header
                 if (!$token) {
                     return response()->json(['error' => 'Token not provided'], 401);
                 }

@@ -27,8 +27,10 @@ class dynamic_Crud_controller extends Controller
         try {
             //code...
 
+            var_dump($request);
             $encrypted = $request->getContent();
-            $requestedData = CryptoHelper::cryptoJsAesDecrypt($encrypted);
+            // $requestedData = CryptoHelper::cryptoJsAesDecrypt($encrypted);
+            $requestedData=$encrypted ;
             $whereConditions = isset($requestedData['whereConditions']) ? $requestedData['whereConditions'] : [];
             $whereNotConditions = isset($requestedData['whereNotConditions']) ? $requestedData['whereNotConditions'] : [];
 
@@ -89,8 +91,8 @@ class dynamic_Crud_controller extends Controller
                     "data" => $fatchdata
                 );
             }
-            // return json_encode($user_arr);
-            return CryptoHelper::cryptoJsAesEncrypt($user_arr);
+            return json_encode($user_arr);
+            // return CryptoHelper::cryptoJsAesEncrypt($user_arr);
         } catch (\Exception $e) {
             //throw $th;
             $user_arr = array(
