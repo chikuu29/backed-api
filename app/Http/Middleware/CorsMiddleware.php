@@ -8,7 +8,7 @@ class CorsMiddleware
 {
     public function handle($request, Closure $next)
     {
-        // $response = $next($request);
+        $response = $next($request);
         
         // // Add CORS headers
         // $response->headers->set('Access-Control-Allow-Origin', '*');
@@ -16,16 +16,29 @@ class CorsMiddleware
         // $response->headers->set('Access-Control-Allow-Headers', 'Content-Type, Authorization');
         
         // return $response;
+        $allowedOrigins = [
+            'http://localhost:4200',
+            'https://admin.choicemarriage.com'
+        ];
+    
+        $origin = $request->header('Origin');
+        if (in_array($origin, $allowedOrigins)) {
+            $headers['Access-Control-Allow-Origin'] = $origin;
+        }else{
+             return $response;
+            
+        }
+            // var_dumb($request);
+            $headers = [
+                'Access-Control-Allow-Origin'      => $origin,
+              'Access-Control-Allow-Methods'     => 'POST, GET, OPTIONS, PUT, DELETE',
+              'Access-Control-Allow-Credentials' => 'true',
+              'Access-Control-Max-Age'           => '86400',
+              'Access-Control-Allow-Headers'     => 'Content-Type, Authorization, X-Requested-With'
+    
+          ];
 
-
-        $headers = [
-            'Access-Control-Allow-Origin'      => 'http://localhost:4200',
-           'Access-Control-Allow-Methods'     => 'POST, GET, OPTIONS, PUT, DELETE',
-           'Access-Control-Allow-Credentials' => 'true',
-           'Access-Control-Max-Age'           => '86400',
-           'Access-Control-Allow-Headers'     => 'Content-Type, Authorization, X-Requested-With'
-
-       ];
+      
 
        if ($request->isMethod('OPTIONS'))
        {
