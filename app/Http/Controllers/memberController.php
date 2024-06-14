@@ -23,60 +23,51 @@ class memberController extends Controller
 
             $addarray = array();
 
-            // print_r($input);
-            // return ;
-            // dd( $data );
-            $finalarray = array_merge($data['value'], $addarray);
-            //return $finalarray;
-            //try {['']
-                if ($finalarray['Id'] == '') {
-                    $addarray = array(
-                        'membership_plan_id' => time() . rand(100, 999)
-                    );
+            // Check if Id is empty, if so, generate membership_plan_id
+            // if (empty($data['Id'])) {
+            //     $addarray['membership_plan_id'] = time() . rand(100, 999);
+            //     unset($data['Id']); // Remove Id from data
+            // }
+
+            $finalarray = array_merge($data, $addarray);
+
+           // try {
+                if (!isset($data['Id']) || $data['Id'] < 0) {
+
+                    // Insert new data
+                    //dd($finalarray);
                     $inputdata = DB::table('membership_plan')->insert($finalarray);
                     $type = DB::table('type')->where('name', $finalarray['membership_plan_type'])->update([
                         "used" => 1
                     ]);
+                    $user_arr = array(
+                        "status" => true,
+                        "success" => true,
+                        "message" => "Data Inserted Successfully!",
+                    );
                 } else {
-                    $Id = $finalarray['Id'];
-                    //dd($Id);
+                    $Id = $data['Id'];
                     unset($finalarray['Id']);
-                    //dd($finalarray);
+
+                    // Update existing data
                     $update = DB::table('membership_plan')->where('Id', $Id)->update($finalarray);
-                }
-                if ($update > 0) {
                     $user_arr = array(
                         "status" => true,
                         "success" => true,
-                        "message" => "Data Updated Successfully !",
-                    );
-                } elseif ($inputdata > 0) {
-                    $user_arr = array(
-                        "status" => true,
-                        "success" => true,
-                        "message" => "Data Inserted Successfully !",
-                    );
-                } else {
-                    $user_arr = array(
-                        "status" => false,
-                        "success" => false,
-                        "message" => "Data Not Inserted !",
+                        "message" => "Data Updated Successfully!",
                     );
                 }
-           // } catch (Exception $e) {
-                // $user_arr = array(
-                //     "status" => false,
-                //     "success" => false,
-                //     "message" => $e,
-                // );
-            //}
+            // } catch (Exception $e) {
+            //     $user_arr = array(
+            //         "status" => false,
+            //         "success" => false,
+            //         "message" => $e->getMessage(),
+            //     );
+            // }
         }
         return json_encode($user_arr);
-        // dd($finalarray);
-        // dd($input['value']['type']);
-
-
     }
+
     public function getAllData()
     {
         $data = json_decode(file_get_contents("php://input"));

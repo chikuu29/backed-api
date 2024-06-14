@@ -15,6 +15,7 @@ class AppController extends Controller
     public function settings(Request $request)
     {
 
+
         try {
             //code...
 

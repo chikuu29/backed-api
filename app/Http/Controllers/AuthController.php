@@ -26,8 +26,6 @@ class AuthController extends Controller
             $user = $data->userId;
             $password = $data->password;
             $logindata = DB::table('admin')->where('UserId', $user)->get();
-            dd($logindata);
-            //  dd();
             if ($logindata[0]->published == 1) {
                 if (count($logindata) > 0) {
                     if ($password == $logindata[0]->Password) {

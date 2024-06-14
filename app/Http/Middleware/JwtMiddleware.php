@@ -15,7 +15,7 @@ class JwtMiddleware
         $authorizationHeader = $request->header('Authorization');
         $cookieValue = $request->cookie('authToken');
         if ($authorizationHeader || $cookieValue) {
-            
+
             try {
                 $token =$authorizationHeader? $request->bearerToken():$cookieValue; // Get the JWT from the Authorization header
                 if (!$token) {

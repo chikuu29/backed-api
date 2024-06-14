@@ -34,7 +34,6 @@ class userController extends Controller
         $usermothertoungh = $data->user_mother_toungh ?? '';
         $usermaritalstatus = $data->user_marital_status ?? '';
         $ccode = $data->ccode ?? '';
-
         $iddata = DB::table('prefix_id')->get('prefix_id_name');
         $id = $iddata[0]->prefix_id_name;
         $userId = $id . chr(64 + rand(0, 26)) . rand(0, 9) . chr(64 + rand(0, 26)) . rand(0, 9) . chr(64 + rand(0, 26)) . rand(1000, 9999);
