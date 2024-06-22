@@ -23,21 +23,17 @@ class memberController extends Controller
 
             $addarray = array();
 
-            // Check if Id is empty, if so, generate membership_plan_id
-            // if (empty($data['Id'])) {
-            //     $addarray['membership_plan_id'] = time() . rand(100, 999);
-            //     unset($data['Id']); // Remove Id from data
-            // }
-
             $finalarray = array_merge($data, $addarray);
 
-           // try {
-                if (!isset($data['Id']) || $data['Id'] < 0) {
-
+            try {
+                if ($data['value']['Id'] < 0) {
                     // Insert new data
-                    //dd($finalarray);
-                    $inputdata = DB::table('membership_plan')->insert($finalarray);
-                    $type = DB::table('type')->where('name', $finalarray['membership_plan_type'])->update([
+
+                     $finalarray['value']['membership_plan_id'] = time() . rand(100, 999);
+                     unset($finalarray['value']['Id']); // Remove Id from data
+                 //return $finalarray['value'];
+                    $inputdata = DB::table('membership_plan')->insert($finalarray['value']);
+                    $type = DB::table('type')->where('name', $finalarray['value']['membership_plan_type'])->update([
                         "used" => 1
                     ]);
                     $user_arr = array(
@@ -46,24 +42,24 @@ class memberController extends Controller
                         "message" => "Data Inserted Successfully!",
                     );
                 } else {
-                    $Id = $data['Id'];
-                    unset($finalarray['Id']);
-
+                    $Id = $data['value']['Id'];
+                    unset($finalarray['value']['Id']);
+                    unset($finalarray['value']['membership_plan_type']);
                     // Update existing data
-                    $update = DB::table('membership_plan')->where('Id', $Id)->update($finalarray);
+                    $update = DB::table('membership_plan')->where('Id', $Id)->update($finalarray['value']);
                     $user_arr = array(
                         "status" => true,
                         "success" => true,
                         "message" => "Data Updated Successfully!",
                     );
                 }
-            // } catch (Exception $e) {
-            //     $user_arr = array(
-            //         "status" => false,
-            //         "success" => false,
-            //         "message" => $e->getMessage(),
-            //     );
-            // }
+            } catch (Exception $e) {
+                $user_arr = array(
+                    "status" => false,
+                    "success" => false,
+                    "message" => $e->getMessage(),
+                );
+            }
         }
         return json_encode($user_arr);
     }

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -241,16 +242,18 @@ class uplodeController extends Controller
         $path = env('FILE_UPLOAD_PATH') . '/barcode/';
         $uniqid = uniqid();
         $file = $path . $uniqid . '.' . $extention[1];
-
-
         if (file_put_contents($file, $image_base64)) {
-            $data = DB::table('barCode')->insert([
+            try{
+            $data = DB::table('barcode')->insert([
                 'image' => $uniqid . '.' . $extention[1],
                 'created_At' => $date,
                 'name' => $name,
                 'phoneno' => $phoneno,
                 'upi' => $upi
             ]);
+        } catch(Exception $e){
+            return $e;
+        }
             if ($data) {
                 $user_arr = array(
                     "success" => true,

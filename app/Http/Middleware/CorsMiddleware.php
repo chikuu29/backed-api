@@ -10,7 +10,7 @@ class CorsMiddleware
     {
         $allowedOrigins = [
             'http://localhost:4200',
-            'https://admin.choicemarriage.com'
+            'http://localhost:52859'
         ];
 
         $origin = $request->header('Origin');
