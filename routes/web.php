@@ -117,6 +117,7 @@ $router->post("/auth", "AuthController@userLogin");
 $router->post("/generate_reset_password", "AuthController@generateResetLink");
 $router->get("/reset_password_token_validator", "AuthController@validate_token");
 $router->post("/addUserDataFirstApi", "userController@addUserDataFirstApi");
+$router->post("/addUserDataFirstApi10", "userController@addUserDataFirstApi10");
 $router->post("/addUserDataSecondApi", "userController@addUserDataSecondApi");
 $router->post("/getAllData", "memberController@getAllData");
 $router->post("/aboutus", "addItemControler@aboutus");

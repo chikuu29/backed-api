@@ -17,7 +17,6 @@ class userController extends Controller
     public function addUserDataFirstApi(Request $res)
     {
         $data = json_decode(file_get_contents("php://input"));
-
         $profiletype = $data->profiletype ?? 'myself';
         $email = $data->email ?? '';
         $phone = $data->phone ?? '';
@@ -34,6 +33,7 @@ class userController extends Controller
         $usermothertoungh = $data->user_mother_toungh ?? '';
         $usermaritalstatus = $data->user_marital_status ?? '';
         $ccode = $data->ccode ?? '';
+        $weside = $data->weside ?? null;
         $iddata = DB::table('prefix_id')->get('prefix_id_name');
         $id = $iddata[0]->prefix_id_name;
         $userId = $id . chr(64 + rand(0, 26)) . rand(0, 9) . chr(64 + rand(0, 26)) . rand(0, 9) . chr(64 + rand(0, 26)) . rand(1000, 9999);
@@ -58,7 +58,7 @@ class userController extends Controller
             if ($getAuthUserCount == 0) {
                 try {
                     DB::beginTransaction();
-                    DB::transaction(function () use ($userId, $age, $profiletype, $gender, $email, $fname, $lname, $dob, $password, $phone, $url, $usermothertoungh, $usermaritalstatus, $userreligion, $usercaste, $usersubcaste, $passwordcreatedbyadmin, $ccode) {
+                    DB::transaction(function () use ($userId, $age, $profiletype, $gender, $email, $fname, $lname, $dob, $password, $phone, $url, $usermothertoungh, $usermaritalstatus, $userreligion, $usercaste, $usersubcaste, $passwordcreatedbyadmin, $ccode, $weside) {
                         DB::table('auth_user')->insert([
                             'auth_ID' => $userId,
                             'auth_email' => $email,
@@ -82,7 +82,8 @@ class userController extends Controller
                             'user_mother_toungh' => $usermothertoungh,
                             'user_marital_status' => $usermaritalstatus,
                             'user_age' => $age,
-                            'user_full_name' => $fname . ' ' . $lname
+                            'user_full_name' => $fname . ' ' . $lname,
+                            'data_come_from' => $weside
                         ]);
 
                         DB::table('user_religion')->insert([
@@ -120,6 +121,142 @@ class userController extends Controller
                         'to_name' => $fname, // Recipient name
                     ];
                     Queue::push(new SendEmailJob($emailData), '', 'emails');
+                    $user_arr = [
+                        "status" => true,
+                        "success" => true,
+                        "profileID" => $userId,
+                        "message" => "Congratulations! Your Registration Done",
+                    ];
+                    DB::commit();
+                } catch (\Exception $e) {
+                    // Handle the exception
+                    DB::rollback();
+                    $user_arr = [
+                        "status" => false,
+                        "success" => false,
+                        "message" =>  $e->getMessage(),
+                    ];
+                }
+            } else {
+                $user_arr = [
+                    "status" => false,
+                    "success" => false,
+                    "message" => "Email or Phone number already exists!",
+                ];
+            }
+        }
+
+        return json_encode($user_arr);
+    }
+    public function addUserDataFirstApi10(Request $res)
+    {
+        $data = json_decode(file_get_contents("php://input"));
+
+        $profiletype = $data->profiletype ?? 'myself';
+        $email = $data->email ?? '';
+        $phone = $data->phone ?? '';
+        $password = isset($data->password) ? md5($data->password) : '';
+        $passwordcreatedbyadmin = isset($data->password) ? $data->password : '';
+        $gender = $data->gender ?? '';
+        $url = $data->url ?? '';
+        $userreligion = $data->user_religion ?? '';
+        $usercaste = $data->user_caste ?? '';
+        $usersubcaste = $data->user_subcaste ?? '';
+        $fname = $data->fname ?? '';
+        $lname = $data->lname ?? '';
+        $dob = $data->dob ?? '';
+        $usermothertoungh = $data->user_mother_toungh ?? '';
+        $usermaritalstatus = $data->user_marital_status ?? '';
+        $ccode = $data->ccode ?? '';
+        $weside = $data->weside ?? null;
+        // $iddata = DB::table('prefix_id')->get('prefix_id_name');
+        // $id = $iddata[0]->prefix_id_name;
+        $userId =  $data->profileID ?? null;
+        // $id . chr(64 + rand(0, 26)) . rand(0, 9) . chr(64 + rand(0, 26)) . rand(0, 9) . chr(64 + rand(0, 26)) . rand(1000, 9999);
+
+        // Create DateTime objects for the date of birth and current date
+        $dateOfBirth = new DateTime($dob);
+        $currentDate = new DateTime();
+        // Calculate the difference in years between the two dates
+        $age = $currentDate->diff($dateOfBirth)->y;
+        if (empty($profiletype) || empty($email) || empty($phone) || empty($password) || empty($gender)) {
+            $user_arr = [
+                "status" => false,
+                "success" => false,
+                "message" => "Please Fill All Data",
+            ];
+        } else {
+            $getAuthUserCount = DB::table('auth_user')
+                ->where('auth_email', $email)
+                ->orWhere('auth_phone_no', $phone)
+                ->count();
+
+            if ($getAuthUserCount == 0) {
+                try {
+                    DB::beginTransaction();
+                    DB::transaction(function () use ($userId, $age, $profiletype, $gender, $email, $fname, $lname, $dob, $password, $phone, $url, $usermothertoungh, $usermaritalstatus, $userreligion, $usercaste, $usersubcaste, $passwordcreatedbyadmin, $ccode, $weside) {
+                        DB::table('auth_user')->insert([
+                            'auth_ID' => $userId,
+                            'auth_email' => $email,
+                            'auth_password' => $password,
+                            'auth_phone_no' => $phone,
+                            'auth_name' => $fname . " " . $lname,
+                            'password_created_by_admin' => $passwordcreatedbyadmin
+                        ]);
+                        DB::table('user_info')->insert([
+                            'user_id' => $userId,
+                            'user_profileType' => $profiletype,
+                            'user_phone_no' => $phone,
+                            'country_code' => $ccode,
+                            'user_gender' => $gender,
+                            'user_email' => $email,
+                            'user_fname' => $fname,
+                            'user_lname' => $lname,
+                            'user_dob' => $dob,
+                            'status' => 1,
+                            'deleted' => 1,
+                            'user_mother_toungh' => $usermothertoungh,
+                            'user_marital_status' => $usermaritalstatus,
+                            'user_age' => $age,
+                            'user_full_name' => $fname . ' ' . $lname,
+                            'data_come_from' => $weside
+                        ]);
+
+                        DB::table('user_religion')->insert([
+                            'user_ID' => $userId,
+                            'user_religion' => $userreligion,
+                            'user_caste' => $usercaste,
+                            'user_subcaste' => $usersubcaste,
+                            'completed' => 1
+                        ]);
+                    });
+                    // $filepath = 'https://choicemarriage.com/';
+                    // $logo =  DB::table('logo_table')->where('status', 1)->first('image');
+                    // $socialmedialinks = DB::table('social_media_links')->first();
+                    // $emailData = [
+                    //     'view' => 'mail.registration', // The view for the email content
+                    //     'data' => [
+                    //         'imageurl' => $filepath . 'storage/logo_image/' . $logo->image,
+                    //         'user_email' => $email,
+                    //         'name' => $fname,
+                    //         'url' => $url,
+                    //         'profile_id' => $userId,
+                    //         'fb' => $socialmedialinks->facebook_link,
+                    //         'in' => $socialmedialinks->insta_id,
+                    //         'x' => $socialmedialinks->twitter_link,
+                    //         'yt' => $socialmedialinks->youtub_link,
+                    //         'ld' => $socialmedialinks->linkedin_link,
+                    //         'foter' => $filepath . 'storage/bg.jpg',
+                    //         'baner' => $filepath . 'storage/cimg.jpg',
+                    //         'date' => date("d M Y")
+                    //     ],
+                    //     'subject' => 'Registration Successful',
+                    //     'from' => 'info@choicemarriage.com', // Sender email address
+                    //     'from_name' => 'choicemarriage', // Sender name
+                    //     'to' => $email, // Recipient email address
+                    //     'to_name' => $fname, // Recipient name
+                    // ];
+                    // Queue::push(new SendEmailJob($emailData), '', 'emails');
                     $user_arr = [
                         "status" => true,
                         "success" => true,
