@@ -11,7 +11,7 @@ class CorsMiddleware
         $allowedOrigins = [
             'http://localhost:4200',
             'http://localhost:52418',
-            'http://localhost:60029'
+            'http://localhost:56929'
         ];
 
         $origin = $request->header('Origin');
