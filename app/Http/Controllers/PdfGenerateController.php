@@ -46,10 +46,9 @@ class PdfGenerateController extends Controller
         if ($user_physical_details->user_height == 0 || $user_physical_details->user_height == '') {
             $fitincconverted = 'NA';
         } else {
-            $inches = $user_physical_details->user_height / 2.54;
-            $feet = floor($inches / 12);
-            $remainingInches = $inches % 12;
-            $fitincconverted = $feet . 'ft' . ' ' . $remainingInches . 'in';
+            $feet   = $user_physical_details->user_height * 0.0328084;
+            $inches = ($feet - floor($feet)) * 12;
+            $fitincconverted = floor($feet) . ' ft' . ' ' . ceil($inches) . ' in';
         }
         //dd($userinfo->user_dob);
         if ($userinfo->user_dob == '') {
@@ -64,7 +63,24 @@ class PdfGenerateController extends Controller
         if ($user_education_occupations->user_anual_income == '') {
             $finalincome = 'NA';
         } else {
-            $finalincome = $user_education_occupations->user_anual_income * 1000000;
+            $d = $user_education_occupations->user_anual_income * 100000;
+            if ($d == 0) {
+                $finalincome = 0 . ' (No Income)';
+            } else if ($d >= 100000) {
+                $finalincome = number_format($d / 100000, 0) . ' Lakh';
+            } else {
+                $finalincome = number_format($d / 1000, 0) . ' Thousand';
+            }
+        }
+        $user_religion = DB::table('user_religion')->where('user_id', $userid)->first(['user_caste']);
+        if ($user_religion == null) {
+            $user_religion = new stdClass();
+            $user_religion->user_caste = '';
+        }
+        if ($user_religion->user_caste == '') {
+            $religiondata = 'NA';
+        } else {
+            $religiondata = $user_religion->user_caste;
         }
 
         $lodganeshimage = $filepath . 'storage/images.jpg';
@@ -100,13 +116,14 @@ class PdfGenerateController extends Controller
             'occupation' =>  $user_education_occupations->user_occupation == '' ? 'NA' : $user_education_occupations->user_occupation,
             'deg' => $user_education_occupations->user_deg == '' ? 'NA' : $user_education_occupations->user_deg,
             'joblocation' => $user_education_occupations->user_occupation_location == '' ? 'NA' : $user_education_occupations->user_occupation_location,
-            'income' => $finalincome == 0 ? 'NA' : $finalincome,
+            'income' => $finalincome == '' ? 'NA' : $finalincome,
             'hometown' => $user_locations->user_city == '' ? 'NA' : $user_locations->user_city,
             'id' => $userid,
             'hieght' => $fitincconverted,
             'color' => $user_physical_details->user_complextion == '' ? 'NA' : $user_physical_details->user_complextion,
             'rasi' => $user_horoscope->user_zodiacs == '' ? 'NA' : $user_horoscope->user_zodiacs,
-            'phoneadmin' => $social_media_links->phone_no
+            'phoneadmin' => $social_media_links->phone_no,
+            'religiondata' => $religiondata
         ];
 
         // Render the Blade view to HTML with dynamic data
@@ -140,13 +157,14 @@ class PdfGenerateController extends Controller
         $filepath = isset($input['filepath']) ? $input['filepath'] : '';
 
         // Fetch data from database
-        $userinfo = DB::table('user_info')->whereIn('user_id', $userIds)->get(['user_id','user_dob', 'user_phone_no', 'country_code', 'user_whatsapp_no', 'whats_app_c_code', 'user_profile_image']);
-        $user_education_occupations = DB::table('user_education_occupations')->whereIn('user_ID', $userIds)->get(['user_ID','user_highest_education', 'user_occupation', 'user_deg', 'user_anual_income', 'user_occupation_location']);
-        $user_locations = DB::table('user_locations')->whereIn('user_ID', $userIds)->get(['user_ID','user_city']);
-        $user_physical_details = DB::table('user_physical_details')->whereIn('user_ID', $userIds)->get(['user_ID','user_complextion', 'user_height']);
-        $user_horoscope = DB::table('user_horoscope')->whereIn('user_id', $userIds)->get(['user_id','user_zodiacs']);
+        $userinfo = DB::table('user_info')->whereIn('user_id', $userIds)->get(['user_id', 'user_dob', 'user_phone_no', 'country_code', 'user_whatsapp_no', 'whats_app_c_code', 'user_profile_image']);
+        $user_education_occupations = DB::table('user_education_occupations')->whereIn('user_ID', $userIds)->get(['user_ID', 'user_highest_education', 'user_occupation', 'user_deg', 'user_anual_income', 'user_occupation_location']);
+        $user_locations = DB::table('user_locations')->whereIn('user_ID', $userIds)->get(['user_ID', 'user_city']);
+        $user_physical_details = DB::table('user_physical_details')->whereIn('user_ID', $userIds)->get(['user_ID', 'user_complextion', 'user_height']);
+        $user_horoscope = DB::table('user_horoscope')->whereIn('user_id', $userIds)->get(['user_id', 'user_zodiacs']);
         $social_media_links = DB::table('social_media_links')->where('id', 1)->first(['phone_no']);
-        //dd($user_physical_details);
+        $user_religion = DB::table('user_religion')->whereIn('user_ID', $userIds)->get(['user_caste', 'user_ID']);
+        //return $user_religion ;
         // Prepare combined data structure
         $data = [
             'userinfo' => $userinfo,
@@ -182,32 +200,50 @@ class PdfGenerateController extends Controller
             $location = $user_locations->firstWhere('user_ID', $id);
             $detail = $user_physical_details->firstWhere('user_ID', $id);
             $horoscope = $user_horoscope->firstWhere('user_id', $id);
+            $religion = $user_religion->firstWhere('user_ID', $id);
 
 
-            if($info != null){
+
+            if ($info != null) {
                 $formattedDate = isset($info->user_dob) ? date('d M Y', strtotime($info->user_dob)) : 'NA';
                 $maskedPhoneNumber = 'XXXXXXX' . substr($info->user_phone_no, -3);
                 $maskedwhatsapNumber = 'XXXXXXX' . substr($info->user_whatsapp_no, -3);
-            }else{
+            } else {
                 $formattedDate = 'NA';
                 $maskedPhoneNumber =  'NA';
                 $maskedwhatsapNumber = 'NA';
             }
-            if($detail != null){
-                if ($detail->user_height != 0 || $detail->user_height != '' || $detail->user_height != null ) {
-                    $inches = $detail->user_height / 2.54;
-                    $feet = floor($inches / 12);
-                    $remainingInches = $inches % 12;
-                    $fitincconverted = $feet . 'ft' . ' ' . $remainingInches . 'in';
+            if ($detail != null) {
+                if ($detail->user_height != 0 || $detail->user_height != '' || $detail->user_height != null) {
+                    $feet   = $detail->user_height * 0.0328084;
+                    $inches =  ($feet - floor($feet)) * 12;
+                    $fitincconverted = floor($feet) . ' ft' . ' ' . ceil($inches) . ' in';
                 } else {
                     $fitincconverted = 'NA';
                 }
-            }else{
+            } else {
                 $fitincconverted = 'NA';
             }
 
 
-            $finalincome = isset($occupation->user_anual_income) ? $occupation->user_anual_income * 1000000 : 'NA';
+            // $finalincome = isset($occupation->user_anual_income) ? $occupation->user_anual_income * 1000000 : 'NA';
+
+            if (!isset($occupation->user_anual_income)) {
+                $finalincome = 'NA';
+            } else {
+                $d = $occupation->user_anual_income * 100000;
+                if ($d == 0) {
+                    $finalincome = 0 . ' (No Income)';
+                } else if ($d >= 100000) {
+                    $finalincome = number_format($d / 100000, 0) . ' Lakh';
+                } else {
+                    $finalincome = number_format($d / 1000, 0) . ' Thousand';
+                }
+            }
+
+
+
+
 
             $profilrimgpath = $filepath . 'storage/' . ($info->user_profile_image ?? '');
             $profilebase64EncodedImage = @base64_encode(file_get_contents($profilrimgpath));
@@ -235,6 +271,7 @@ class PdfGenerateController extends Controller
                 'color' => $detail->user_complextion ?? 'NA',
                 'rasi' => $horoscope->user_zodiacs ?? 'NA',
                 'phoneadmin' => $social_media_links->phone_no ?? 'NA',
+                'religiondata' => $religion->user_caste ?? 'NA'
             ];
         }
 
@@ -264,7 +301,8 @@ class PdfGenerateController extends Controller
 
 
 
-    function formatData($data){
+    function formatData($data)
+    {
 
 
         $returnFormatedData = array();
@@ -277,12 +315,5 @@ class PdfGenerateController extends Controller
             $itemsBySeller[$sellerId][] = $item;
         }
         return $returnFormatedData;
-
-
-
-
     }
-
-
-
 }

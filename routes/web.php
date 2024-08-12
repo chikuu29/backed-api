@@ -60,6 +60,7 @@ $router->group(['middleware' => ['App\Http\Middleware\JwtMiddleware']], function
     $router->post("/contactViewCalculation", "planCalculationController@contactViewCalculation");
     $router->post("/logoUplode", "uplodeController@logoUplode");
     $router->post("/homeLogoUplode", "uplodeController@homeLogoUplode");
+    $router->post("/bannerAdv", "uplodeController@bannerAdv");
     $router->post("/bannerUplode", "uplodeController@bannerUplode");
     $router->post("/cast_matches", "filterController@matchByCast");
     $router->post("/coloumUpdated", "registerController@coloumUpdated");
@@ -140,16 +141,6 @@ $router->post("/feedbackAdminEntry", "AppController@feedbackAdminEntry");
 $router->get("/sendExpireMesagewhenpakageexpire", "planCalculationController@sendExpireMesagewhenpakageexpire");
 $router->get("/SendMatchaes", "planCalculationController@SendMatchaes");
 $router->post("/suspended", "AuthController@suspended");
-
-
-
-
-
-
-
-
-
-
-
-
+$router->post("/getcitynamefromlogitudeandlatitude", "uplodeController@getCityNameFromLongitudeAndLatitude");
+$router->post("/dynaquayunsequary", "dynaController@dynaQuayUnsequary");
 

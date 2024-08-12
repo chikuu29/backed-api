@@ -72,6 +72,7 @@ class memberController extends Controller
             $alldata = DB::table('membership_plan')
                 ->orderBy('membership_plan_amount')
                 ->where('membership_plan_default', 0)
+                ->where('membership_plan_status',1)
                 ->get();
             if (count($alldata) > 0) {
                 $user_arr = array(

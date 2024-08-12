@@ -26,11 +26,11 @@ class dynamic_Crud_controller extends Controller
 
         try {
             //code...
-            // print_r($request); 
+            // print_r($request);
             $encrypted = $request->getContent();
-          
+
             $requestedData = CryptoHelper::cryptoJsAesDecrypt($encrypted);
-             
+
             // $requestedData=file_get_contents("php://input");
             $whereConditions = isset($requestedData['whereConditions']) ? $requestedData['whereConditions'] : [];
             $whereNotConditions = isset($requestedData['whereNotConditions']) ? $requestedData['whereNotConditions'] : [];
@@ -96,7 +96,7 @@ class dynamic_Crud_controller extends Controller
             return CryptoHelper::cryptoJsAesEncrypt($user_arr);
         } catch (\Exception $e) {
             //throw $th;
-        
+
             $user_arr = array(
                 "status" => true,
                 "success" => true,
@@ -328,11 +328,17 @@ class dynamic_Crud_controller extends Controller
         // } fetch data parametr formate
 
         $requestedData = $request->all();
+        // echo '<pre>';
+        // dd($request);
         $whereConditions = isset($requestedData['whereConditions']) ? $requestedData['whereConditions'] : [];
         $table = isset($requestedData['table']) ? $requestedData['table'] : '';
         $projection = isset($requestedData['projection']) ? $requestedData['projection'] : [];
-        $selectedtavle = array('mother_tongue', 'about_us', 'social_media_links', 'success_story_by_user', 'religion', 'cast_table', 'sub_cast', 'contactus', 'termand_condition', 'privacy_policy', 'country');
-        if (in_array($table, $selectedtavle)) {
+        $selectedtavle = array('mother_tongue', 'city','about_us', 'social_media_links', 'success_story_by_user', 'religion', 'cast_table', 'sub_cast', 'contactus', 'termand_condition', 'privacy_policy','advertisement' ,'country');
+        // echo '<pre>';
+        // echo $table;
+        // print_r($selectedtavle);
+        // dd(in_array($table, $selectedtavle,true));
+        if (in_array($table, $selectedtavle,true)) {
             if (empty($table)) {
                 $user_arr = array(
                     "status" => false,

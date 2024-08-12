@@ -243,17 +243,17 @@ class uplodeController extends Controller
         $uniqid = uniqid();
         $file = $path . $uniqid . '.' . $extention[1];
         if (file_put_contents($file, $image_base64)) {
-            try{
-            $data = DB::table('barcode')->insert([
-                'image' => $uniqid . '.' . $extention[1],
-                'created_At' => $date,
-                'name' => $name,
-                'phoneno' => $phoneno,
-                'upi' => $upi
-            ]);
-        } catch(Exception $e){
-            return $e;
-        }
+            try {
+                $data = DB::table('barcode')->insert([
+                    'image' => $uniqid . '.' . $extention[1],
+                    'created_At' => $date,
+                    'name' => $name,
+                    'phoneno' => $phoneno,
+                    'upi' => $upi
+                ]);
+            } catch (Exception $e) {
+                return $e;
+            }
             if ($data) {
                 $user_arr = array(
                     "success" => true,
@@ -299,21 +299,22 @@ class uplodeController extends Controller
         return json_encode($user_arr);
     }
 
-    public function eventImageUplode(Request $res){
+    public function eventImageUplode(Request $res)
+    {
         $input = $res->all();
         $date = $input['data'];
-        $image = explode(';base64,',$date);
+        $image = explode(';base64,', $date);
         $image_base64 = base64_decode($image[1]);
         $extention = explode('/', $image[0]);
         $path = env('FILE_UPLOAD_PATH') . '/event_img/';
         $uniqid = uniqid();
         $file = $path . $uniqid . '.' . $extention[1];
         if (file_put_contents($file, $image_base64)) {
-                $user_arr = array(
-                    "success" => true,
-                    "message" => "File Uploaded Successfully",
-                    "Filename" => $uniqid . '.' . $extention[1]
-                );
+            $user_arr = array(
+                "success" => true,
+                "message" => "File Uploaded Successfully",
+                "Filename" => $uniqid . '.' . $extention[1]
+            );
         } else {
             $user_arr = array(
                 "success" => false,
@@ -322,5 +323,76 @@ class uplodeController extends Controller
             );
         }
         return json_encode($user_arr);
+    }
+    public function bannerAdv(Request $res)
+    {
+        $input = $res->all();
+        // return $input;
+        $date = $input['date'];
+        $type = $input['type'];
+        $country = isset($input['country']) ? $input['country'] : null;
+        $state = isset($input['state']) ? $input['state'] : null;
+        $city = isset($input['city']) ? $input['city'] : null;
+        $global = isset($input['global']) ? $input['global'] : 0;
+
+        $image = explode(';base64,', $input['image']);
+        $image_base64 = base64_decode($image[1]);
+        $extention = explode('/', $image[0]);
+        $path = env('FILE_UPLOAD_PATH') . '/Advertisement/banner/';
+        $uniqid = uniqid();
+        $file = $path . $uniqid . '.' . $extention[1];
+
+
+        if (file_put_contents($file, $image_base64)) {
+            try {
+                $data = DB::table('advertisement')->insert([
+                    'image' => $uniqid . '.' . $extention[1],
+                    'created_At' => $date,
+                    'type' => $type,
+                    'country' => $country,
+                    'state' => $state,
+                    'city' => json_encode($city),
+                    'global' => $global
+                ]);
+                if ($data) {
+                    $user_arr = array(
+                        "success" => true,
+                        "message" => "File Uploaded Successfully",
+                    );
+                }
+            } catch (Exception $e) {
+                echo '<pre>';
+                return $e;
+            }
+        } else {
+            $user_arr = array(
+                "success" => false,
+                "message" => "Error",
+            );
+        }
+        return json_encode($user_arr);
+    }
+
+    public function getCityNameFromLongitudeAndLatitude(Request $request)
+    {
+        // Retrieve latitude and longitude from the request
+        $latitude = $request->input('latitude');
+        $longitude = $request->input('longitude');
+        // Query to find the closest city using the Haversine formula
+        $city =  DB::table('city')
+        ->select(
+            'city_name',
+            DB::raw("(6371 * acos(cos(radians($latitude)) * cos(radians(latitude)) * cos(radians(longitude) - radians($longitude)) + sin(radians($latitude)) * sin(radians(latitude)))) AS distance")
+        )
+        ->orderBy('distance', 'asc')
+        ->take(4) // Limit to the first 4 results
+        ->get();
+            // return $city;
+        // Return the city name
+        if ($city) {
+            return response()->json(['city_name' => $city, 'status' => true], 200);
+        } else {
+            return response()->json(['message' => 'City not found','status' => false], 404);
+        }
     }
 }

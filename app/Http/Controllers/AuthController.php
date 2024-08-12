@@ -54,14 +54,14 @@ class AuthController extends Controller
                             "token" => $jwt,
                             "message" => "Login Successfully !",
                         );
-                         setcookie('authToken', $jwt, [
-                        'expires' => $expiration, // 1 day expiration
-                        'path' => '/',
-                        // 'domain' => '', // Set to your domain
-                        'secure' => true, // Must be true for SameSite=None
-                        'httponly' => true,
-                        'samesite' => 'None'
-                    ]);
+                        setcookie('authToken', $jwt, [
+                            'expires' => $expiration, // 1 day expiration
+                            'path' => '/',
+                            // 'domain' => '', // Set to your domain
+                            'secure' => true, // Must be true for SameSite=None
+                            'httponly' => true,
+                            'samesite' => 'None'
+                        ]);
                     } else {
                         $user_arr = array(
                             "status" => false,
@@ -117,11 +117,14 @@ class AuthController extends Controller
             ), 401);
         }
 
-        try {
+        //  try {
 
-            $logindata = DB::table('auth_user')->orwhere('auth_ID', $user)->orWhere('auth_email', $user)->orWhere('auth_phone_no', $user)->get();
-            if (count($logindata) > 0) {
-                if (md5($password) == $logindata[0]->auth_password) {
+        $logindata = DB::table('auth_user')->orwhere('auth_ID', $user)->orWhere('auth_email', $user)->orWhere('auth_phone_no', $user)->get();
+        // return  $logindata;
+        if (count($logindata) > 0) {
+            if (md5($password) == $logindata[0]->auth_password) {
+                $publish = DB::table("user_info")->where('user_id', $logindata[0]->auth_ID)->get(['status']);
+                if ($publish[0]->status == 1) {
                     DB::table("user_info")->where([
                         ['user_id', $logindata[0]->auth_ID],
                         ['user_email', $user]
@@ -165,7 +168,7 @@ class AuthController extends Controller
                         "message" => "Login Successfully !",
                     );
                     // setcookie('authToken', $jwt, $expiration, "/", "", false, true); // 1 day expiration, httpOnly
-                     // Set the token as a cookie with SameSite=None and Secure attributes
+                    // Set the token as a cookie with SameSite=None and Secure attributes
                     setcookie('authToken', $jwt, [
                         'expires' => $expiration, // 1 day expiration
                         'path' => '/',
@@ -174,34 +177,41 @@ class AuthController extends Controller
                         'httponly' => true,
                         'samesite' => 'None'
                     ]);
-                    return response()->json($user_arr);
                 } else {
-
-                    return response()->json(array(
+                    return response()->json([
                         "status" => false,
                         "success" => false,
-                        "message" => "Password not match !",
-                    ));
+                        "message" => 'For some unavoidable circumstances your account is not accessible. On clicking WhatUp Icon you can contact Admin',
+                    ]);
                 }
+                return response()->json($user_arr);
             } else {
+
                 return response()->json(array(
                     "status" => false,
                     "success" => false,
-                    "id" => '',
-                    "name" => '',
-                    "message" => "User Id not match !",
+                    "message" => "Password not match !",
                 ));
             }
-        } catch (\Exception $e) {
-
+        } else {
             return response()->json(array(
                 "status" => false,
                 "success" => false,
                 "id" => '',
                 "name" => '',
-                "message" => "Unauthorize Access!",
-            ), 401);
+                "message" => "User Id not match !",
+            ));
         }
+        // } catch (\Exception $e) {
+
+        //     return response()->json(array(
+        //         "status" => false,
+        //         "success" => false,
+        //         "id" => '',
+        //         "name" => '',
+        //         "message" => "Unauthorize Access!",
+        //     ), 401);
+        // }
 
         // return array("id" => base64_encode(json_encode($user_arr)));
     }
@@ -490,7 +500,7 @@ class AuthController extends Controller
                 "message" => "Please enter required parametes",
             );
         } else {
-            $data = DB::table('user_info')->orWhere('user_id', $id)->orWhere('user_email', $id)->orWhere('user_phone_no', $id)->first(['deleted', 'status','user_id']);
+            $data = DB::table('user_info')->orWhere('user_id', $id)->orWhere('user_email', $id)->orWhere('user_phone_no', $id)->first(['deleted', 'status', 'user_id']);
             if ($data != null) {
                 $user_arr = array(
                     "status" => true,

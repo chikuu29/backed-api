@@ -38,6 +38,9 @@
                 <span style="color:green;">Rashi:-</span><span style="color: red;"> {{ $rasi }}</span>
             </div>
             <div style="font-size: 30px;text-decoration: underline;margin-bottom: 20px;">
+                <span style="color:green;">Cast:-</span><span style="color: red;"> {{ $religiondata }}</span>
+            </div>
+            <div style="font-size: 30px;text-decoration: underline;margin-bottom: 20px;">
                 <span style="color:green;">Qualification:-</span><span style="color: red;"> {{ $userhighesteducation }}</span>
             </div>
             <div style="font-size: 30px;text-decoration: underline;margin-bottom: 20px;">
@@ -58,18 +61,18 @@
             <div style="font-size: 30px;text-decoration: underline;margin-bottom: 20px;">
                 <span style="color:green;">Contact:-</span><span style="color: red;"> {{ $phone }}</span>
             </div>
-            <div style="font-size: 30px;text-decoration: underline;margin-bottom: 20px;">
+            <!-- <div style="font-size: 30px;text-decoration: underline;margin-bottom: 20px;">
                 <span style="color:green;">WhatsApp:-</span><span style="color: red;"> {{ $whats }}</span>
-            </div>
+            </div> -->
         </div>
-        <div style="text-align: center; padding: 5px;height: auto;width: 300px;background-color: yellow; margin: 20px 0 0 0 ;position: relative;left:150px;border-radius: 10px;">
-            <div>
+        <div style="text-align: center; padding: 5px;height: auto;width: 400px;background-color: yellow; margin: 20px 0 0 0 ;position: relative;left:150px;border-radius: 10px;">
+            <div  style="font-size:20px;">
                 <span style="color:green;">Website:-</span>
                 <span>
                     <a href="https://choicemarriage.com">www.choicemarriage.com</a>
                 </span>
             </div>
-            <div>
+            <div style="font-size:20px;">
                 <span style="color:green;">Contact:-</span>
                 <span style="color:red;">{{ $phoneadmin }}</span>
             </div>

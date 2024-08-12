@@ -1,5 +1,6 @@
 <?php
 
+// app/Http/Middleware/CorsMiddleware.php
 namespace App\Http\Middleware;
 
 use Closure;
@@ -11,12 +12,12 @@ class CorsMiddleware
         $allowedOrigins = [
             'http://localhost:4200',
             'http://localhost:52418',
-            'http://localhost:56929'
+            'http://localhost:62998'
         ];
 
         $origin = $request->header('Origin');
 
-        // Initializing headers array
+        // Default headers
         $headers = [
             'Access-Control-Allow-Methods' => 'POST, GET, OPTIONS, PUT, DELETE',
             'Access-Control-Allow-Credentials' => 'true',
@@ -26,19 +27,22 @@ class CorsMiddleware
 
         if (in_array($origin, $allowedOrigins)) {
             $headers['Access-Control-Allow-Origin'] = $origin;
+        } else {
+            $headers['Access-Control-Allow-Origin'] = '*'; // Or an appropriate default for non-allowed origins
         }
 
-        // If the request method is OPTIONS, we respond with allowed headers
+        // Handle OPTIONS requests
         if ($request->isMethod('OPTIONS')) {
-            return response()->json('{"method":"OPTIONS"}', 200, $headers);
+            return response()->json(['method' => 'OPTIONS'], 200, $headers);
         }
 
-        // Continue processing the request and add headers to the response
+        // Handle the request and add CORS headers to the response
         $response = $next($request);
         foreach ($headers as $key => $value) {
-            $response->header($key, $value);
+            $response->headers->set($key, $value);
         }
 
         return $response;
     }
 }
+

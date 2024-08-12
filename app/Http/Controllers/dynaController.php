@@ -24,6 +24,7 @@ class dynaController extends Controller
                     "message" => "Unauthorized Access",
                 );
             } else {
+                // return $query;
                 try {
                     $dataoftable = DB::select($query);
                     if (count($dataoftable) > 0) {
@@ -57,6 +58,57 @@ class dynaController extends Controller
         }
         // return json_encode($user_arr);
         return cryptoJsAesEncrypt($user_arr);
+    }
+    public function dynaQuayUnsequary()
+    {
+        $data = file_get_contents("php://input");
+        // $data=file_get_contents("php://input");
+        //return $data;
+        if ($data !== null) {
+            $query = $data;
+            $match = array("CREATE", "DROP", "UPDATE", "DELETE", 'INSERT', 'TRUNCATE', 'ALTER');
+            $pattern = '/\b(' . implode('|', $match) . ')\b/i';
+            $found = preg_match($pattern, $query);
+            if ($found) {
+                $user_arr = array(
+                    "status" => false,
+                    "success" => false,
+                    "message" => "Unauthorized Access",
+                );
+            } else {
+                // return $query;
+                try {
+                    $dataoftable = DB::select($query);
+                    if (count($dataoftable) > 0) {
+                        $user_arr = array(
+                            "status" => true,
+                            "success" => true,
+                            "data" => $dataoftable,
+                        );
+                    } else {
+                        $user_arr = array(
+                            "status" => true,
+                            "success" => true,
+                            "data" => [],
+                        );
+                    }
+                } catch (\Exception $e) {
+                    $user_arr = array(
+                        "status" => false,
+                        "success" => false,
+                        "data" => [],
+                        "message" => (object)$e,
+                    );
+                }
+            }
+        } else {
+            $user_arr = array(
+                "status" => false,
+                "success" => false,
+                "message" => "Unauthorized Access",
+            );
+        }
+         return json_encode($user_arr);
     }
 }
 
