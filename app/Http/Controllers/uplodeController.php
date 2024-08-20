@@ -334,6 +334,7 @@ class uplodeController extends Controller
         $state = isset($input['state']) ? $input['state'] : null;
         $city = isset($input['city']) ? $input['city'] : null;
         $global = isset($input['global']) ? $input['global'] : 0;
+        $expirydate  =  $input['expirydate'];
 
         $image = explode(';base64,', $input['image']);
         $image_base64 = base64_decode($image[1]);
@@ -352,7 +353,8 @@ class uplodeController extends Controller
                     'country' => $country,
                     'state' => $state,
                     'city' => json_encode($city),
-                    'global' => $global
+                    'global' => $global,
+                    'expirydate' => $expirydate
                 ]);
                 if ($data) {
                     $user_arr = array(
@@ -380,19 +382,19 @@ class uplodeController extends Controller
         $longitude = $request->input('longitude');
         // Query to find the closest city using the Haversine formula
         $city =  DB::table('city')
-        ->select(
-            'city_name',
-            DB::raw("(6371 * acos(cos(radians($latitude)) * cos(radians(latitude)) * cos(radians(longitude) - radians($longitude)) + sin(radians($latitude)) * sin(radians(latitude)))) AS distance")
-        )
-        ->orderBy('distance', 'asc')
-        ->take(4) // Limit to the first 4 results
-        ->get();
-            // return $city;
+            ->select(
+                'city_name',
+                DB::raw("(6371 * acos(cos(radians($latitude)) * cos(radians(latitude)) * cos(radians(longitude) - radians($longitude)) + sin(radians($latitude)) * sin(radians(latitude)))) AS distance")
+            )
+            ->orderBy('distance', 'asc')
+            ->take(4) // Limit to the first 4 results
+            ->get();
+        // return $city;
         // Return the city name
         if ($city) {
             return response()->json(['city_name' => $city, 'status' => true], 200);
         } else {
-            return response()->json(['message' => 'City not found','status' => false], 404);
+            return response()->json(['message' => 'City not found', 'status' => false], 404);
         }
     }
 }

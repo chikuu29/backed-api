@@ -143,4 +143,4 @@ $router->get("/SendMatchaes", "planCalculationController@SendMatchaes");
 $router->post("/suspended", "AuthController@suspended");
 $router->post("/getcitynamefromlogitudeandlatitude", "uplodeController@getCityNameFromLongitudeAndLatitude");
 $router->post("/dynaquayunsequary", "dynaController@dynaQuayUnsequary");
-
+$router->post("/contactViewOveralCalculation", "planCalculationController@contactViewOveralCalculation");

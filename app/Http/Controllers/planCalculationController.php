@@ -619,4 +619,60 @@ class planCalculationController extends Controller
             }
         }
     }
+    public function contactViewOveralCalculation(Request $res)
+    {
+        $loginid = $res->loginid;
+        $viewid = $res->viewid;
+        if ($loginid == '' || $loginid == null || $viewid == '' || $viewid == null) {
+            $user_arr = array(
+                "status" => 300,
+                "success" => false,
+                "message" => "Contact Admin"
+            );
+        } else {
+            $useractivitiesforcontactdetails = DB::table('user_activities_for_contact_details')
+                ->where('profile_view_by_profile_id', $loginid)
+                ->where('viewed_profile_id', $viewid)->exists();
+            if ($useractivitiesforcontactdetails) {
+            }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+            // $user_arr = array(
+            //     "status" => true,
+            //     "success" => true,
+            //     "message" => "Work in progress"
+            // );
+        }
+
+        return $user_arr;
+    }
 }

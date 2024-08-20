@@ -34,6 +34,8 @@ class userController extends Controller
         $usermaritalstatus = $data->user_marital_status ?? '';
         $ccode = $data->ccode ?? '';
         $weside = $data->weside ?? null;
+        $wccode = $data->wccode ?? null;
+        $wno = $data->wno ?? null;
         $iddata = DB::table('prefix_id')->get('prefix_id_name');
         $id = $iddata[0]->prefix_id_name;
         $userId = $id . chr(64 + rand(0, 26)) . rand(0, 9) . chr(64 + rand(0, 26)) . rand(0, 9) . chr(64 + rand(0, 26)) . rand(1000, 9999);
@@ -58,7 +60,7 @@ class userController extends Controller
             if ($getAuthUserCount == 0) {
                 try {
                     DB::beginTransaction();
-                    DB::transaction(function () use ($userId, $age, $profiletype, $gender, $email, $fname, $lname, $dob, $password, $phone, $url, $usermothertoungh, $usermaritalstatus, $userreligion, $usercaste, $usersubcaste, $passwordcreatedbyadmin, $ccode, $weside) {
+                    DB::transaction(function () use ($userId, $age, $profiletype, $gender, $email, $fname, $lname, $dob, $password, $phone, $url, $usermothertoungh, $usermaritalstatus, $userreligion, $usercaste, $usersubcaste, $passwordcreatedbyadmin, $ccode, $weside,$wccode,$wno) {
                         DB::table('auth_user')->insert([
                             'auth_ID' => $userId,
                             'auth_email' => $email,
@@ -83,7 +85,9 @@ class userController extends Controller
                             'user_marital_status' => $usermaritalstatus,
                             'user_age' => $age,
                             'user_full_name' => $fname . ' ' . $lname,
-                            'data_come_from' => $weside
+                            'data_come_from' => $weside,
+                            'whats_app_c_code' => $wccode,
+                            'user_whatsapp_no' => $wno
                         ]);
 
                         DB::table('user_religion')->insert([
