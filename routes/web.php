@@ -52,7 +52,7 @@ $router->group(['middleware' => ['App\Http\Middleware\JwtMiddleware']], function
     $router->post("/matches", "filterController@matches");
     $router->post("/matchPersent", "filterController@matchPersent");
     $router->post("/getplandata", "filterController@getplandata");
-    $router->post("/getUserPlan", "memberController@getMembersheepPlan");
+    $router->get("/getUserPlan", "memberController@getMembersheepPlan");
     $router->post("/callCalculation", "planCalculationController@callCalculation");
     $router->post("/sendMessageCalculation", "planCalculationController@sendMessageCalculation");
     $router->post("/horscopeCalculation", "planCalculationController@horscopeCalculation");
