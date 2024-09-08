@@ -268,4 +268,13 @@ class AppController extends Controller
         }
         return json_encode($user_arr);
     }
+    public function countryState(){
+        try{
+        $state = DB::table('state')->get();
+        $city = DB::table('city')->get();
+        return array('state'=>$state,'city'=>$city);
+        }catch(Exception $e){
+            return $e;
+        }
+    }
 }

@@ -3112,7 +3112,7 @@ class filterController extends Controller
                     ->limit(10)
                     ->get();
 
-                $alldataofuser = array_merge($fatchdata->toArray(), $fatchdataone->toArray());
+                $alldataofuser = array_unique(array_merge($fatchdata->toArray(), $fatchdataone->toArray()),SORT_REGULAR);
                 foreach ($alldataofuser as $item) {
                     $id = $item->user_id;
                     if (!isset($uniqueArray[$id])) {
